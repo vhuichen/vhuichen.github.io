@@ -84,24 +84,61 @@
 
 
 
-<meta name="description" content="序言记下来，怕以后会忘记！
-证书申请流程申请CSR文件   
-申请发布证书和测试证书申请BundleID测试证书需要添加UDID（好像已经不需要了）申请描述文件下载证书和描述文件并安装登录ITunes创建新的APP打包应用并上传提交审核，回答审核员的问题">
+<meta name="description" content="序言被CocoaPods虐好几次了！~~(&amp;gt;_&amp;lt;)~~
+安装其实就那么两条一句
+
+sudo gem install cocoapodspod setup   
+
+但是两次都花了不止一天的时间才安装好 坑
+Problemgem版本比较旧，需要先升级版本查看版本
+
+gem –version
+
+升级版本
+
+sudo gem update –system
+
+到这里这个问题就解决了
+Ruby的默">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS基础之证书申请及应用上架流程(2016)">
-<meta property="og:url" content="http://yoursite.com/2016/10/23/[161023]iOS基础之证书申请及应用上架流程(2016)/index.html">
+<meta property="og:title" content="iOS基础之Cocoapods">
+<meta property="og:url" content="http://yoursite.com/2016/10/28/161028-iOS基础之Cocoapods/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="序言记下来，怕以后会忘记！
-证书申请流程申请CSR文件   
-申请发布证书和测试证书申请BundleID测试证书需要添加UDID（好像已经不需要了）申请描述文件下载证书和描述文件并安装登录ITunes创建新的APP打包应用并上传提交审核，回答审核员的问题">
-<meta property="og:image" content="https://github.com/vhuichen/image/blob/master/image/CSR.png?raw=true">
-<meta property="og:updated_time" content="2016-11-11T16:30:27.000Z">
+<meta property="og:description" content="序言被CocoaPods虐好几次了！~~(&amp;gt;_&amp;lt;)~~
+安装其实就那么两条一句
+
+sudo gem install cocoapodspod setup   
+
+但是两次都花了不止一天的时间才安装好 坑
+Problemgem版本比较旧，需要先升级版本查看版本
+
+gem –version
+
+升级版本
+
+sudo gem update –system
+
+到这里这个问题就解决了
+Ruby的默">
+<meta property="og:updated_time" content="2016-12-05T15:29:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS基础之证书申请及应用上架流程(2016)">
-<meta name="twitter:description" content="序言记下来，怕以后会忘记！
-证书申请流程申请CSR文件   
-申请发布证书和测试证书申请BundleID测试证书需要添加UDID（好像已经不需要了）申请描述文件下载证书和描述文件并安装登录ITunes创建新的APP打包应用并上传提交审核，回答审核员的问题">
-<meta name="twitter:image" content="https://github.com/vhuichen/image/blob/master/image/CSR.png?raw=true">
+<meta name="twitter:title" content="iOS基础之Cocoapods">
+<meta name="twitter:description" content="序言被CocoaPods虐好几次了！~~(&amp;gt;_&amp;lt;)~~
+安装其实就那么两条一句
+
+sudo gem install cocoapodspod setup   
+
+但是两次都花了不止一天的时间才安装好 坑
+Problemgem版本比较旧，需要先升级版本查看版本
+
+gem –version
+
+升级版本
+
+sudo gem update –system
+
+到这里这个问题就解决了
+Ruby的默">
 
 
 
@@ -122,10 +159,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/10/23/[161023]iOS基础之证书申请及应用上架流程(2016)/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/10/28/161028-iOS基础之Cocoapods/"/>
 
 
-  <title> iOS基础之证书申请及应用上架流程(2016) | vhuichen </title>
+  <title> iOS基础之Cocoapods | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -255,7 +292,7 @@
             
             
               
-                iOS基础之证书申请及应用上架流程(2016)
+                iOS基础之Cocoapods
               
             
           </h1>
@@ -267,8 +304,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-23T20:16:51+08:00" content="2016-10-23">
-              2016-10-23
+            <time itemprop="dateCreated" datetime="2016-10-28T21:14:26+08:00" content="2016-10-28">
+              2016-10-28
             </time>
           </span>
 
@@ -314,9 +351,31 @@
       
 
       
-        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>记下来，怕以后会忘记！</p>
-<h1 id="证书申请流程"><a href="#证书申请流程" class="headerlink" title="证书申请流程"></a>证书申请流程</h1><h2 id="申请CSR文件"><a href="#申请CSR文件" class="headerlink" title="申请CSR文件"></a>申请CSR文件</h2><p><img src="https://github.com/vhuichen/image/blob/master/image/CSR.png?raw=true" alt="Alt text">   </p>
-<h2 id="申请发布证书和测试证书"><a href="#申请发布证书和测试证书" class="headerlink" title="申请发布证书和测试证书"></a>申请发布证书和测试证书</h2><h2 id="申请BundleID"><a href="#申请BundleID" class="headerlink" title="申请BundleID"></a>申请BundleID</h2><h2 id="测试证书需要添加UDID（好像已经不需要了）"><a href="#测试证书需要添加UDID（好像已经不需要了）" class="headerlink" title="测试证书需要添加UDID（好像已经不需要了）"></a>测试证书需要添加UDID（好像已经不需要了）</h2><h2 id="申请描述文件"><a href="#申请描述文件" class="headerlink" title="申请描述文件"></a>申请描述文件</h2><h2 id="下载证书和描述文件并安装"><a href="#下载证书和描述文件并安装" class="headerlink" title="下载证书和描述文件并安装"></a>下载证书和描述文件并安装</h2><h1 id="登录ITunes创建新的APP"><a href="#登录ITunes创建新的APP" class="headerlink" title="登录ITunes创建新的APP"></a>登录ITunes创建新的APP</h1><h1 id="打包应用并上传"><a href="#打包应用并上传" class="headerlink" title="打包应用并上传"></a>打包应用并上传</h1><h1 id="提交审核，回答审核员的问题"><a href="#提交审核，回答审核员的问题" class="headerlink" title="提交审核，回答审核员的问题"></a>提交审核，回答审核员的问题</h1>
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>被<code>CocoaPods</code>虐好几次了！<strong><del>~~(&gt;_&lt;)</del>~~</strong></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>其实就那么两条一句</p>
+<blockquote>
+<p><strong>sudo gem install cocoapods</strong><br><strong>pod setup</strong>   </p>
+</blockquote>
+<p>但是两次都花了不止一天的时间才安装好 <strong><del>坑</del></strong></p>
+<h1 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h1><h2 id="gem版本比较旧，需要先升级版本"><a href="#gem版本比较旧，需要先升级版本" class="headerlink" title="gem版本比较旧，需要先升级版本"></a>gem版本比较旧，需要先升级版本</h2><p>查看版本</p>
+<blockquote>
+<p>gem –version</p>
+</blockquote>
+<p>升级版本</p>
+<blockquote>
+<p>sudo gem update –system</p>
+</blockquote>
+<p>到这里这个问题就解决了</p>
+<h2 id="Ruby的默认软件源被墙，需要跟换软件源"><a href="#Ruby的默认软件源被墙，需要跟换软件源" class="headerlink" title="Ruby的默认软件源被墙，需要跟换软件源"></a>Ruby的默认软件源被墙，需要跟换软件源</h2><p>网上给出了很多的答案，可以这样做</p>
+<blockquote>
+<p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="https://ruby.taobao.org/" target="_blank" rel="external">https://ruby.taobao.org/</a>   </p>
+</blockquote>
+<p><strong>就可以了？NO</strong><br><code>https://ruby.taobao.org/</code>这个网站已经不再维护了，如果把软件源更换到淘宝的这个镜像，会无法<code>setup</code>，至少我这里试了好几次都不行。<br>进入这个网站会有相关信息说明，相关的管理工作已经交给<code>https://gems.ruby-china.org/</code>来做了。<br>具体操作是：   </p>
+<blockquote>
+<p>gem sources –add <a href="https://gems.ruby-china.org/" target="_blank" rel="external">https://gems.ruby-china.org/</a><br>gem sources -l   </p>
+</blockquote>
+<p>确保只有<code>https://gems.ruby-china.org/</code>一个源。<br><strong>这样就可以了？不一定</strong><br>可能由于网络问题，我这里失败了好几次后才成功。可以打开一个新的终端进入<code>~/.cocoapods/repos</code>目录使用命令<code>du sh *</code>命令查看，如果一直不变，基本上可以认为是失败了。</p>
+
       
     </div>
 
@@ -347,13 +406,17 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/18/[161018]iOS基础之搭建SVN服务器/" rel="next" title="iOS基础之搭建SVN服务器">
+              <a href="/2016/10/18/161018-iOS基础之搭建SVN服务器/" rel="next" title="iOS基础之搭建SVN服务器">
                 <i class="fa fa-chevron-left"></i> iOS基础之搭建SVN服务器
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/01/161101-iOS基础之开机启动SVN服务/" rel="prev" title="iOS基础之开机启动SVN服务">
+                iOS基础之开机启动SVN服务 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -421,7 +484,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -429,7 +492,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -438,7 +501,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -467,7 +530,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#证书申请流程"><span class="nav-number">2.</span> <span class="nav-text">证书申请流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#申请CSR文件"><span class="nav-number">2.1.</span> <span class="nav-text">申请CSR文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#申请发布证书和测试证书"><span class="nav-number">2.2.</span> <span class="nav-text">申请发布证书和测试证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#申请BundleID"><span class="nav-number">2.3.</span> <span class="nav-text">申请BundleID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试证书需要添加UDID（好像已经不需要了）"><span class="nav-number">2.4.</span> <span class="nav-text">测试证书需要添加UDID（好像已经不需要了）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#申请描述文件"><span class="nav-number">2.5.</span> <span class="nav-text">申请描述文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载证书和描述文件并安装"><span class="nav-number">2.6.</span> <span class="nav-text">下载证书和描述文件并安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登录ITunes创建新的APP"><span class="nav-number">3.</span> <span class="nav-text">登录ITunes创建新的APP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打包应用并上传"><span class="nav-number">4.</span> <span class="nav-text">打包应用并上传</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#提交审核，回答审核员的问题"><span class="nav-number">5.</span> <span class="nav-text">提交审核，回答审核员的问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Problem"><span class="nav-number">3.</span> <span class="nav-text">Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#gem版本比较旧，需要先升级版本"><span class="nav-number">3.1.</span> <span class="nav-text">gem版本比较旧，需要先升级版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ruby的默认软件源被墙，需要跟换软件源"><span class="nav-number">3.2.</span> <span class="nav-text">Ruby的默认软件源被墙，需要跟换软件源</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

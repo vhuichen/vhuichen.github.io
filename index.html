@@ -246,8 +246,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/23/[161023]iOS基础之证书申请及应用上架流程(2016)/" itemprop="url">
-                  iOS基础之证书申请及应用上架流程(2016)
+                <a class="post-title-link" href="/2016/11/01/161101-iOS基础之开机启动SVN服务/" itemprop="url">
+                  iOS基础之开机启动SVN服务
                 </a>
               
             
@@ -260,8 +260,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-23T20:16:51+08:00" content="2016-10-23">
-              2016-10-23
+            <time itemprop="dateCreated" datetime="2016-11-01T21:30:23+08:00" content="2016-11-01">
+              2016-11-01
             </time>
           </span>
 
@@ -309,9 +309,31 @@
       
         
           
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>记下来，怕以后会忘记！</p>
-<h1 id="证书申请流程"><a href="#证书申请流程" class="headerlink" title="证书申请流程"></a>证书申请流程</h1><h2 id="申请CSR文件"><a href="#申请CSR文件" class="headerlink" title="申请CSR文件"></a>申请CSR文件</h2><p><img src="https://github.com/vhuichen/image/blob/master/image/CSR.png?raw=true" alt="Alt text">   </p>
-<h2 id="申请发布证书和测试证书"><a href="#申请发布证书和测试证书" class="headerlink" title="申请发布证书和测试证书"></a>申请发布证书和测试证书</h2><h2 id="申请BundleID"><a href="#申请BundleID" class="headerlink" title="申请BundleID"></a>申请BundleID</h2><h2 id="测试证书需要添加UDID（好像已经不需要了）"><a href="#测试证书需要添加UDID（好像已经不需要了）" class="headerlink" title="测试证书需要添加UDID（好像已经不需要了）"></a>测试证书需要添加UDID（好像已经不需要了）</h2><h2 id="申请描述文件"><a href="#申请描述文件" class="headerlink" title="申请描述文件"></a>申请描述文件</h2><h2 id="下载证书和描述文件并安装"><a href="#下载证书和描述文件并安装" class="headerlink" title="下载证书和描述文件并安装"></a>下载证书和描述文件并安装</h2><h1 id="登录ITunes创建新的APP"><a href="#登录ITunes创建新的APP" class="headerlink" title="登录ITunes创建新的APP"></a>登录ITunes创建新的APP</h1><h1 id="打包应用并上传"><a href="#打包应用并上传" class="headerlink" title="打包应用并上传"></a>打包应用并上传</h1><h1 id="提交审核，回答审核员的问题"><a href="#提交审核，回答审核员的问题" class="headerlink" title="提交审核，回答审核员的问题"></a>提交审核，回答审核员的问题</h1>
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>早前，上班时发现刚刚搭建好的本地SVN服务器无法连接 <strong>O(∩_∩)O~一脸懵逼</strong>，打开<code>活动监视器</code>发现SVN服务并没有自动开启，手动开启后发现还是不能连接，查看IP地址后才明白，IP是自动获取的啊，亲！so，先将IP改为手动分配，<strong>so easy</strong>。然后。。。。</p>
+<h1 id="在命令行新建-sh文件"><a href="#在命令行新建-sh文件" class="headerlink" title="在命令行新建.sh文件"></a>在命令行新建.sh文件</h1><p>需要路径可以自己加上去</p>
+<blockquote>
+<p>vi SVNServe.sh  </p>
+</blockquote>
+<p>或者   </p>
+<blockquote>
+<p>touch SVNServe.sh</p>
+</blockquote>
+<h1 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h1><p>具体怎么改比较合适不清楚，反正直接<code>777</code>肯定没问题   </p>
+<blockquote>
+<p>chmod 777 SVNServe.sh</p>
+</blockquote>
+<h1 id="编辑-sh文件"><a href="#编辑-sh文件" class="headerlink" title="编辑.sh文件"></a>编辑.sh文件</h1><p>加入以下内容   </p>
+<blockquote>
+<p><strong>#!/bin/bash<br>svnserve -d -r ~/svn</strong>   </p>
+</blockquote>
+<p><strong><code>#!/bin/bash</code></strong> 表示用根目录bin文件夹下的bash来解析这个脚本（bash是shell的一种）<strong><code>#!</code></strong>是特殊的表示符，据说一定要放在文件的第一行才起作用。<strong>不管，没试</strong>。<br><strong><code>svnserve -d -r ~/svn</code></strong> 就是开启SVN服务器的命令，表示要执行这条指令。<br><code>~/svn</code>表示在用户根目录下<code>svn</code>这个文件夹下开启SVN服务</p>
+<h1 id="添加自启动项"><a href="#添加自启动项" class="headerlink" title="添加自启动项"></a>添加自启动项</h1><blockquote>
+<p>进入<code>系统偏好设置</code>-&gt;<code>用户与群组</code>-&gt;<code>登录项</code>，点击<code>+</code>号,添加上面编辑好的<code>.sh</code>文件。    </p>
+</blockquote>
+<p><strong><code>注意：不要在隐藏栏中打钩</code></strong><br><img src="https://github.com/vhuichen/image/blob/master/image/SVNAutoStart.png?raw=true" alt="Alt text">   </p>
+<h1 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h1><p>搞定。。。。。。</p>
+<p>#备注<br>将Mac的ID地址改为手动获取，防止下次开机IP地址改变</p>
+
           
         
       
@@ -360,7 +382,143 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/18/[161018]iOS基础之搭建SVN服务器/" itemprop="url">
+                <a class="post-title-link" href="/2016/10/28/161028-iOS基础之Cocoapods/" itemprop="url">
+                  iOS基础之Cocoapods
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-28T21:14:26+08:00" content="2016-10-28">
+              2016-10-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>被<code>CocoaPods</code>虐好几次了！<strong><del>~~(&gt;_&lt;)</del>~~</strong></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>其实就那么两条一句</p>
+<blockquote>
+<p><strong>sudo gem install cocoapods</strong><br><strong>pod setup</strong>   </p>
+</blockquote>
+<p>但是两次都花了不止一天的时间才安装好 <strong><del>坑</del></strong></p>
+<h1 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h1><h2 id="gem版本比较旧，需要先升级版本"><a href="#gem版本比较旧，需要先升级版本" class="headerlink" title="gem版本比较旧，需要先升级版本"></a>gem版本比较旧，需要先升级版本</h2><p>查看版本</p>
+<blockquote>
+<p>gem –version</p>
+</blockquote>
+<p>升级版本</p>
+<blockquote>
+<p>sudo gem update –system</p>
+</blockquote>
+<p>到这里这个问题就解决了</p>
+<h2 id="Ruby的默认软件源被墙，需要跟换软件源"><a href="#Ruby的默认软件源被墙，需要跟换软件源" class="headerlink" title="Ruby的默认软件源被墙，需要跟换软件源"></a>Ruby的默认软件源被墙，需要跟换软件源</h2><p>网上给出了很多的答案，可以这样做</p>
+<blockquote>
+<p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="https://ruby.taobao.org/" target="_blank" rel="external">https://ruby.taobao.org/</a>   </p>
+</blockquote>
+<p><strong>就可以了？NO</strong><br><code>https://ruby.taobao.org/</code>这个网站已经不再维护了，如果把软件源更换到淘宝的这个镜像，会无法<code>setup</code>，至少我这里试了好几次都不行。<br>进入这个网站会有相关信息说明，相关的管理工作已经交给<code>https://gems.ruby-china.org/</code>来做了。<br>具体操作是：   </p>
+<blockquote>
+<p>gem sources –add <a href="https://gems.ruby-china.org/" target="_blank" rel="external">https://gems.ruby-china.org/</a><br>gem sources -l   </p>
+</blockquote>
+<p>确保只有<code>https://gems.ruby-china.org/</code>一个源。<br><strong>这样就可以了？不一定</strong><br>可能由于网络问题，我这里失败了好几次后才成功。可以打开一个新的终端进入<code>~/.cocoapods/repos</code>目录使用命令<code>du sh *</code>命令查看，如果一直不变，基本上可以认为是失败了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/18/161018-iOS基础之搭建SVN服务器/" itemprop="url">
                   iOS基础之搭建SVN服务器
                 </a>
               
@@ -513,7 +671,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/17/[161017]Markdown基础语法/" itemprop="url">
+                <a class="post-title-link" href="/2016/10/17/161017-Markdown基础语法/" itemprop="url">
                   Markdown基础语法
                 </a>
               
@@ -654,7 +812,7 @@ Hi,I&apos;m *MarkDown斜体*
             
               
                 
-                <a class="post-title-link" href="/2016/10/15/[161015]GitHub+Hexo+NexT搭建个人博客(进阶)/" itemprop="url">
+                <a class="post-title-link" href="/2016/10/15/161015-GitHub+Hexo+NexT搭建个人博客(进阶)/" itemprop="url">
                   GitHub+Hexo+NexT搭建个人博客(进阶)
                 </a>
               
@@ -773,178 +931,13 @@ Hi,I&apos;m *MarkDown斜体*
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/12/[161012]Github+Hexo+NexT搭建个人博客(基础)/" itemprop="url">
-                  GitHub+Hexo+NexT搭建个人博客(基础)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-12T13:13:08+08:00" content="2016-10-12">
-              2016-10-12
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">Hexo</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>一直想拥有一个自己的博客，记录自己学习内容以及生活经验。此前在群里看到一位大牛分享的自己的博客，马上就忍不住了，私信了那个大牛，询问建博客相关的问题，于是便开始了漫长的建站之路。<br>总体而言就是GitHub负责提供域名和服务器，Hexo负责建站，NexT负责主题。</p>
-<h1 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h1><p>申请GitHub账号，作为域名和服务器。然后创建创库repository，仓库的名称为<code>yourmane.github.io</code><br>我的仓库名称是<code>vhuichen.github.io</code> 至于为什么要这样，我自己也不清楚。</p>
-<h1 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Hexo是一个基于Node.js的静态博客，不需要学习任何网页技术，直接使用MarkDown写文章，生成静态网页并托管到GitHub上。官网 <code>https://hexo.io/zh-cn/</code> </p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="安装Homebrew-（简称brew）"><a href="#安装Homebrew-（简称brew）" class="headerlink" title="安装Homebrew （简称brew）"></a>安装Homebrew （简称brew）</h3><p>看官网<code>http://brew.sh/index_zh-cn.html</code><br>安装只需要一条语句</p>
-<blockquote>
-<p><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></p>
-</blockquote>
-<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p>官网<code>https://nodejs.org/en/</code>   </p>
-<blockquote>
-<p><code>brew install node</code></p>
-</blockquote>
-<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><blockquote>
-<p><code>sudo brew install git</code>   </p>
-</blockquote>
-<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><blockquote>
-<p><code>npm install -g hexo</code>   </p>
-</blockquote>
-<p>或者   </p>
-<blockquote>
-<p><code>npm install -g hexo-cli</code> </p>
-</blockquote>
-<h2 id="初始化配置"><a href="#初始化配置" class="headerlink" title="初始化配置"></a>初始化配置</h2><h3 id="在指定目录下初始化Hexo"><a href="#在指定目录下初始化Hexo" class="headerlink" title="在指定目录下初始化Hexo"></a>在指定目录下初始化Hexo</h3><p>在指定的目录下不需要加路径，如果不是则加上hexo初始化的路径</p>
-<blockquote>
-<p><code>hexo init</code><br><code>hexo init /blog</code></p>
-</blockquote>
-<h3 id="安装npm"><a href="#安装npm" class="headerlink" title="安装npm"></a>安装npm</h3><blockquote>
-<p><code>npm install</code></p>
-</blockquote>
-<h3 id="在Hexo中部署git"><a href="#在Hexo中部署git" class="headerlink" title="在Hexo中部署git"></a>在Hexo中部署git</h3><blockquote>
-<p>npm install hexo-deployer-git –save   </p>
-</blockquote>
-<p>没有这条语句会出现<code>ERROR Deployer not found: git</code>的错误</p>
-<h1 id="使用NexT主题"><a href="#使用NexT主题" class="headerlink" title="使用NexT主题"></a>使用NexT主题</h1><h2 id="NexT官网"><a href="#NexT官网" class="headerlink" title="NexT官网"></a>NexT官网</h2><p><code>http://theme-next.iissnan.com/</code>    </p>
-<font color="red"><strong>PS:看官方文档足够了</strong></font>
-
-<h2 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h2><p>打开终端，定位到Hexo站点目录，将主题从git上下载<br>我的blog目录在<code>/blog/</code>下</p>
-<blockquote>
-<p><code>cd /blog/</code><br>git clone <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">https://github.com/iissnan/hexo-theme-next</a> themes/next`   </p>
-</blockquote>
-<p>#配置站点<code>_congif.yml</code><br>编辑Hexo目录下的<code>_config.yml</code>文件    </p>
-<pre><code>1.配置NexT主题
-</code></pre><blockquote>
-<p># Extensions<br>## Plugins: <a href="https://hexo.io/plugins/" target="_blank" rel="external">https://hexo.io/plugins/</a><br>## Themes: <a href="https://hexo.io/themes/" target="_blank" rel="external">https://hexo.io/themes/</a>   </p>
-<font color="red"><strong>theme: next</strong></font>   
-
-</blockquote>
-<pre><code>2.配置仓库地址
-</code></pre><blockquote>
-<p># Deployment<br>## Docs: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">https://hexo.io/docs/deployment.html</a><br><strong>deploy:</strong><br>      <strong>type: git</strong><br>      <strong>repo: <a href="https://github.com/vhuichen/vhuichen.github.io.git" target="_blank" rel="external">https://github.com/vhuichen/vhuichen.github.io.git</a></strong><br>      <strong>branch: master</strong> </p>
-</blockquote>
-<p>##生成静态网页并启动本地服务<br>//生成静态网页<br>//启动本地服务</p>
-<blockquote>
-<p><code>hexo g</code><br><code>hexo s</code><br>在浏览器中输入<code>http://localhost:4000/</code> 即可查看网页</p>
-</blockquote>
-<h1 id="部署网页"><a href="#部署网页" class="headerlink" title="部署网页"></a>部署网页</h1><blockquote>
-<p><strong>sudo hexo g</strong><br><strong>sudo hexo d</strong><br>在浏览器中输入地址<code>https://vhuichen.github.io/</code>即可查看网页</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -983,7 +976,7 @@ Hi,I&apos;m *MarkDown斜体*
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -991,7 +984,7 @@ Hi,I&apos;m *MarkDown斜体*
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1000,7 +993,7 @@ Hi,I&apos;m *MarkDown斜体*
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
