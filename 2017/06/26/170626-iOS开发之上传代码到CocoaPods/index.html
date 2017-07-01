@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="GitHub,git," />
+  <meta name="keywords" content="iOS开发,CocoaPods," />
 
 
 
@@ -84,19 +84,22 @@
 
 
 
-<meta name="description" content="0.前言有些项目不想公开，但使用GitHub Desktop比较方便，于是尝试看看能否通过GitHub Desktop管理别的远程仓库，还好找到了，记下来。
-1.假设当前已经安装好GitHub Desktop2.以coding为例子，在coding上创建新的仓库3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。git clone https://git.cod">
+<meta name="description" content="前言学习下怎样将自己的代码上传到CocoaPods
+1.在GitHub上创建新的仓库，并clone到本地2.创建podspec文件12cd pathpod spec create XXXX
+3.修改podspec文件1234567891011s.name         = &amp;quot;VCHKit&amp;quot;s.version      = &amp;quot;0.0.1&amp;quot;s.summary">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用GitHub Desktop管理别的仓库">
-<meta property="og:url" content="http://yoursite.com/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/index.html">
+<meta property="og:title" content="iOS开发之上传代码到CocoaPods">
+<meta property="og:url" content="http://yoursite.com/2017/06/26/170626-iOS开发之上传代码到CocoaPods/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="0.前言有些项目不想公开，但使用GitHub Desktop比较方便，于是尝试看看能否通过GitHub Desktop管理别的远程仓库，还好找到了，记下来。
-1.假设当前已经安装好GitHub Desktop2.以coding为例子，在coding上创建新的仓库3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。git clone https://git.cod">
-<meta property="og:updated_time" content="2017-06-27T14:42:30.000Z">
+<meta property="og:description" content="前言学习下怎样将自己的代码上传到CocoaPods
+1.在GitHub上创建新的仓库，并clone到本地2.创建podspec文件12cd pathpod spec create XXXX
+3.修改podspec文件1234567891011s.name         = &amp;quot;VCHKit&amp;quot;s.version      = &amp;quot;0.0.1&amp;quot;s.summary">
+<meta property="og:updated_time" content="2017-07-01T11:54:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用GitHub Desktop管理别的仓库">
-<meta name="twitter:description" content="0.前言有些项目不想公开，但使用GitHub Desktop比较方便，于是尝试看看能否通过GitHub Desktop管理别的远程仓库，还好找到了，记下来。
-1.假设当前已经安装好GitHub Desktop2.以coding为例子，在coding上创建新的仓库3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。git clone https://git.cod">
+<meta name="twitter:title" content="iOS开发之上传代码到CocoaPods">
+<meta name="twitter:description" content="前言学习下怎样将自己的代码上传到CocoaPods
+1.在GitHub上创建新的仓库，并clone到本地2.创建podspec文件12cd pathpod spec create XXXX
+3.修改podspec文件1234567891011s.name         = &amp;quot;VCHKit&amp;quot;s.version      = &amp;quot;0.0.1&amp;quot;s.summary">
 
 
 
@@ -117,10 +120,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/26/170626-iOS开发之上传代码到CocoaPods/"/>
 
 
-  <title> 使用GitHub Desktop管理别的仓库 | vhuichen </title>
+  <title> iOS开发之上传代码到CocoaPods | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -250,7 +253,7 @@
             
             
               
-                使用GitHub Desktop管理别的仓库
+                iOS开发之上传代码到CocoaPods
               
             
           </h1>
@@ -262,8 +265,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-12T22:22:23+08:00" content="2017-01-12">
-              2017-01-12
+            <time itemprop="dateCreated" datetime="2017-06-26T19:54:23+08:00" content="2017-06-26">
+              2017-06-26
             </time>
           </span>
 
@@ -276,8 +279,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/GitHub/" itemprop="url" rel="index">
-                    <span itemprop="name">GitHub</span>
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
                   </a>
                 </span>
 
@@ -309,10 +312,18 @@
       
 
       
-        <h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0.前言"></a>0.前言</h1><p>有些项目不想公开，但使用GitHub Desktop比较方便，于是尝试看看能否通过GitHub Desktop管理别的远程仓库，还好找到了，记下来。</p>
-<h2 id="1-假设当前已经安装好GitHub-Desktop"><a href="#1-假设当前已经安装好GitHub-Desktop" class="headerlink" title="1.假设当前已经安装好GitHub Desktop"></a>1.假设当前已经安装好GitHub Desktop</h2><h2 id="2-以coding为例子，在coding上创建新的仓库"><a href="#2-以coding为例子，在coding上创建新的仓库" class="headerlink" title="2.以coding为例子，在coding上创建新的仓库"></a>2.以coding为例子，在coding上创建新的仓库</h2><h2 id="3-打开终端，cd到指定的目录。使用命令-git-clone-将远程仓库clone下来。"><a href="#3-打开终端，cd到指定的目录。使用命令-git-clone-将远程仓库clone下来。" class="headerlink" title="3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。"></a>3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。</h2><pre><code class="objc">git clone https:<span class="comment">//git.coding.net/xxxxxx/xxx.git</span>
-</code></pre>
-<h2 id="4-打开GitHub-Desktop-点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。"><a href="#4-打开GitHub-Desktop-点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。" class="headerlink" title="4.打开GitHub Desktop 点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。"></a>4.打开GitHub Desktop 点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。</h2><h2 id="5-完成，至此可以通过GitHub-Desktop操作这个仓库了。"><a href="#5-完成，至此可以通过GitHub-Desktop操作这个仓库了。" class="headerlink" title="5.完成，至此可以通过GitHub Desktop操作这个仓库了。"></a>5.完成，至此可以通过GitHub Desktop操作这个仓库了。</h2>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习下怎样将自己的代码上传到CocoaPods</p>
+<h2 id="1-在GitHub上创建新的仓库，并clone到本地"><a href="#1-在GitHub上创建新的仓库，并clone到本地" class="headerlink" title="1.在GitHub上创建新的仓库，并clone到本地"></a>1.在GitHub上创建新的仓库，并clone到本地</h2><h2 id="2-创建podspec文件"><a href="#2-创建podspec文件" class="headerlink" title="2.创建podspec文件"></a>2.创建podspec文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd path</div><div class="line">pod spec create XXXX</div></pre></td></tr></table></figure>
+<h2 id="3-修改podspec文件"><a href="#3-修改podspec文件" class="headerlink" title="3.修改podspec文件"></a>3.修改podspec文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">s.name         = &quot;VCHKit&quot;</div><div class="line">s.version      = &quot;0.0.1&quot;</div><div class="line">s.summary      = &quot;this is summary&quot;</div><div class="line">s.homepage     = &quot;https://github.com/vhuichen/VCHKit&quot;</div><div class="line">s.license      = &quot;MIT&quot;</div><div class="line">s.author       = &#123; &quot;vhuichen&quot; =&gt; &quot;vhuichen@163.com&quot; &#125;</div><div class="line">s.platform     = :ios, &quot;8.0&quot;</div><div class="line">s.source       = &#123; :git =&gt; &quot;https://github.com/vhuichen/VCHKit.git&quot;, :tag =&gt; &quot;#&#123;s.version&#125;&quot; &#125;</div><div class="line">s.source_files  = &quot;VCHKit&quot;, &quot;VCHKit/*.&#123;h,m&#125;&quot;</div><div class="line">s.frameworks = &quot;UIKit&quot;</div><div class="line">s.requires_arc = true</div></pre></td></tr></table></figure>
+<h2 id="4-提交代码到GitHub"><a href="#4-提交代码到GitHub" class="headerlink" title="4.提交代码到GitHub"></a>4.提交代码到GitHub</h2><p>将代码提交到GitHub，并打上tag   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git tag 0.0.1   </div><div class="line">git push --tags</div></pre></td></tr></table></figure>
+<h2 id="5-提交库到CocoaPods-trunk"><a href="#5-提交库到CocoaPods-trunk" class="headerlink" title="5.提交库到CocoaPods trunk"></a>5.提交库到CocoaPods trunk</h2><h3 id="也要打上和GitHub上相同的tag"><a href="#也要打上和GitHub上相同的tag" class="headerlink" title="也要打上和GitHub上相同的tag"></a>也要打上和GitHub上相同的tag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">set the new version to 0.0.1</div><div class="line">set the new tag to 0.0.1</div></pre></td></tr></table></figure>
+<h3 id="注册trunk"><a href="#注册trunk" class="headerlink" title="注册trunk"></a>注册trunk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk register vhuichen@163.com &apos;vhuichen&apos;  --verbose</div></pre></td></tr></table></figure>
+<h3 id="向trunk服务器查询自己的注册信息"><a href="#向trunk服务器查询自己的注册信息" class="headerlink" title="向trunk服务器查询自己的注册信息"></a>向trunk服务器查询自己的注册信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk me</div></pre></td></tr></table></figure>
+<h3 id="验证pod"><a href="#验证pod" class="headerlink" title="验证pod"></a>验证pod</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod lib lint</div></pre></td></tr></table></figure>
+<p>如果验证成功则会显示成功信息</p>
+<h3 id="上传或更新trunk"><a href="#上传或更新trunk" class="headerlink" title="上传或更新trunk"></a>上传或更新trunk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk push</div></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -334,9 +345,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/GitHub/" rel="tag">#GitHub</a>
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
           
-            <a href="/tags/git/" rel="tag">#git</a>
+            <a href="/tags/CocoaPods/" rel="tag">#CocoaPods</a>
           
         </div>
       
@@ -345,17 +356,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/30/161130-iOS基础之计算字符串长度/" rel="next" title="iOS基础之计算字符串长度">
-                <i class="fa fa-chevron-left"></i> iOS基础之计算字符串长度
+              <a href="/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/" rel="next" title="使用GitHub Desktop管理别的仓库">
+                <i class="fa fa-chevron-left"></i> 使用GitHub Desktop管理别的仓库
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/26/170626-iOS开发之上传代码到CocoaPods/" rel="prev" title="iOS开发之上传代码到CocoaPods">
-                iOS开发之上传代码到CocoaPods <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -469,7 +476,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-前言"><span class="nav-number">1.</span> <span class="nav-text">0.前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-假设当前已经安装好GitHub-Desktop"><span class="nav-number">1.1.</span> <span class="nav-text">1.假设当前已经安装好GitHub Desktop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-以coding为例子，在coding上创建新的仓库"><span class="nav-number">1.2.</span> <span class="nav-text">2.以coding为例子，在coding上创建新的仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-打开终端，cd到指定的目录。使用命令-git-clone-将远程仓库clone下来。"><span class="nav-number">1.3.</span> <span class="nav-text">3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-打开GitHub-Desktop-点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。"><span class="nav-number">1.4.</span> <span class="nav-text">4.打开GitHub Desktop 点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-完成，至此可以通过GitHub-Desktop操作这个仓库了。"><span class="nav-number">1.5.</span> <span class="nav-text">5.完成，至此可以通过GitHub Desktop操作这个仓库了。</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-在GitHub上创建新的仓库，并clone到本地"><span class="nav-number">1.1.</span> <span class="nav-text">1.在GitHub上创建新的仓库，并clone到本地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-创建podspec文件"><span class="nav-number">1.2.</span> <span class="nav-text">2.创建podspec文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-修改podspec文件"><span class="nav-number">1.3.</span> <span class="nav-text">3.修改podspec文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-提交代码到GitHub"><span class="nav-number">1.4.</span> <span class="nav-text">4.提交代码到GitHub</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-提交库到CocoaPods-trunk"><span class="nav-number">1.5.</span> <span class="nav-text">5.提交库到CocoaPods trunk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#也要打上和GitHub上相同的tag"><span class="nav-number">1.5.1.</span> <span class="nav-text">也要打上和GitHub上相同的tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册trunk"><span class="nav-number">1.5.2.</span> <span class="nav-text">注册trunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#向trunk服务器查询自己的注册信息"><span class="nav-number">1.5.3.</span> <span class="nav-text">向trunk服务器查询自己的注册信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证pod"><span class="nav-number">1.5.4.</span> <span class="nav-text">验证pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上传或更新trunk"><span class="nav-number">1.5.5.</span> <span class="nav-text">上传或更新trunk</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
