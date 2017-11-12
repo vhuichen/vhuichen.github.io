@@ -574,7 +574,7 @@
         
           
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个问题花了我2天的时间没解决，记下来！</p>
-<h2 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h2><p>由于项目需要定制化，需要在原来的项目上修改部分图片以及部分接口，然后上一个新的APP。于是想到用Target来实现。copy一个新的Target。</p>
+<h2 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h2><p>由于项目需要定制化，需要在原来的项目上修改部分图片以及部分接口，然后上一个新的APP。于是想到用Target来实现。copy一个新的Target。<br><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-12/5962422.jpg" alt=""></p>
 <p><strong>编译后，发现旧的Target编译成功，而新创建的Target编译失败。</strong><br>报错提示：</p>
 <blockquote>
 <p><strong>Command failed due to signal: Segmentation fault: 11</strong>     </p>
@@ -583,6 +583,7 @@
 <blockquote>
 <p><strong>An internal error occurred.Editing functionality may be limited</strong><br><strong>An internal error occurred. Soucre Editor functionality is limited,Attempting to restore</strong>            </p>
 </blockquote>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-12/21764291.jpg" alt=""></p>
 <p><strong>Xcode版本:8.3.3</strong></p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><blockquote>
 <p>rm -rf ~/Library/Developer/Xcode/DerivedData/   </p>
