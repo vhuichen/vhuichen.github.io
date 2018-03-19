@@ -84,45 +84,22 @@
 
 
 
-<meta name="description" content="序言早前，上班时发现刚刚搭建好的本地SVN服务器无法连接 O(∩_∩)O~一脸懵逼，打开活动监视器发现SVN服务并没有自动开启，手动开启后发现还是不能连接，查看IP地址后才明白，IP是自动获取的啊，亲！so，先将IP改为手动分配，so easy。然后。。。。
-在命令行新建.sh文件需要路径可以自己加上去
-
-vi SVNServe.sh  
-
-或者   
-
-touch SVNServe.sh
-
-修改">
+<meta name="description" content="判断View是否显示在当前窗口写一个分类
+1234567#import &amp;lt;UIKit/UIKit.h&amp;gt;@interface UIView (VCHFrame)- (BOOL)isShowingOnKeyWindow;@end
+12345678910111213141516- (BOOL)isShowingOnKeyWindow &amp;#123;    UIWindow *window =">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS基础之开机启动SVN服务">
-<meta property="og:url" content="http://yoursite.com/2016/11/01/161101-iOS基础之开机启动SVN服务/index.html">
+<meta property="og:title" content="iOS基础之navigationItem.title设置但不显示">
+<meta property="og:url" content="http://yoursite.com/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="序言早前，上班时发现刚刚搭建好的本地SVN服务器无法连接 O(∩_∩)O~一脸懵逼，打开活动监视器发现SVN服务并没有自动开启，手动开启后发现还是不能连接，查看IP地址后才明白，IP是自动获取的啊，亲！so，先将IP改为手动分配，so easy。然后。。。。
-在命令行新建.sh文件需要路径可以自己加上去
-
-vi SVNServe.sh  
-
-或者   
-
-touch SVNServe.sh
-
-修改">
-<meta property="og:image" content="https://github.com/vhuichen/image/blob/master/image/SVNAutoStart.png?raw=true">
-<meta property="og:updated_time" content="2016-11-13T09:48:17.000Z">
+<meta property="og:description" content="判断View是否显示在当前窗口写一个分类
+1234567#import &amp;lt;UIKit/UIKit.h&amp;gt;@interface UIView (VCHFrame)- (BOOL)isShowingOnKeyWindow;@end
+12345678910111213141516- (BOOL)isShowingOnKeyWindow &amp;#123;    UIWindow *window =">
+<meta property="og:updated_time" content="2018-03-19T14:40:22.782Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS基础之开机启动SVN服务">
-<meta name="twitter:description" content="序言早前，上班时发现刚刚搭建好的本地SVN服务器无法连接 O(∩_∩)O~一脸懵逼，打开活动监视器发现SVN服务并没有自动开启，手动开启后发现还是不能连接，查看IP地址后才明白，IP是自动获取的啊，亲！so，先将IP改为手动分配，so easy。然后。。。。
-在命令行新建.sh文件需要路径可以自己加上去
-
-vi SVNServe.sh  
-
-或者   
-
-touch SVNServe.sh
-
-修改">
-<meta name="twitter:image" content="https://github.com/vhuichen/image/blob/master/image/SVNAutoStart.png?raw=true">
+<meta name="twitter:title" content="iOS基础之navigationItem.title设置但不显示">
+<meta name="twitter:description" content="判断View是否显示在当前窗口写一个分类
+1234567#import &amp;lt;UIKit/UIKit.h&amp;gt;@interface UIView (VCHFrame)- (BOOL)isShowingOnKeyWindow;@end
+12345678910111213141516- (BOOL)isShowingOnKeyWindow &amp;#123;    UIWindow *window =">
 
 
 
@@ -143,10 +120,10 @@ touch SVNServe.sh
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/01/161101-iOS基础之开机启动SVN服务/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/"/>
 
 
-  <title> iOS基础之开机启动SVN服务 | vhuichen </title>
+  <title> iOS基础之navigationItem.title设置但不显示 | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -276,7 +253,7 @@ touch SVNServe.sh
             
             
               
-                iOS基础之开机启动SVN服务
+                iOS基础之navigationItem.title设置但不显示
               
             
           </h1>
@@ -288,8 +265,8 @@ touch SVNServe.sh
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-01T21:30:23+08:00" content="2016-11-01">
-              2016-11-01
+            <time itemprop="dateCreated" datetime="2017-07-11T21:01:43+08:00" content="2017-07-11">
+              2017-07-11
             </time>
           </span>
 
@@ -335,30 +312,13 @@ touch SVNServe.sh
       
 
       
-        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>早前，上班时发现刚刚搭建好的本地SVN服务器无法连接 <strong>O(∩_∩)O~一脸懵逼</strong>，打开<code>活动监视器</code>发现SVN服务并没有自动开启，手动开启后发现还是不能连接，查看IP地址后才明白，IP是自动获取的啊，亲！so，先将IP改为手动分配，<strong>so easy</strong>。然后。。。。</p>
-<h1 id="在命令行新建-sh文件"><a href="#在命令行新建-sh文件" class="headerlink" title="在命令行新建.sh文件"></a>在命令行新建.sh文件</h1><p>需要路径可以自己加上去</p>
-<blockquote>
-<p>vi SVNServe.sh  </p>
-</blockquote>
-<p>或者   </p>
-<blockquote>
-<p>touch SVNServe.sh</p>
-</blockquote>
-<h1 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h1><p>具体怎么改比较合适不清楚，反正直接<code>777</code>肯定没问题   </p>
-<blockquote>
-<p>chmod 777 SVNServe.sh</p>
-</blockquote>
-<h1 id="编辑-sh文件"><a href="#编辑-sh文件" class="headerlink" title="编辑.sh文件"></a>编辑.sh文件</h1><p>加入以下内容   </p>
-<blockquote>
-<p><strong>#!/bin/bash<br>svnserve -d -r ~/svn</strong>   </p>
-</blockquote>
-<p><strong><code>#!/bin/bash</code></strong> 表示用根目录bin文件夹下的bash来解析这个脚本（bash是shell的一种）<strong><code>#!</code></strong>是特殊的表示符，据说一定要放在文件的第一行才起作用。<strong>不管，没试</strong>。<br><strong><code>svnserve -d -r ~/svn</code></strong> 就是开启SVN服务器的命令，表示要执行这条指令。<br><code>~/svn</code>表示在用户根目录下<code>svn</code>这个文件夹下开启SVN服务</p>
-<h1 id="添加自启动项"><a href="#添加自启动项" class="headerlink" title="添加自启动项"></a>添加自启动项</h1><blockquote>
-<p>进入<code>系统偏好设置</code>-&gt;<code>用户与群组</code>-&gt;<code>登录项</code>，点击<code>+</code>号,添加上面编辑好的<code>.sh</code>文件。    </p>
-</blockquote>
-<p><strong><code>注意：不要在隐藏栏中打钩</code></strong><br><img src="https://github.com/vhuichen/image/blob/master/image/SVNAutoStart.png?raw=true" alt="Alt text">   </p>
-<h1 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h1><p>搞定。。。。。。</p>
-<p>#备注<br>将Mac的ID地址改为手动获取，防止下次开机IP地址改变</p>
+        <h3 id="判断View是否显示在当前窗口"><a href="#判断View是否显示在当前窗口" class="headerlink" title="判断View是否显示在当前窗口"></a>判断View是否显示在当前窗口</h3><p>写一个分类</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">VCHFrame</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow &#123;</div><div class="line">    <span class="built_in">UIWindow</span> *window = [<span class="built_in">UIApplication</span> sharedApplication].keyWindow;</div><div class="line">    <span class="built_in">CGRect</span> newRect = [window convertRect:<span class="keyword">self</span>.frame fromView:<span class="keyword">self</span>.superview];</div><div class="line">    <span class="built_in">BOOL</span> intersects = <span class="built_in">CGRectIntersectsRect</span>(newRect, window.bounds);</div><div class="line">    <span class="keyword">return</span> intersects &amp;&amp; !<span class="keyword">self</span>.isHidden &amp;&amp; (<span class="keyword">self</span>.alpha &gt; <span class="number">0.01</span>) &amp;&amp; (<span class="keyword">self</span>.window == window);</div><div class="line">&#125;</div><div class="line">~~~   </div><div class="line"></div><div class="line"><span class="meta">### 判断控制器是否显示到当前窗口   </span></div><div class="line">可以用一种简单的方法，判断view是否已经加载，再判断window是否存在。用这两个条件正常情况下都可以判断出来。   </div><div class="line">**这种方法不是绝对的。**</div><div class="line"></div><div class="line">~~~ objc</div><div class="line">- (<span class="built_in">BOOL</span>)isShowing &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">self</span>.isViewLoaded &amp;&amp; <span class="keyword">self</span>.view.window;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="坐标转变方法"><a href="#坐标转变方法" class="headerlink" title="坐标转变方法"></a>坐标转变方法</h3><pre><code class="objc"><span class="built_in">CGRect</span> newRect = [view1 convertRect:view2.frame toView:view3];
+<span class="built_in">CGRect</span> newRect = [view3 convertRect:view2.frame fromView:view1];
+</code></pre>
+<p>view1：view2的父类（view2的frame相对的坐标系的view）<br>view2：需要转换坐标的view<br>view3：转换后坐标所在的view   </p>
 
       
     </div>
@@ -390,16 +350,16 @@ touch SVNServe.sh
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/28/161028-iOS基础之Cocoapods/" rel="next" title="iOS基础之Cocoapods">
-                <i class="fa fa-chevron-left"></i> iOS基础之Cocoapods
+              <a href="/2017/06/26/170626-iOS开发之上传代码到CocoaPods/" rel="next" title="iOS开发之上传代码到CocoaPods">
+                <i class="fa fa-chevron-left"></i> iOS开发之上传代码到CocoaPods
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/11/30/161130-iOS基础之计算字符串长度/" rel="prev" title="iOS基础之计算字符串长度">
-                iOS基础之计算字符串长度 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/05/171105-iOS开发之APP默认语言/" rel="prev" title="iOS开发之APP默认语言">
+                iOS开发之APP默认语言 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -514,7 +474,7 @@ touch SVNServe.sh
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在命令行新建-sh文件"><span class="nav-number">2.</span> <span class="nav-text">在命令行新建.sh文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改文件权限"><span class="nav-number">3.</span> <span class="nav-text">修改文件权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编辑-sh文件"><span class="nav-number">4.</span> <span class="nav-text">编辑.sh文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加自启动项"><span class="nav-number">5.</span> <span class="nav-text">添加自启动项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#以上"><span class="nav-number">6.</span> <span class="nav-text">以上</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#判断View是否显示在当前窗口"><span class="nav-number">1.</span> <span class="nav-text">判断View是否显示在当前窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#坐标转变方法"><span class="nav-number">2.</span> <span class="nav-text">坐标转变方法</span></a></li></ol></div>
             
           </div>
         </section>
