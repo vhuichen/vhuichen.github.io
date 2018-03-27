@@ -84,19 +84,22 @@
 
 
 
-<meta name="description" content="imagedNamed使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。优点：下次需要使用的时候，直接从缓存加载。缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。
-imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定的位置加载。优点和缺点刚好和 i">
+<meta name="description" content="序言比较两种使用方法的不同。
+imagedNamed使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。优点：下次需要使用的时候，直接从缓存加载。缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。
+imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS基础之UIImage两种加载方式的区别">
 <meta property="og:url" content="http://yoursite.com/2016/10/20/161020-iOS基础之UIImage两种加载方式的区别/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="imagedNamed使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。优点：下次需要使用的时候，直接从缓存加载。缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。
-imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定的位置加载。优点和缺点刚好和 i">
-<meta property="og:updated_time" content="2018-03-23T14:54:57.903Z">
+<meta property="og:description" content="序言比较两种使用方法的不同。
+imagedNamed使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。优点：下次需要使用的时候，直接从缓存加载。缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。
+imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定的">
+<meta property="og:updated_time" content="2018-03-23T15:00:36.284Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS基础之UIImage两种加载方式的区别">
-<meta name="twitter:description" content="imagedNamed使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。优点：下次需要使用的时候，直接从缓存加载。缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。
-imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定的位置加载。优点和缺点刚好和 i">
+<meta name="twitter:description" content="序言比较两种使用方法的不同。
+imagedNamed使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。优点：下次需要使用的时候，直接从缓存加载。缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。
+imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定的">
 
 
 
@@ -309,9 +312,10 @@ imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定
       
 
       
-        <h3 id="imagedNamed"><a href="#imagedNamed" class="headerlink" title="imagedNamed"></a>imagedNamed</h3><p>使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。<br>优点：下次需要使用的时候，直接从缓存加载。<br>缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。</p>
+        <h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>比较两种使用方法的不同。</p>
+<h3 id="imagedNamed"><a href="#imagedNamed" class="headerlink" title="imagedNamed"></a>imagedNamed</h3><p>使用此方法，系统会先从内存中查找此图片，如果找到，则返回显示。如果没有找到，则从指定的bundle中加载这张图片，然后缓存在系统内存中，并返回对象。<br>优点：下次需要使用的时候，直接从缓存加载。<br>缺点：增加了缓存需要的时间，图片越大，缓存需要的时间越长，并占用内存。</p>
 <h3 id="imageWithContentsOfFile"><a href="#imageWithContentsOfFile" class="headerlink" title="imageWithContentsOfFile"></a>imageWithContentsOfFile</h3><p>此方法不会缓存图片，每次调用直接从指定的位置加载。<br>优点和缺点刚好和 imagedNamed 相反。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在不同的场景使用不同的方法。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在不同的场景使用不同的方法。</p>
 
       
     </div>
@@ -421,7 +425,7 @@ imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -467,7 +471,7 @@ imageWithContentsOfFile此方法不会缓存图片，每次调用直接从指定
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#imagedNamed"><span class="nav-number">1.</span> <span class="nav-text">imagedNamed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#imageWithContentsOfFile"><span class="nav-number">2.</span> <span class="nav-text">imageWithContentsOfFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#imagedNamed"><span class="nav-number">1.1.</span> <span class="nav-text">imagedNamed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#imageWithContentsOfFile"><span class="nav-number">1.2.</span> <span class="nav-text">imageWithContentsOfFile</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
         </section>
