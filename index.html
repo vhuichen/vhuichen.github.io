@@ -246,6 +246,121 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/03/180403-iOS开发之Push Notification/" itemprop="url">
+                  iOS开发之Push Notification
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-03T15:12:39+08:00" content="2018-04-03">
+              2018-04-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>iOS远程推送是怎么实现的？</p>
+<h3 id="远程推送逻辑图"><a href="#远程推送逻辑图" class="headerlink" title="远程推送逻辑图"></a>远程推送逻辑图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg" alt=""></p>
+<p>1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。<br>2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。<br>3、 APP 将 Device Token 发送给自己的服务器。<br>4、 当服务器发生APP感兴趣事件的时候，服务器将该消息以及对应的 Device Token 发送给APNS。<br>5、 APNS 再根据 Device Token 将消息发送给对应的APP（用户）。   </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/22/180323-iOS开发之多线程（NSThread、NSOperation、GCD）/" itemprop="url">
                   iOS开发之多线程（NSThread、NSOperation、GCD）
                 </a>
@@ -1109,132 +1224,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/26/170626-iOS开发之上传代码到CocoaPods/" itemprop="url">
-                  iOS开发之上传代码到CocoaPods
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-26T19:54:23+08:00" content="2017-06-26">
-              2017-06-26
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习下怎样将自己的代码上传到CocoaPods</p>
-<h2 id="1-在GitHub上创建新的仓库，并clone到本地"><a href="#1-在GitHub上创建新的仓库，并clone到本地" class="headerlink" title="1.在GitHub上创建新的仓库，并clone到本地"></a>1.在GitHub上创建新的仓库，并clone到本地</h2><p>此时将库文件但放到一个单独的文件夹内，并将相关的演示Demo写好。</p>
-<h2 id="2-创建podspec文件"><a href="#2-创建podspec文件" class="headerlink" title="2.创建podspec文件"></a>2.创建podspec文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd path****</div><div class="line">pod spec create VCHKit</div></pre></td></tr></table></figure>
-<h2 id="3-修改podspec文件"><a href="#3-修改podspec文件" class="headerlink" title="3.修改podspec文件"></a>3.修改podspec文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">s.name         = &quot;VCHKit&quot;</div><div class="line">s.version      = &quot;0.0.1&quot;</div><div class="line">s.summary      = &quot;this is summary&quot;</div><div class="line">s.description  = &lt;&lt;-DESC</div><div class="line">                 this is description</div><div class="line">                 DESC</div><div class="line">s.homepage     = &quot;https://github.com/vhuichen/VCHKit&quot;</div><div class="line">s.license      = &quot;MIT&quot;</div><div class="line">s.author       = &#123; &quot;vhuichen&quot; =&gt; &quot;vhuichen@163.com&quot; &#125;</div><div class="line">s.platform     = :ios, &quot;8.0&quot;</div><div class="line">s.source       = &#123; :git =&gt; &quot;https://github.com/vhuichen/VCHKit.git&quot;, :tag =&gt; &quot;#&#123;s.version&#125;&quot; &#125;</div><div class="line">s.source_files  = &quot;VCHMapKit/*.&#123;h,m&#125;&quot;, &quot;VCHMapKit/XXXX/*.&#123;h,m&#125;&quot;</div><div class="line">s.frameworks = &quot;UIKit&quot;</div><div class="line">s.requires_arc = true</div></pre></td></tr></table></figure>
-<p>*注意：描述description必须填写，并且不能和summary相同</p>
-<h3 id="验证pod"><a href="#验证pod" class="headerlink" title="验证pod"></a>验证pod</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod lib lint</div></pre></td></tr></table></figure>
-<p>如果验证成功则会显示成功信息<br>–<strong>VCHMapKit passed validation.</strong></p>
-<h2 id="4-提交库到CocoaPods-trunk"><a href="#4-提交库到CocoaPods-trunk" class="headerlink" title="4.提交库到CocoaPods trunk"></a>4.提交库到CocoaPods trunk</h2><h3 id="如果没有注册，则先注册trunk"><a href="#如果没有注册，则先注册trunk" class="headerlink" title="如果没有注册，则先注册trunk"></a>如果没有注册，则先注册trunk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk register vhuichen@163.com &apos;vhuichen&apos;  --verbose</div></pre></td></tr></table></figure>
-<h3 id="向trunk服务器查询自己的注册信息"><a href="#向trunk服务器查询自己的注册信息" class="headerlink" title="向trunk服务器查询自己的注册信息"></a>向trunk服务器查询自己的注册信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk me</div></pre></td></tr></table></figure>
-<h3 id="打上和GitHub上相同的tag"><a href="#打上和GitHub上相同的tag" class="headerlink" title="打上和GitHub上相同的tag"></a>打上和GitHub上相同的tag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">set the new version to 0.0.1</div><div class="line">set the new tag to 0.0.1</div></pre></td></tr></table></figure>
-<h2 id="5-提交代码到GitHub"><a href="#5-提交代码到GitHub" class="headerlink" title="5.提交代码到GitHub"></a>5.提交代码到GitHub</h2><p>将代码提交到GitHub后，再打上tag   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git tag 0.0.1   </div><div class="line">git push --tags</div></pre></td></tr></table></figure>
-<h2 id="6-上传或更新trunk"><a href="#6-上传或更新trunk" class="headerlink" title="6.上传或更新trunk"></a>6.上传或更新trunk</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk push</div></pre></td></tr></table></figure>
-<h2 id="7-出现的问题"><a href="#7-出现的问题" class="headerlink" title="7.出现的问题"></a>7.出现的问题</h2><p><strong>1、Unable to find a pod with name, author, summary, or description matching <code>VCHMapKit</code></strong><br>解决方法，先删除缓存，然后在重新搜索<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rm ~/Library/Caches/CocoaPods/search_index.json</div><div class="line">pod search VCHMapKit</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1280,7 +1269,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="iOS基础," />
+  <meta name="keywords" content="iOS开发," />
 
 
 
@@ -84,36 +84,24 @@
 
 
 
-<meta name="description" content="###前言记录下来，有好几次在这里花时间了
-####一、相对约束上图表示的意思是    
-
-Superview.Trailing = Button.Trailing * (5 / 4) - 50   
-
-Superview.Trailing 表示Superview右边相对左边的距离。
-####二、固有约束Content Hugging Priority: 抗拉伸优先级，优先级越高，越难拉伸。Con">
+<meta name="description" content="序言iOS远程推送是怎么实现的？
+远程推送逻辑图
+1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。3、 APP 将 Device Token 发送给自己的服务器。4、 当服务器发生APP感">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS基础之约束">
-<meta property="og:url" content="http://yoursite.com/2018/01/05/180105-iOS基础之约束/index.html">
+<meta property="og:title" content="iOS开发之Push Notification">
+<meta property="og:url" content="http://yoursite.com/2018/04/03/180403-iOS开发之Push Notification/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="###前言记录下来，有好几次在这里花时间了
-####一、相对约束上图表示的意思是    
-
-Superview.Trailing = Button.Trailing * (5 / 4) - 50   
-
-Superview.Trailing 表示Superview右边相对左边的距离。
-####二、固有约束Content Hugging Priority: 抗拉伸优先级，优先级越高，越难拉伸。Con">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-5/95466782.jpg">
-<meta property="og:updated_time" content="2018-03-19T14:42:47.701Z">
+<meta property="og:description" content="序言iOS远程推送是怎么实现的？
+远程推送逻辑图
+1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。3、 APP 将 Device Token 发送给自己的服务器。4、 当服务器发生APP感">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg">
+<meta property="og:updated_time" content="2018-04-03T15:19:46.868Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS基础之约束">
-<meta name="twitter:description" content="###前言记录下来，有好几次在这里花时间了
-####一、相对约束上图表示的意思是    
-
-Superview.Trailing = Button.Trailing * (5 / 4) - 50   
-
-Superview.Trailing 表示Superview右边相对左边的距离。
-####二、固有约束Content Hugging Priority: 抗拉伸优先级，优先级越高，越难拉伸。Con">
-<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-5/95466782.jpg">
+<meta name="twitter:title" content="iOS开发之Push Notification">
+<meta name="twitter:description" content="序言iOS远程推送是怎么实现的？
+远程推送逻辑图
+1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。3、 APP 将 Device Token 发送给自己的服务器。4、 当服务器发生APP感">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg">
 
 
 
@@ -134,10 +122,10 @@ Superview.Trailing 表示Superview右边相对左边的距离。
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/05/180105-iOS基础之约束/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/03/180403-iOS开发之Push Notification/"/>
 
 
-  <title> iOS基础之约束 | vhuichen </title>
+  <title> iOS开发之Push Notification | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -267,7 +255,7 @@ Superview.Trailing 表示Superview右边相对左边的距离。
             
             
               
-                iOS基础之约束
+                iOS开发之Push Notification
               
             
           </h1>
@@ -279,8 +267,8 @@ Superview.Trailing 表示Superview右边相对左边的距离。
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-05T21:32:30+08:00" content="2018-01-05">
-              2018-01-05
+            <time itemprop="dateCreated" datetime="2018-04-03T15:12:39+08:00" content="2018-04-03">
+              2018-04-03
             </time>
           </span>
 
@@ -293,8 +281,8 @@ Superview.Trailing 表示Superview右边相对左边的距离。
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
                   </a>
                 </span>
 
@@ -326,13 +314,9 @@ Superview.Trailing 表示Superview右边相对左边的距离。
       
 
       
-        <p>###前言<br>记录下来，有好几次在这里花时间了</p>
-<p>####一、相对约束<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-5/95466782.jpg" alt=""><br>上图表示的意思是    </p>
-<blockquote>
-<p><strong>Superview.Trailing = Button.Trailing * (5 / 4) - 50</strong>   </p>
-</blockquote>
-<p>Superview.Trailing 表示Superview右边相对左边的距离。</p>
-<p>####二、固有约束<br>Content Hugging Priority: 抗拉伸优先级，优先级越高，越难拉伸。<br>Content Compression Resistance Priority: 抗拉压缩先级，优先级越高，越难压缩。</p>
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>iOS远程推送是怎么实现的？</p>
+<h3 id="远程推送逻辑图"><a href="#远程推送逻辑图" class="headerlink" title="远程推送逻辑图"></a>远程推送逻辑图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg" alt=""></p>
+<p>1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。<br>2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。<br>3、 APP 将 Device Token 发送给自己的服务器。<br>4、 当服务器发生APP感兴趣事件的时候，服务器将该消息以及对应的 Device Token 发送给APNS。<br>5、 APNS 再根据 Device Token 将消息发送给对应的APP（用户）。   </p>
 
       
     </div>
@@ -355,7 +339,7 @@ Superview.Trailing 表示Superview右边相对左边的距离。
       
         <div class="post-tags">
           
-            <a href="/tags/iOS基础/" rel="tag">#iOS基础</a>
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
           
         </div>
       
@@ -364,17 +348,13 @@ Superview.Trailing 表示Superview右边相对左边的距离。
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/05/180105-iOS开发之单元测试/" rel="next" title="iOS开发之单元测试">
-                <i class="fa fa-chevron-left"></i> iOS开发之单元测试
+              <a href="/2018/03/22/180323-iOS开发之多线程（NSThread、NSOperation、GCD）/" rel="next" title="iOS开发之多线程（NSThread、NSOperation、GCD）">
+                <i class="fa fa-chevron-left"></i> iOS开发之多线程（NSThread、NSOperation、GCD）
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/22/180322-iOS开发之封装FMDB/" rel="prev" title="iOS开发之封装FMDB">
-                iOS开发之封装FMDB <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,7 +468,7 @@ Superview.Trailing 表示Superview右边相对左边的距离。
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#远程推送逻辑图"><span class="nav-number">1.0.1.</span> <span class="nav-text">远程推送逻辑图</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
