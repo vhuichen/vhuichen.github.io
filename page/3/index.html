@@ -246,6 +246,151 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/28/161028-iOS基础之Cocoapods/" itemprop="url">
+                  iOS基础之Cocoapods
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-28T21:14:26+08:00" content="2016-10-28">
+              2016-10-28
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2016-12-05T23:29:37+08:00" content="2016-12-05">
+				2016-12-05
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>被<code>CocoaPods</code>虐好几次了！<strong><del>~~(&gt;_&lt;)</del>~~</strong></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>其实就那么两条一句</p>
+<blockquote>
+<p><strong>sudo gem install cocoapods</strong><br><strong>pod setup</strong>   </p>
+</blockquote>
+<p>但是两次都花了不止一天的时间才安装好 <strong><del>坑</del></strong></p>
+<h1 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h1><h2 id="gem版本比较旧，需要先升级版本"><a href="#gem版本比较旧，需要先升级版本" class="headerlink" title="gem版本比较旧，需要先升级版本"></a>gem版本比较旧，需要先升级版本</h2><p>查看版本</p>
+<blockquote>
+<p>gem –version</p>
+</blockquote>
+<p>升级版本</p>
+<blockquote>
+<p>sudo gem update –system</p>
+</blockquote>
+<p>到这里这个问题就解决了</p>
+<h2 id="Ruby的默认软件源被墙，需要跟换软件源"><a href="#Ruby的默认软件源被墙，需要跟换软件源" class="headerlink" title="Ruby的默认软件源被墙，需要跟换软件源"></a>Ruby的默认软件源被墙，需要跟换软件源</h2><p>网上给出了很多的答案，可以这样做</p>
+<blockquote>
+<p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="https://ruby.taobao.org/" target="_blank" rel="external">https://ruby.taobao.org/</a>   </p>
+</blockquote>
+<p><strong>就可以了？NO</strong><br><code>https://ruby.taobao.org/</code>这个网站已经不再维护了，如果把软件源更换到淘宝的这个镜像，会无法<code>setup</code>，至少我这里试了好几次都不行。<br>进入这个网站会有相关信息说明，相关的管理工作已经交给<code>https://gems.ruby-china.org/</code>来做了。<br>具体操作是：   </p>
+<blockquote>
+<p>gem sources –add <a href="https://gems.ruby-china.org/" target="_blank" rel="external">https://gems.ruby-china.org/</a><br>gem sources -l   </p>
+</blockquote>
+<p>确保只有<code>https://gems.ruby-china.org/</code>一个源。<br><strong>这样就可以了？不一定</strong><br>可能由于网络问题，我这里失败了好几次后才成功。可以打开一个新的终端进入<code>~/.cocoapods/repos</code>目录使用命令<code>du sh *</code>命令查看，如果一直不变，基本上可以认为是失败了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/20/161020-iOS基础之UIImage两种加载方式的区别/" itemprop="url">
                   iOS基础之UIImage两种加载方式的区别
                 </a>
@@ -264,6 +409,15 @@
               2016-10-20
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-23T23:00:36+08:00" content="2018-03-23">
+				2018-03-23
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -380,6 +534,15 @@
               2016-10-18
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2017-11-12T21:15:59+08:00" content="2017-11-12">
+				2017-11-12
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -533,6 +696,15 @@
               2016-10-17
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2017-11-12T20:51:08+08:00" content="2017-11-12">
+				2017-11-12
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -677,6 +849,15 @@ Hi,I&apos;m *MarkDown斜体*
               2016-10-15
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-08T22:57:57+08:00" content="2018-04-08">
+				2018-04-08
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -750,7 +931,8 @@ Hi,I&apos;m *MarkDown斜体*
 
 <pre><code>4.在对应的文章标题处添加分类、标签
 </code></pre><p>&gt;<br>-–<br>title: Markdown基础语法<br>date: 2016-10-18 00:13:58<br>tags: [Markdown, Markdown1]<br>category: “Markdown”<br>-–</p>
-
+<pre><code>5.
+</code></pre>
           
         
       
@@ -817,6 +999,15 @@ Hi,I&apos;m *MarkDown斜体*
               2016-10-12
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2016-11-10T22:50:42+08:00" content="2016-11-10">
+				2016-11-10
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -992,7 +1183,7 @@ Hi,I&apos;m *MarkDown斜体*
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1065,6 +1256,22 @@ Hi,I&apos;m *MarkDown斜体*
 </div>
 
         
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
 
         
       </div>
@@ -1159,6 +1366,21 @@ Hi,I&apos;m *MarkDown斜体*
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 

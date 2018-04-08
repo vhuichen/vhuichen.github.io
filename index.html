@@ -264,6 +264,15 @@
               2018-04-03
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-03T23:19:46+08:00" content="2018-04-03">
+				2018-04-03
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -361,6 +370,135 @@
             
               
                 
+                <a class="post-title-link" href="/2018/03/31/180331-iOS开发之Designated Initializer/" itemprop="url">
+                  iOS开发之Designated Initializer(指定初始化方法)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-31T00:00:00+08:00" content="2018-03-31">
+              2018-03-31
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-08T00:00:00+08:00" content="2018-04-08">
+				2018-04-08
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以通过编译器在编译的时候帮我们找出可能潜在的问题。   </p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="comment">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="comment">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="comment">#else</span></div><div class="line"><span class="comment">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="comment">#endif</span></div><div class="line"><span class="comment">#endif</span></div></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>看看官方的接口是怎么使用的。   </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// UIViewController</div><div class="line">- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div><div class="line"></div><div class="line">// UIView</div><div class="line">- (instancetype)initWithFrame:(CGRect)frame NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div><div class="line"></div><div class="line">// UITableViewCell</div><div class="line">- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier NS_AVAILABLE_IOS(3_0) NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div></pre></td></tr></table></figure>
+<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>在OC中它想表达的意思大概就是：当你alloc了一个类的时候，必须直接或间接调用这个类的其中一个带有 NS_DESIGNATED_INITIALIZER 后缀的初始化方法。不然初始化不完全，编译器会报出一个警告！</p>
+<h3 id="初始化顺序"><a href="#初始化顺序" class="headerlink" title="初始化顺序"></a>初始化顺序</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/50413485.jpg" alt=""><br>1、便利初始化方法只能调用本类的初始化方法，最终一定会调用指定初始化方法。<br>2、子类的指定初始化方法一定会调用父类的指定初始化方法。</p>
+<p>当存在多个初始化方法的时候，初始化的流程是这样的。这里的 Secondary initializer 就是 Convenience (便利初始化方法)<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/93397245.jpg" alt=""></p>
+<p>子类在初始化自身的变量之前要先初始化父类<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/37631710.jpg" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/22/180323-iOS开发之多线程（NSThread、NSOperation、GCD）/" itemprop="url">
                   iOS开发之多线程（NSThread、NSOperation、GCD）
                 </a>
@@ -379,6 +517,15 @@
               2018-03-22
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-27T21:36:25+08:00" content="2018-03-27">
+				2018-03-27
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -521,6 +668,15 @@
               2018-03-22
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-23T22:48:18+08:00" content="2018-03-23">
+				2018-03-23
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -644,6 +800,15 @@
               2018-01-05
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-19T22:42:47+08:00" content="2018-03-19">
+				2018-03-19
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -763,6 +928,15 @@
               2018-01-05
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-27T21:35:10+08:00" content="2018-03-27">
+				2018-03-27
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -886,6 +1060,15 @@
               2017-11-05
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2017-11-12T21:08:18+08:00" content="2017-11-12">
+				2017-11-12
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -1024,6 +1207,15 @@
               2017-11-05
             </time>
           </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-19T22:38:57+08:00" content="2018-03-19">
+				2018-03-19
+			    </time>
+			  </span>
+			
 
           
             <span class="post-category" >
@@ -1105,125 +1297,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/" itemprop="url">
-                  iOS开发之判断View是否显示在当前窗口
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-11T21:01:43+08:00" content="2017-07-11">
-              2017-07-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="判断View是否显示在当前窗口"><a href="#判断View是否显示在当前窗口" class="headerlink" title="判断View是否显示在当前窗口"></a>判断View是否显示在当前窗口</h3><p>写一个分类</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">VCHFrame</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow &#123;</div><div class="line">    <span class="built_in">UIWindow</span> *window = [<span class="built_in">UIApplication</span> sharedApplication].keyWindow;</div><div class="line">    <span class="built_in">CGRect</span> newRect = [window convertRect:<span class="keyword">self</span>.frame fromView:<span class="keyword">self</span>.superview];</div><div class="line">    <span class="built_in">BOOL</span> intersects = <span class="built_in">CGRectIntersectsRect</span>(newRect, window.bounds);</div><div class="line">    <span class="keyword">return</span> intersects &amp;&amp; !<span class="keyword">self</span>.isHidden &amp;&amp; (<span class="keyword">self</span>.alpha &gt; <span class="number">0.01</span>) &amp;&amp; (<span class="keyword">self</span>.window == window);</div><div class="line">&#125;</div><div class="line">~~~   </div><div class="line"></div><div class="line"><span class="meta">### 判断控制器是否显示到当前窗口   </span></div><div class="line">可以用一种简单的方法，判断view是否已经加载，再判断window是否存在。用这两个条件正常情况下都可以判断出来。   </div><div class="line">**这种方法不是绝对的。**</div><div class="line"></div><div class="line">~~~ objc</div><div class="line">- (<span class="built_in">BOOL</span>)isShowing &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">self</span>.isViewLoaded &amp;&amp; <span class="keyword">self</span>.view.window;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="坐标转变方法"><a href="#坐标转变方法" class="headerlink" title="坐标转变方法"></a>坐标转变方法</h3><pre><code class="objc"><span class="built_in">CGRect</span> newRect = [view1 convertRect:view2.frame toView:view3];
-<span class="built_in">CGRect</span> newRect = [view3 convertRect:view2.frame fromView:view1];
-</code></pre>
-<p>view1：view2的父类（view2的frame相对的坐标系的view）<br>view2：需要转换坐标的view<br>view3：转换后坐标所在的view   </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1269,7 +1342,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1342,6 +1415,22 @@
 </div>
 
         
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
 
         
       </div>
@@ -1436,6 +1525,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 
