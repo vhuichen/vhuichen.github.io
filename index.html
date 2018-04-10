@@ -246,6 +246,136 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/08/180408-[算法]给定已排序数组，找出和为特定数值的两个数/" itemprop="url">
+                  给定已排序数组，找出和为特定数值的两个数
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-08T22:02:01+08:00" content="2018-04-08">
+              2018-04-08
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-10T23:43:39+08:00" content="2018-04-10">
+				2018-04-10
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h1><p>给定已排序数组，找出和为特定数值的两个数。假定数组中的数值都不相同。</p>
+<h3 id="方法一：穷举法"><a href="#方法一：穷举法" class="headerlink" title="方法一：穷举法"></a>方法一：穷举法</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">fineTwoNumberWithArray0:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int leftNum,rightNum;</div><div class="line">    </div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; count - <span class="number">1</span>; i++) &#123;</div><div class="line">        leftNum = nums[i];</div><div class="line">        <span class="keyword">for</span> (int j = i + <span class="number">1</span>; j &lt; count; j++) &#123;</div><div class="line">            rightNum = nums[j];</div><div class="line">            <span class="keyword">if</span> ((rightNum + leftNum) == target) &#123;</div><div class="line">                NSLog(@<span class="string">"%d + %d = %d"</span>,leftNum, rightNum, target);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>T(n) = (n - 1 + 1) * n / 2 = (n^2) / 2 = O(n^2)，即时间复杂度：O(n^2)。   </p>
+</blockquote>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">fineTwoNumberWithArray1:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int left = <span class="number">0</span>;</div><div class="line">    int right = count - <span class="number">1</span>;</div><div class="line">    int sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        sum = nums[left] + nums[right];</div><div class="line">        <span class="keyword">if</span> (sum &lt; target) &#123;</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &gt; target) &#123;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            NSLog(@<span class="string">"%d + %d = %d"</span>,nums[left], nums[right], target);</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>T(n) &lt;= n - 1 = O(n) 时间复杂度：O(n)。 </p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/08/180408-时间复杂度/" itemprop="url">
                   时间复杂度
                 </a>
@@ -339,136 +469,6 @@
 <h3 id="T-n-O-nlog-n"><a href="#T-n-O-nlog-n" class="headerlink" title="T(n) = O(nlog(n))"></a>T(n) = O(nlog(n))</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">// 快速排序</div><div class="line">- (void)quickSort:(int *)nums count:(int)count &#123;</div><div class="line">    int start = 0;</div><div class="line">    int end = count - 1;</div><div class="line">    int value = nums[start];</div><div class="line">    </div><div class="line">    if (count &lt; 1) return;</div><div class="line">    </div><div class="line">    while (start &lt; end) &#123;</div><div class="line">        //从数组右边往左查找一个小于value的元素</div><div class="line">        while (start &lt; end) &#123;</div><div class="line">            if (nums[end] &lt; value) &#123;</div><div class="line">                nums[start] = nums[end];</div><div class="line">                start++;</div><div class="line">                break;</div><div class="line">            &#125; else &#123;</div><div class="line">                end--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        //从数组左边往右查找一个大于value的元素</div><div class="line">        while (start &lt; end) &#123;</div><div class="line">            if (nums[start] &gt; value) &#123;</div><div class="line">                nums[end] = nums[start];</div><div class="line">                end--;</div><div class="line">                break;</div><div class="line">            &#125; else &#123;</div><div class="line">                start++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    nums[start] = value;</div><div class="line">    </div><div class="line">    [self quickSort:nums count:start];</div><div class="line">    [self quickSort:nums + start + 1 count:count - start - 1];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>第1次递归：T[n] = 2T[n/2] + n<br>第2次递归：T[n] = 2{ 2T[n/4] + (n/2) }  + n = 2^2 T[n/(2^2)] + 2n<br>第m次递归：T[n] = 2^m T[n/(2^m)] + mn<br>假设最多需要m次递归完，那么：T[n/(2^m)] = T(1)  ==&gt; m = log2(n)<br>得到：T[n] = 2^m T[1] + mn = 2^(log2(n))T[1] + (log2(n))n = nT[1] + (log2(n))n<br>当n趋近于无穷大的时候 T[n] = nT[1] + (log2(n))n = (log2(n))n = O(nlogn)<br>即：T(n) = O(nlog(n))   </p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/08/180408-[算法]给定已排序数组，找出和为特定数值的两个数/" itemprop="url">
-                  给定已排序数组，找出和为特定数值的两个数
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-08T19:02:01+08:00" content="2018-04-08">
-              2018-04-08
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-10T23:39:42+08:00" content="2018-04-10">
-				2018-04-10
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h1><p>给定已排序数组，找出和为特定数值的两个数。假定数组中的数值都不相同。</p>
-<h3 id="方法一：穷举法"><a href="#方法一：穷举法" class="headerlink" title="方法一：穷举法"></a>方法一：穷举法</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">fineTwoNumberWithArray0:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int leftNum,rightNum;</div><div class="line">    </div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; count - <span class="number">1</span>; i++) &#123;</div><div class="line">        leftNum = nums[i];</div><div class="line">        <span class="keyword">for</span> (int j = i + <span class="number">1</span>; j &lt; count; j++) &#123;</div><div class="line">            rightNum = nums[j];</div><div class="line">            <span class="keyword">if</span> ((rightNum + leftNum) == target) &#123;</div><div class="line">                NSLog(@<span class="string">"%d + %d = %d"</span>,leftNum, rightNum, target);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>T(n) = (n - 1 + 1) * n / 2 = (n^2) / 2 = O(n^2)，即时间复杂度：O(n^2)。   </p>
-</blockquote>
-<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">fineTwoNumberWithArray1:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int left = <span class="number">0</span>;</div><div class="line">    int right = count - <span class="number">1</span>;</div><div class="line">    int sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        sum = nums[left] + nums[right];</div><div class="line">        <span class="keyword">if</span> (sum &lt; target) &#123;</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &gt; target) &#123;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            NSLog(@<span class="string">"%d + %d = %d"</span>,nums[left], nums[right], target);</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>T(n) &lt;= n - 1 = O(n) 时间复杂度：O(n)。 </p>
 </blockquote>
 
           
