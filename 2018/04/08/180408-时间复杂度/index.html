@@ -1,0 +1,674 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="时间复杂度一个算法需要执行的次数我们记为T(n)，其中n为算法的规模。现在引入某个辅助函数f(n)，当n趋近于无穷大时，T(n)/f(n) = C (C ≠ 0)。则f(n)和T(n)是同量级函数，记为T(n) = O(f(n))，我们称这个为时间复杂度。
+##每种时间复杂度表示的意思
+T(n) = O(1)123- (void)aFunction0:(int)n &amp;#123;    NSLog(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间复杂度">
+<meta property="og:url" content="http://yoursite.com/2018/04/08/180408-时间复杂度/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="时间复杂度一个算法需要执行的次数我们记为T(n)，其中n为算法的规模。现在引入某个辅助函数f(n)，当n趋近于无穷大时，T(n)/f(n) = C (C ≠ 0)。则f(n)和T(n)是同量级函数，记为T(n) = O(f(n))，我们称这个为时间复杂度。
+##每种时间复杂度表示的意思
+T(n) = O(1)123- (void)aFunction0:(int)n &amp;#123;    NSLog(">
+<meta property="og:updated_time" content="2018-04-10T15:25:55.787Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="时间复杂度">
+<meta name="twitter:description" content="时间复杂度一个算法需要执行的次数我们记为T(n)，其中n为算法的规模。现在引入某个辅助函数f(n)，当n趋近于无穷大时，T(n)/f(n) = C (C ≠ 0)。则f(n)和T(n)是同量级函数，记为T(n) = O(f(n))，我们称这个为时间复杂度。
+##每种时间复杂度表示的意思
+T(n) = O(1)123- (void)aFunction0:(int)n &amp;#123;    NSLog(">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/08/180408-时间复杂度/"/>
+
+
+  <title> 时间复杂度 | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                时间复杂度
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-08T00:00:00+08:00" content="2018-04-08">
+              2018-04-08
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-10T23:25:55+08:00" content="2018-04-10">
+				2018-04-10
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>一个算法需要执行的次数我们记为T(n)，其中n为算法的规模。现在引入某个辅助函数f(n)，当n趋近于无穷大时，T(n)/f(n) = C (C ≠ 0)。则f(n)和T(n)是同量级函数，记为T(n) = O(f(n))，我们称这个为时间复杂度。</p>
+<p>##每种时间复杂度表示的意思</p>
+<h3 id="T-n-O-1"><a href="#T-n-O-1" class="headerlink" title="T(n) = O(1)"></a>T(n) = O(1)</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">aFunction0:</span>(int)n &#123;</div><div class="line">    NSLog(@<span class="string">"%zd"</span>,n); <span class="regexp">//</span> 执行 <span class="number">1</span> 次</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>不管输入的n是多少，执行次数都是常数。执行次数和输入n值没有任何关系。<br>T(n) = 1 = O(1)</p>
+</blockquote>
+<h3 id="T-n-O-n"><a href="#T-n-O-n" class="headerlink" title="T(n) = O(n)"></a>T(n) = O(n)</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">aFunction1:</span>(int)n &#123;</div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="regexp">//</span> n + <span class="number">1</span> 次</div><div class="line">        NSLog(@<span class="string">"%zd"</span>,i); <span class="regexp">//</span> n 次</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>执行次数和输入的n值成线性关系。<br>T(n) = n + 1 + n = 2n + 1 = O(n)</p>
+</blockquote>
+<h3 id="T-n-O-n-2"><a href="#T-n-O-n-2" class="headerlink" title="T(n) = O(n^2)"></a>T(n) = O(n^2)</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">aFunction2:</span>(int)n &#123;</div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="regexp">//</span> n + <span class="number">1</span></div><div class="line">        <span class="keyword">for</span> (int j = <span class="number">0</span>; j &lt; n; j++) &#123; <span class="regexp">//</span> n + <span class="number">1</span></div><div class="line">            NSLog(@<span class="string">"%zd"</span>,i); <span class="regexp">//</span> n</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>执行次数和输入的n值成线性关系。<br>T(n) = (n + 1) * (n + 1 + n) = 2n^2 + 3n + 1 = O(n^2)</p>
+</blockquote>
+<h3 id="T-n-O-log-n"><a href="#T-n-O-log-n" class="headerlink" title="T(n) = O(log(n))"></a>T(n) = O(log(n))</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (int)<span class="symbol">aFunction3:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int left = <span class="number">0</span>;</div><div class="line">    int right = count - <span class="number">1</span>;</div><div class="line">    int mid = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        mid = (left + right) <span class="meta">&gt;&gt; </span><span class="number">1</span>;</div><div class="line">        if (nums[mid] &lt; target) &#123;</div><div class="line">            left = mid + <span class="number">1</span>;</div><div class="line">        &#125; else if (nums[mid] &gt; target) &#123;</div><div class="line">            right = mid - <span class="number">1</span>;</div><div class="line">        &#125; else &#123;</div><div class="line">            return mid;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>第1次查找，找到的概率为 1/n<br>第2次查找，找到的概率为 2/n<br>第3次查找，找到的概率为 4/n<br>第m次查找，找到的概率为 2^(m - 1)/n<br>假设最多需要查找m次，那么存在：1/n + 2/n + 4/n + … + 2^(m - 1)/n = 1，可以推导出 m &lt;= lg(n + 1)<br>即 T(n) = O(log(n))</p>
+</blockquote>
+<h3 id="T-n-O-nlog-n"><a href="#T-n-O-nlog-n" class="headerlink" title="T(n) = O(nlog(n))"></a>T(n) = O(nlog(n))</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">// 快速排序</div><div class="line">- (void)quickSort:(int *)nums count:(int)count &#123;</div><div class="line">    int start = 0;</div><div class="line">    int end = count - 1;</div><div class="line">    int value = nums[start];</div><div class="line">    </div><div class="line">    if (count &lt; 1) return;</div><div class="line">    </div><div class="line">    while (start &lt; end) &#123;</div><div class="line">        //从数组右边往左查找一个小于value的元素</div><div class="line">        while (start &lt; end) &#123;</div><div class="line">            if (nums[end] &lt; value) &#123;</div><div class="line">                nums[start] = nums[end];</div><div class="line">                start++;</div><div class="line">                break;</div><div class="line">            &#125; else &#123;</div><div class="line">                end--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        //从数组左边往右查找一个大于value的元素</div><div class="line">        while (start &lt; end) &#123;</div><div class="line">            if (nums[start] &gt; value) &#123;</div><div class="line">                nums[end] = nums[start];</div><div class="line">                end--;</div><div class="line">                break;</div><div class="line">            &#125; else &#123;</div><div class="line">                start++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    nums[start] = value;</div><div class="line">    </div><div class="line">    [self quickSort:nums count:start];</div><div class="line">    [self quickSort:nums + start + 1 count:count - start - 1];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>第1次递归：T[n] = 2T[n/2] + n<br>第2次递归：T[n] = 2{ 2T[n/4] + (n/2) }  + n = 2^2 T[n/(2^2)] + 2n<br>第m次递归：T[n] = 2^m T[n/(2^m)] + mn<br>假设最多需要m次递归完，那么：T[n/(2^m)] = T(1)  ==&gt; m = log2(n)<br>得到：T[n] = 2^m T[1] + mn = 2^(log2(n))T[1] + (log2(n))n = nT[1] + (log2(n))n<br>当n趋近于无穷大的时候 T[n] = nT[1] + (log2(n))n = (log2(n))n = O(nlogn)<br>即：T(n) = O(nlog(n))   </p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/08/180408-[算法]给定已排序数组，找出和为特定数值的两个数/" rel="next" title="给定已排序数组，找出和为特定数值的两个数">
+                <i class="fa fa-chevron-left"></i> 给定已排序数组，找出和为特定数值的两个数
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#时间复杂度"><span class="nav-number">1.</span> <span class="nav-text">时间复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#T-n-O-1"><span class="nav-number">1.1.</span> <span class="nav-text">T(n) = O(1)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T-n-O-n"><span class="nav-number">1.2.</span> <span class="nav-text">T(n) = O(n)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T-n-O-n-2"><span class="nav-number">1.3.</span> <span class="nav-text">T(n) = O(n^2)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T-n-O-log-n"><span class="nav-number">1.4.</span> <span class="nav-text">T(n) = O(log(n))</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T-n-O-nlog-n"><span class="nav-number">1.5.</span> <span class="nav-text">T(n) = O(nlog(n))</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
