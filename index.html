@@ -246,6 +246,147 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/10/180410-iOS开发之理解load和initialize/" itemprop="url">
+                  iOS开发之理解load和initialize
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-10T00:00:00+08:00" content="2018-04-10">
+              2018-04-10
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:51:42+08:00" content="2018-04-11">
+				2018-04-11
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="load"><a href="#load" class="headerlink" title="load"></a>load</h2><p>load 会在类装载的时候调用（main函数执行之前）。load 不会被覆盖，如果父类、父类分类、子类、子类分类，同时实现了 load 方法，那么这些方法都会执行。</p>
+<h3 id="调用顺序"><a href="#调用顺序" class="headerlink" title="调用顺序"></a>调用顺序</h3><p>1、先调用父类的 load 方法，再调用子类的 load 方法。<br>2、先调用本类的 load 方法，再调用分类的 load 方法。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>1、Method Swizzle 。</p>
+<h2 id="initialize"><a href="#initialize" class="headerlink" title="initialize"></a>initialize</h2><p>initialize 会在第一次给该类发送消息之前调用，有些文章说是在实例化、初始化之前调用是错的。看看文档是怎么说的</p>
+<blockquote>
+<p><strong>Initializes the class before it receives its first message.</strong>   </p>
+</blockquote>
+<h3 id="调用顺序-1"><a href="#调用顺序-1" class="headerlink" title="调用顺序"></a>调用顺序</h3><p>父类优先于子类调用 initialize 方法。<br>如果子类以及子类的分类没有实现 initialize 方法，那么当第一次给子类发消息的时候，会先给父类的 initialize 发消息。也就是父类的 initialize 方法可能会被调用多次。<br>如果本类以及其分类都实现 initialize 方法，那么只会调用 分类的 initialize 方法。</p>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>initialize 是线程安全的，自带锁，当第一个线程给这个类发了 initialize 消息，其他想给这个类发 initialize 消息的线程会被阻塞，直到第一个线程发送完 initialize 消息。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p><strong>1、如果本类以及本类的多个分类都实现了 initialize 方法，怎么调用？</strong><br>答：会调用 Compile Source 中的本类最后一个分类的 initialize 方法，如下图：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-11/38950580.jpg" alt=""><br>我在代码中实现三个 initialize 方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Person</span></div><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person initialize......."</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Person (Special)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Special) initialize......."</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Person (Special1)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Special1) initialize......."</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果打印出”<strong>Person (Special1) initialize…….</strong>“。<br>当我在 Compile Source 中调换了本类两个分类的先后顺序后，则打印出”<strong>Person (Special) initialize…….</strong>“。<br>从而得出结论上面的结论，Compile Source 中本类最后一个分类的 initialize 方法将会被调用。</p>
+<p><strong>2、当子类及其分类没有实现 initialize 方法，在父类的 initialize 方法中怎么区分这个消息是通过本类发来的还是子类发来的？</strong><br>这里我定义了两个类，Person 为父类，Student 为子类。Student 类中没有实现 initialize 方法。那么给 Student 发消息后，结果如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == [Person <span class="keyword">self</span>]) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"本类发来的 initialize 消息。%@ - %@"</span>,<span class="keyword">self</span>,[Person <span class="keyword">self</span>]);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"子类发来的 initialize 消息。%@ - %@"</span>,<span class="keyword">self</span>,[Person <span class="keyword">self</span>]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果：<br>本类发来的 initialize 消息。Person - Person<br>子类发来的 initialize 消息。Student - Person  </p>
+</blockquote>
+<p>既：如果是本类发送的 initialize 消息，那么 self == Person。如果是子类发送过来的消息，那么 self == Student。   </p>
+<h3 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h3><p>1、初始化静态变量。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>1、由于 initialize 使用的是阻塞的调用方式，当一个类 initialize 依赖 另一个类的 initialize 的时候，容易造成死锁，所以应该尽量避免在 initialize 中完成一些复杂的初始化工作。<br>2、应该避免问题1这样的情况出现。如果需要在本类以及分类中同时实现初始化，可以考虑用 load 方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/08/180408-[算法]给定已排序数组，找出和为特定数值的两个数/" itemprop="url">
                   给定已排序数组，找出和为特定数值的两个数
                 </a>
@@ -268,8 +409,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-10T23:43:39+08:00" content="2018-04-10">
-				2018-04-10
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:53:04+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -319,11 +460,11 @@
         
           
             <h1 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h1><p>给定已排序数组，找出和为特定数值的两个数。假定数组中的数值都不相同。</p>
-<h3 id="方法一：穷举法"><a href="#方法一：穷举法" class="headerlink" title="方法一：穷举法"></a>方法一：穷举法</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">fineTwoNumberWithArray0:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int leftNum,rightNum;</div><div class="line">    </div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; count - <span class="number">1</span>; i++) &#123;</div><div class="line">        leftNum = nums[i];</div><div class="line">        <span class="keyword">for</span> (int j = i + <span class="number">1</span>; j &lt; count; j++) &#123;</div><div class="line">            rightNum = nums[j];</div><div class="line">            <span class="keyword">if</span> ((rightNum + leftNum) == target) &#123;</div><div class="line">                NSLog(@<span class="string">"%d + %d = %d"</span>,leftNum, rightNum, target);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="方法一：穷举法"><a href="#方法一：穷举法" class="headerlink" title="方法一：穷举法"></a>方法一：穷举法</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)fineTwoNumberWithArray0:(<span class="keyword">int</span> *)nums count:(<span class="keyword">int</span>)count target:(<span class="keyword">int</span>)target &#123;</div><div class="line">    <span class="keyword">int</span> leftNum,rightNum;</div><div class="line">    </div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count - <span class="number">1</span>; i++) &#123;</div><div class="line">        leftNum = nums[i];</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; count; j++) &#123;</div><div class="line">            rightNum = nums[j];</div><div class="line">            <span class="keyword">if</span> ((rightNum + leftNum) == target) &#123;</div><div class="line">                <span class="built_in">NSLog</span>(<span class="string">@"%d + %d = %d"</span>,leftNum, rightNum, target);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>T(n) = (n - 1 + 1) * n / 2 = (n^2) / 2 = O(n^2)，即时间复杂度：O(n^2)。   </p>
 </blockquote>
-<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">fineTwoNumberWithArray1:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int left = <span class="number">0</span>;</div><div class="line">    int right = count - <span class="number">1</span>;</div><div class="line">    int sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        sum = nums[left] + nums[right];</div><div class="line">        <span class="keyword">if</span> (sum &lt; target) &#123;</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &gt; target) &#123;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            NSLog(@<span class="string">"%d + %d = %d"</span>,nums[left], nums[right], target);</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)fineTwoNumberWithArray1:(<span class="keyword">int</span> *)nums count:(<span class="keyword">int</span>)count target:(<span class="keyword">int</span>)target &#123;</div><div class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> right = count - <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        sum = nums[left] + nums[right];</div><div class="line">        <span class="keyword">if</span> (sum &lt; target) &#123;</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &gt; target) &#123;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%d + %d = %d"</span>,nums[left], nums[right], target);</div><div class="line">            left += <span class="number">1</span>;</div><div class="line">            right -= <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>T(n) &lt;= n - 1 = O(n) 时间复杂度：O(n)。 </p>
 </blockquote>
@@ -398,8 +539,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-10T23:39:14+08:00" content="2018-04-10">
-				2018-04-10
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:52:52+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -450,23 +591,23 @@
           
             <h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>一个算法需要执行的次数我们记为T(n)，其中n为算法的规模。现在引入某个辅助函数f(n)，当n趋近于无穷大时，T(n)/f(n) = C (C ≠ 0)。则f(n)和T(n)是同量级函数，记为T(n) = O(f(n))，我们称这个为时间复杂度。</p>
 <p>##每种时间复杂度表示的意思</p>
-<h3 id="T-n-O-1"><a href="#T-n-O-1" class="headerlink" title="T(n) = O(1)"></a>T(n) = O(1)</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">aFunction0:</span>(int)n &#123;</div><div class="line">    NSLog(@<span class="string">"%zd"</span>,n); <span class="regexp">//</span> 执行 <span class="number">1</span> 次</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="T-n-O-1"><a href="#T-n-O-1" class="headerlink" title="T(n) = O(1)"></a>T(n) = O(1)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)aFunction0:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%zd"</span>,n); <span class="comment">// 执行 1 次</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>不管输入的n是多少，执行次数都是常数。执行次数和输入n值没有任何关系。<br>T(n) = 1 = O(1)</p>
 </blockquote>
-<h3 id="T-n-O-n"><a href="#T-n-O-n" class="headerlink" title="T(n) = O(n)"></a>T(n) = O(n)</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">aFunction1:</span>(int)n &#123;</div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="regexp">//</span> n + <span class="number">1</span> 次</div><div class="line">        NSLog(@<span class="string">"%zd"</span>,i); <span class="regexp">//</span> n 次</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="T-n-O-n"><a href="#T-n-O-n" class="headerlink" title="T(n) = O(n)"></a>T(n) = O(n)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)aFunction1:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="comment">// n + 1 次</span></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%zd"</span>,i); <span class="comment">// n 次</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>执行次数和输入的n值成线性关系。<br>T(n) = n + 1 + n = 2n + 1 = O(n)</p>
 </blockquote>
-<h3 id="T-n-O-n-2"><a href="#T-n-O-n-2" class="headerlink" title="T(n) = O(n^2)"></a>T(n) = O(n^2)</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)<span class="symbol">aFunction2:</span>(int)n &#123;</div><div class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="regexp">//</span> n + <span class="number">1</span></div><div class="line">        <span class="keyword">for</span> (int j = <span class="number">0</span>; j &lt; n; j++) &#123; <span class="regexp">//</span> n + <span class="number">1</span></div><div class="line">            NSLog(@<span class="string">"%zd"</span>,i); <span class="regexp">//</span> n</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="T-n-O-n-2"><a href="#T-n-O-n-2" class="headerlink" title="T(n) = O(n^2)"></a>T(n) = O(n^2)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)aFunction2:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="comment">// n + 1</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123; <span class="comment">// n + 1</span></div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%zd"</span>,i); <span class="comment">// n</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>执行次数和输入的n值成线性关系。<br>T(n) = (n + 1) * (n + 1 + n) = 2n^2 + 3n + 1 = O(n^2)</p>
 </blockquote>
-<h3 id="T-n-O-log-n"><a href="#T-n-O-log-n" class="headerlink" title="T(n) = O(log(n))"></a>T(n) = O(log(n))</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (int)<span class="symbol">aFunction3:</span>(int *)nums <span class="symbol">count:</span>(int)count <span class="symbol">target:</span>(int)target &#123;</div><div class="line">    int left = <span class="number">0</span>;</div><div class="line">    int right = count - <span class="number">1</span>;</div><div class="line">    int mid = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        mid = (left + right) <span class="meta">&gt;&gt; </span><span class="number">1</span>;</div><div class="line">        if (nums[mid] &lt; target) &#123;</div><div class="line">            left = mid + <span class="number">1</span>;</div><div class="line">        &#125; else if (nums[mid] &gt; target) &#123;</div><div class="line">            right = mid - <span class="number">1</span>;</div><div class="line">        &#125; else &#123;</div><div class="line">            return mid;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="T-n-O-log-n"><a href="#T-n-O-log-n" class="headerlink" title="T(n) = O(log(n))"></a>T(n) = O(log(n))</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)aFunction3:(<span class="keyword">int</span> *)nums count:(<span class="keyword">int</span>)count target:(<span class="keyword">int</span>)target &#123;</div><div class="line">    <span class="keyword">int</span> left = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> right = count - <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> mid = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</div><div class="line">        mid = (left + right) &gt;&gt; <span class="number">1</span>;</div><div class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</div><div class="line">            left = mid + <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) &#123;</div><div class="line">            right = mid - <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> mid;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>第1次查找，找到的概率为 1/n<br>第2次查找，找到的概率为 2/n<br>第3次查找，找到的概率为 4/n<br>第m次查找，找到的概率为 2^(m - 1)/n<br>假设最多需要查找m次，那么存在：1/n + 2/n + 4/n + … + 2^(m - 1)/n = 1，可以推导出 m &lt;= lg(n + 1)<br>即 T(n) = O(log(n))</p>
 </blockquote>
-<h3 id="T-n-O-nlog-n"><a href="#T-n-O-nlog-n" class="headerlink" title="T(n) = O(nlog(n))"></a>T(n) = O(nlog(n))</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">// 快速排序</div><div class="line">- (void)quickSort:(int *)nums count:(int)count &#123;</div><div class="line">    int start = 0;</div><div class="line">    int end = count - 1;</div><div class="line">    int value = nums[start];</div><div class="line">    </div><div class="line">    if (count &lt; 1) return;</div><div class="line">    </div><div class="line">    while (start &lt; end) &#123;</div><div class="line">        //从数组右边往左查找一个小于value的元素</div><div class="line">        while (start &lt; end) &#123;</div><div class="line">            if (nums[end] &lt; value) &#123;</div><div class="line">                nums[start] = nums[end];</div><div class="line">                start++;</div><div class="line">                break;</div><div class="line">            &#125; else &#123;</div><div class="line">                end--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        //从数组左边往右查找一个大于value的元素</div><div class="line">        while (start &lt; end) &#123;</div><div class="line">            if (nums[start] &gt; value) &#123;</div><div class="line">                nums[end] = nums[start];</div><div class="line">                end--;</div><div class="line">                break;</div><div class="line">            &#125; else &#123;</div><div class="line">                start++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    nums[start] = value;</div><div class="line">    </div><div class="line">    [self quickSort:nums count:start];</div><div class="line">    [self quickSort:nums + start + 1 count:count - start - 1];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="T-n-O-nlog-n"><a href="#T-n-O-nlog-n" class="headerlink" title="T(n) = O(nlog(n))"></a>T(n) = O(nlog(n))</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 快速排序</span></div><div class="line">- (<span class="keyword">void</span>)quickSort:(<span class="keyword">int</span> *)nums count:(<span class="keyword">int</span>)count &#123;</div><div class="line">    <span class="keyword">int</span> start = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> end = count - <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> value = nums[start];</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (count &lt; <span class="number">1</span>) <span class="keyword">return</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">while</span> (start &lt; end) &#123;</div><div class="line">        <span class="comment">//从数组右边往左查找一个小于value的元素</span></div><div class="line">        <span class="keyword">while</span> (start &lt; end) &#123;</div><div class="line">            <span class="keyword">if</span> (nums[end] &lt; value) &#123;</div><div class="line">                nums[start] = nums[end];</div><div class="line">                start++;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                end--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//从数组左边往右查找一个大于value的元素</span></div><div class="line">        <span class="keyword">while</span> (start &lt; end) &#123;</div><div class="line">            <span class="keyword">if</span> (nums[start] &gt; value) &#123;</div><div class="line">                nums[end] = nums[start];</div><div class="line">                end--;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                start++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    nums[start] = value;</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> quickSort:nums count:start];</div><div class="line">    [<span class="keyword">self</span> quickSort:nums + start + <span class="number">1</span> count:count - start - <span class="number">1</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>第1次递归：T[n] = 2T[n/2] + n<br>第2次递归：T[n] = 2{ 2T[n/4] + (n/2) }  + n = 2^2 T[n/(2^2)] + 2n<br>第m次递归：T[n] = 2^m T[n/(2^m)] + mn<br>假设最多需要m次递归完，那么：T[n/(2^m)] = T(1)  ==&gt; m = log2(n)<br>得到：T[n] = 2^m T[1] + mn = 2^(log2(n))T[1] + (log2(n))n = nT[1] + (log2(n))n<br>当n趋近于无穷大的时候 T[n] = nT[1] + (log2(n))n = (log2(n))n = O(nlogn)<br>即：T(n) = O(nlog(n))   </p>
 </blockquote>
@@ -665,8 +806,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-10T00:06:04+08:00" content="2018-04-10">
-				2018-04-10
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:53:23+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -716,9 +857,9 @@
         
           
             <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以在编译的时候帮我们找出潜在的问题。<br>如果一个类中的初始化方法没有用 NS_DESIGNATED_INITIALIZER 修饰，说明这个方法是便利初始化方法（Convenience Initializer）。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="comment">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="comment">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="comment">#else</span></div><div class="line"><span class="comment">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="comment">#endif</span></div><div class="line"><span class="comment">#endif</span></div></pre></td></tr></table></figure>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="meta">#else</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#endif</span></div><div class="line"><span class="meta">#endif</span></div></pre></td></tr></table></figure>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>看看官方的接口是怎么使用的。   </p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// UIViewController</div><div class="line">- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div><div class="line"></div><div class="line">// UIView</div><div class="line">- (instancetype)initWithFrame:(CGRect)frame NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div><div class="line"></div><div class="line">// UITableViewCell</div><div class="line">- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier NS_AVAILABLE_IOS(3_0) NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// UIViewController</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithNibName:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)nibNameOrNil bundle:(<span class="keyword">nullable</span> <span class="built_in">NSBundle</span> *)nibBundleOrNil <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UIView</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">CGRect</span>)frame <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UITableViewCell</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithStyle:(<span class="built_in">UITableViewCellStyle</span>)style reuseIdentifier:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)reuseIdentifier <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_0) <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>两个指定初始化方法分别对应纯代码方式和文件（Xib、Storyboard）方式创建。</p>
 </blockquote>
@@ -957,8 +1098,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-03-23T22:48:18+08:00" content="2018-03-23">
-				2018-03-23
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:54:17+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -1011,11 +1152,11 @@
 <h3 id="常用类-FMDatabaseQueue-FMDatabase"><a href="#常用类-FMDatabaseQueue-FMDatabase" class="headerlink" title="常用类 FMDatabaseQueue FMDatabase"></a>常用类 FMDatabaseQueue FMDatabase</h3><h4 id="FMDatabase"><a href="#FMDatabase" class="headerlink" title="FMDatabase"></a>FMDatabase</h4><p>FMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。</p>
 <h4 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h4><p>使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。</p>
 <h3 id="考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase"><a href="#考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase" class="headerlink" title="考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase"></a>考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase</h3><p>方法如下：   </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue <span class="symbol">inDatabase:</span>^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
 <p>如果要处理事务，则使用下面的方法            </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue <span class="symbol">inDeferredTransaction:</span>^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDeferredTransaction:^(FMDatabase * _Nonnull db, <span class="built_in">BOOL</span> * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
 <p>不管是使用 inDatabase 还是 inDeferredTransaction 都是同步的，所以在这里不需要任何处理。</p>
-<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block BOOL isOK = NO;</div><div class="line">[<span class="keyword">self</span>.databaseQueue <span class="symbol">inDatabase:</span>^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db <span class="symbol">executeQuery:</span>sql];</div><div class="line">	isOK = results.<span class="keyword">next</span>;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
+<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">BOOL</span> isOK = <span class="literal">NO</span>;</div><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db executeQuery:sql];</div><div class="line">	isOK = results.next;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
 <p><strong>备注：</strong> 在block内处理完FMResultSet的相关逻辑，就算不调用 [results close] ，也不会报错，可能是由于block处理完，就自动释放了这个类。但注意不要在block外面使用FMResultSet。</p>
 <h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p>Demo中目前没有加入keyid，操作不当会出现多个相同的数据，只能以后再改了。。。。<br><a href="https://github.com/vhuichen/VCHFMDB" target="_blank" rel="external">GitHub Demo</a></p>
 
@@ -1174,143 +1315,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/01/05/180105-iOS开发之单元测试/" itemprop="url">
-                  iOS开发之单元测试
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-01-05T20:12:33+08:00" content="2018-01-05">
-              2018-01-05
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-03-27T21:35:10+08:00" content="2018-03-27">
-				2018-03-27
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>单元测试的基本操作。</p>
-<h3 id="新建单元测试文件"><a href="#新建单元测试文件" class="headerlink" title="新建单元测试文件"></a>新建单元测试文件</h3><p>一般项目会默认建立一个单元测试文件，如果没有或者需要创建新的单元测试文件，可以创建一个新的文件，在选择文件类型为Unit Testing 类型。创建好文件后就可以开始了。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-3-27/53340373.jpg" alt=""></p>
-<h3 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h3><h4 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h4><p>开始测试的时候会调用这个方法。可以在这个位置初始化一些对象、数值等。</p>
-<h4 id="tearDown"><a href="#tearDown" class="headerlink" title="tearDown"></a>tearDown</h4><p>测试结束的时候会调用这个方法。一般在这里释放对象。</p>
-<h4 id="testExample"><a href="#testExample" class="headerlink" title="testExample"></a>testExample</h4><p>需要进行单元测试的方法，可以自定义方法名，方法名必须用test开头，返回类型是void。</p>
-<h4 id="testPerformanceExample"><a href="#testPerformanceExample" class="headerlink" title="testPerformanceExample"></a>testPerformanceExample</h4><p>这里可以进行一下性能测试，可以测试代码的执行时间。</p>
-<h3 id="异步单元测试"><a href="#异步单元测试" class="headerlink" title="异步单元测试"></a>异步单元测试</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)testExample &#123;</div><div class="line">    <span class="comment">// This is an example of a functional test case.</span></div><div class="line">    <span class="comment">// Use XCTAssert and related functions to verify your tests produce the correct results.</span></div><div class="line">    <span class="comment">// 单元测试</span></div><div class="line">    </div><div class="line">    <span class="built_in">XCTestExpectation</span> *expectation = [<span class="keyword">self</span> expectationWithDescription:<span class="string">@"出错了。。。。。"</span>];</div><div class="line">    <span class="comment">//[self expectationForNotification:(@"testNoti") object:nil handler:nil];</span></div><div class="line">    </div><div class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line">        sleep(<span class="number">5</span>);</div><div class="line">        <span class="built_in">XCTAssertTrue</span>(<span class="literal">true</span>,<span class="string">@"数据出错"</span>);</div><div class="line">        <span class="comment">//测试成功</span></div><div class="line">        [expectation fulfill];</div><div class="line">        <span class="comment">//[[NSNotificationCenter defaultCenter] postNotificationName:@"testNoti" object:nil];</span></div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> waitForExpectationsWithTimeout:<span class="number">3</span> handler:^(<span class="built_in">NSError</span> * _Nullable error) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div><div class="line"><span class="comment">// 当任务中设置的睡眠时间大于等待时间的时候就会报错。</span></div><div class="line"><span class="comment">// 使用 XCTestExpectation 和 Notification 均能实现。</span></div></pre></td></tr></table></figure>
-<h3 id="时间性能测试"><a href="#时间性能测试" class="headerlink" title="时间性能测试"></a>时间性能测试</h3><p>当 Baseline *（1 - Max STDDEV）大于 Average 时，测试通过，小于则不通过。</p>
-<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-3-27/26837240.jpg" alt=""></p>
-<h3 id="常用断言"><a href="#常用断言" class="headerlink" title="常用断言"></a>常用断言</h3><p>// 如果 expression 不为 true，则提示后面的错误信息。<br>XCTAssertTrue(expression, format…)<br>// 如果 expression 不为 nil，则提示后面的错误信息。<br>XCTAssertNil(expression, …)<br>// 如果 expression1 expression2 不相等，则提示后面的错误信息。<br>XCTAssertEqual(expression1, expression2, format…)   </p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>单元测试不需要搭建环境，却可以为我们节省一定的时间，不需要每次调试功能都要一个一个点进去。<br>如果可以将单元测试集成到CI中，将更方便。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1351,7 +1360,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

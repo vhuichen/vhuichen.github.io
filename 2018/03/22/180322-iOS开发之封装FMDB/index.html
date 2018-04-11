@@ -96,7 +96,7 @@ FMDatabaseQueue使用 FMDatabaseQueue 操作数据库则是线程安全的，看
 常用类 FMDatabaseQueue FMDatabaseFMDatabaseFMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。
 FMDatabaseQueue使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。
 考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDat">
-<meta property="og:updated_time" content="2018-03-23T14:48:18.042Z">
+<meta property="og:updated_time" content="2018-04-11T14:54:17.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS开发之封装FMDB">
 <meta name="twitter:description" content="序言之前在项目中使用过，写出来记录一下。
@@ -276,8 +276,8 @@ FMDatabaseQueue使用 FMDatabaseQueue 操作数据库则是线程安全的，看
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-03-23T22:48:18+08:00" content="2018-03-23">
-				2018-03-23
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:54:17+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -333,11 +333,11 @@ FMDatabaseQueue使用 FMDatabaseQueue 操作数据库则是线程安全的，看
 <h3 id="常用类-FMDatabaseQueue-FMDatabase"><a href="#常用类-FMDatabaseQueue-FMDatabase" class="headerlink" title="常用类 FMDatabaseQueue FMDatabase"></a>常用类 FMDatabaseQueue FMDatabase</h3><h4 id="FMDatabase"><a href="#FMDatabase" class="headerlink" title="FMDatabase"></a>FMDatabase</h4><p>FMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。</p>
 <h4 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h4><p>使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。</p>
 <h3 id="考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase"><a href="#考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase" class="headerlink" title="考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase"></a>考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase</h3><p>方法如下：   </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue <span class="symbol">inDatabase:</span>^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
 <p>如果要处理事务，则使用下面的方法            </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue <span class="symbol">inDeferredTransaction:</span>^(FMDatabase * _Nonnull db, BOOL * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDeferredTransaction:^(FMDatabase * _Nonnull db, <span class="built_in">BOOL</span> * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
 <p>不管是使用 inDatabase 还是 inDeferredTransaction 都是同步的，所以在这里不需要任何处理。</p>
-<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block BOOL isOK = NO;</div><div class="line">[<span class="keyword">self</span>.databaseQueue <span class="symbol">inDatabase:</span>^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db <span class="symbol">executeQuery:</span>sql];</div><div class="line">	isOK = results.<span class="keyword">next</span>;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
+<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">BOOL</span> isOK = <span class="literal">NO</span>;</div><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db executeQuery:sql];</div><div class="line">	isOK = results.next;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
 <p><strong>备注：</strong> 在block内处理完FMResultSet的相关逻辑，就算不调用 [results close] ，也不会报错，可能是由于block处理完，就自动释放了这个类。但注意不要在block外面使用FMResultSet。</p>
 <h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p>Demo中目前没有加入keyid，操作不当会出现多个相同的数据，只能以后再改了。。。。<br><a href="https://github.com/vhuichen/VCHFMDB" target="_blank" rel="external">GitHub Demo</a></p>
 
@@ -449,7 +449,7 @@ FMDatabaseQueue使用 FMDatabaseQueue 操作数据库则是线程安全的，看
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

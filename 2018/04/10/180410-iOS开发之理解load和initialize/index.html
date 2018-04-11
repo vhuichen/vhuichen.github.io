@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="iOS基础," />
+  <meta name="keywords" content="iOS开发," />
 
 
 
@@ -84,19 +84,27 @@
 
 
 
-<meta name="description" content="创建NSString的分类，用来获取字符串的字节长度用两种方法实现
-12345678910111213141516////  NSString+VCHProperty.h//  SmartWatch////  Created by chenhui on 2016/11/22.//  Copyright © 2016年 vhuichen. All rights reserved.//#import">
+<meta name="description" content="loadload 会在类装载的时候调用（main函数执行之前）。load 不会被覆盖，如果父类、父类分类、子类、子类分类，同时实现了 load 方法，那么这些方法都会执行。
+调用顺序1、先调用父类的 load 方法，再调用子类的 load 方法。2、先调用本类的 load 方法，再调用分类的 load 方法。
+使用场景1、Method Swizzle 。
+initializeinitialize">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS基础之计算字符串长度">
-<meta property="og:url" content="http://yoursite.com/2016/11/30/161130-iOS基础之计算字符串长度/index.html">
+<meta property="og:title" content="iOS开发之理解load和initialize">
+<meta property="og:url" content="http://yoursite.com/2018/04/10/180410-iOS开发之理解load和initialize/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="创建NSString的分类，用来获取字符串的字节长度用两种方法实现
-12345678910111213141516////  NSString+VCHProperty.h//  SmartWatch////  Created by chenhui on 2016/11/22.//  Copyright © 2016年 vhuichen. All rights reserved.//#import">
-<meta property="og:updated_time" content="2017-06-27T15:02:28.000Z">
+<meta property="og:description" content="loadload 会在类装载的时候调用（main函数执行之前）。load 不会被覆盖，如果父类、父类分类、子类、子类分类，同时实现了 load 方法，那么这些方法都会执行。
+调用顺序1、先调用父类的 load 方法，再调用子类的 load 方法。2、先调用本类的 load 方法，再调用分类的 load 方法。
+使用场景1、Method Swizzle 。
+initializeinitialize">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-11/38950580.jpg">
+<meta property="og:updated_time" content="2018-04-11T14:51:42.892Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS基础之计算字符串长度">
-<meta name="twitter:description" content="创建NSString的分类，用来获取字符串的字节长度用两种方法实现
-12345678910111213141516////  NSString+VCHProperty.h//  SmartWatch////  Created by chenhui on 2016/11/22.//  Copyright © 2016年 vhuichen. All rights reserved.//#import">
+<meta name="twitter:title" content="iOS开发之理解load和initialize">
+<meta name="twitter:description" content="loadload 会在类装载的时候调用（main函数执行之前）。load 不会被覆盖，如果父类、父类分类、子类、子类分类，同时实现了 load 方法，那么这些方法都会执行。
+调用顺序1、先调用父类的 load 方法，再调用子类的 load 方法。2、先调用本类的 load 方法，再调用分类的 load 方法。
+使用场景1、Method Swizzle 。
+initializeinitialize">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-11/38950580.jpg">
 
 
 
@@ -117,10 +125,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/30/161130-iOS基础之计算字符串长度/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/10/180410-iOS开发之理解load和initialize/"/>
 
 
-  <title> iOS基础之计算字符串长度 | vhuichen </title>
+  <title> iOS开发之理解load和initialize | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -250,7 +258,7 @@
             
             
               
-                iOS基础之计算字符串长度
+                iOS开发之理解load和initialize
               
             
           </h1>
@@ -262,16 +270,16 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-30T21:34:11+08:00" content="2016-11-30">
-              2016-11-30
+            <time itemprop="dateCreated" datetime="2018-04-10T00:00:00+08:00" content="2018-04-10">
+              2018-04-10
             </time>
           </span>
           
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2017-06-27T23:02:28+08:00" content="2017-06-27">
-				2017-06-27
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:51:42+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -285,8 +293,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
                   </a>
                 </span>
 
@@ -323,11 +331,26 @@
       
 
       
-        <p>创建NSString的分类，用来获取字符串的字节长度<br>用两种方法实现</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.h</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength;</div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>实现方法</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.m</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHProperty.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selfLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)[<span class="keyword">self</span> cStringUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="built_in">NSUInteger</span> encodingLength = [<span class="keyword">self</span> lengthOfBytesUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; encodingLength; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (*p) &#123;</div><div class="line">            selfLength++;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selfLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selflLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">self</span>.length; i++) &#123;</div><div class="line">        <span class="keyword">unichar</span> uc = [<span class="keyword">self</span> characterAtIndex:i];</div><div class="line">        selflLength += isascii(uc) ? <span class="number">1</span> : <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selflLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>经测试两种方法都可以获取到字符串的字节长度</p>
+        <h2 id="load"><a href="#load" class="headerlink" title="load"></a>load</h2><p>load 会在类装载的时候调用（main函数执行之前）。load 不会被覆盖，如果父类、父类分类、子类、子类分类，同时实现了 load 方法，那么这些方法都会执行。</p>
+<h3 id="调用顺序"><a href="#调用顺序" class="headerlink" title="调用顺序"></a>调用顺序</h3><p>1、先调用父类的 load 方法，再调用子类的 load 方法。<br>2、先调用本类的 load 方法，再调用分类的 load 方法。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>1、Method Swizzle 。</p>
+<h2 id="initialize"><a href="#initialize" class="headerlink" title="initialize"></a>initialize</h2><p>initialize 会在第一次给该类发送消息之前调用，有些文章说是在实例化、初始化之前调用是错的。看看文档是怎么说的</p>
+<blockquote>
+<p><strong>Initializes the class before it receives its first message.</strong>   </p>
+</blockquote>
+<h3 id="调用顺序-1"><a href="#调用顺序-1" class="headerlink" title="调用顺序"></a>调用顺序</h3><p>父类优先于子类调用 initialize 方法。<br>如果子类以及子类的分类没有实现 initialize 方法，那么当第一次给子类发消息的时候，会先给父类的 initialize 发消息。也就是父类的 initialize 方法可能会被调用多次。<br>如果本类以及其分类都实现 initialize 方法，那么只会调用 分类的 initialize 方法。</p>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>initialize 是线程安全的，自带锁，当第一个线程给这个类发了 initialize 消息，其他想给这个类发 initialize 消息的线程会被阻塞，直到第一个线程发送完 initialize 消息。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p><strong>1、如果本类以及本类的多个分类都实现了 initialize 方法，怎么调用？</strong><br>答：会调用 Compile Source 中的本类最后一个分类的 initialize 方法，如下图：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-11/38950580.jpg" alt=""><br>我在代码中实现三个 initialize 方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Person</span></div><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person initialize......."</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Person (Special)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Special) initialize......."</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Person (Special1)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Special1) initialize......."</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果打印出”<strong>Person (Special1) initialize…….</strong>“。<br>当我在 Compile Source 中调换了本类两个分类的先后顺序后，则打印出”<strong>Person (Special) initialize…….</strong>“。<br>从而得出结论上面的结论，Compile Source 中本类最后一个分类的 initialize 方法将会被调用。</p>
+<p><strong>2、当子类及其分类没有实现 initialize 方法，在父类的 initialize 方法中怎么区分这个消息是通过本类发来的还是子类发来的？</strong><br>这里我定义了两个类，Person 为父类，Student 为子类。Student 类中没有实现 initialize 方法。那么给 Student 发消息后，结果如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == [Person <span class="keyword">self</span>]) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"本类发来的 initialize 消息。%@ - %@"</span>,<span class="keyword">self</span>,[Person <span class="keyword">self</span>]);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"子类发来的 initialize 消息。%@ - %@"</span>,<span class="keyword">self</span>,[Person <span class="keyword">self</span>]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果：<br>本类发来的 initialize 消息。Person - Person<br>子类发来的 initialize 消息。Student - Person  </p>
+</blockquote>
+<p>既：如果是本类发送的 initialize 消息，那么 self == Person。如果是子类发送过来的消息，那么 self == Student。   </p>
+<h3 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h3><p>1、初始化静态变量。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>1、由于 initialize 使用的是阻塞的调用方式，当一个类 initialize 依赖 另一个类的 initialize 的时候，容易造成死锁，所以应该尽量避免在 initialize 中完成一些复杂的初始化工作。<br>2、应该避免问题1这样的情况出现。如果需要在本类以及分类中同时实现初始化，可以考虑用 load 方法。</p>
 
       
     </div>
@@ -350,7 +373,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/iOS基础/" rel="tag">#iOS基础</a>
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
           
         </div>
       
@@ -359,17 +382,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/01/161101-iOS基础之开机启动SVN服务/" rel="next" title="iOS基础之开机启动SVN服务">
-                <i class="fa fa-chevron-left"></i> iOS基础之开机启动SVN服务
+              <a href="/2018/04/08/180408-[算法]给定已排序数组，找出和为特定数值的两个数/" rel="next" title="给定已排序数组，找出和为特定数值的两个数">
+                <i class="fa fa-chevron-left"></i> 给定已排序数组，找出和为特定数值的两个数
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/" rel="prev" title="使用GitHub Desktop管理别的仓库">
-                使用GitHub Desktop管理别的仓库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -483,7 +502,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#load"><span class="nav-number">1.</span> <span class="nav-text">load</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调用顺序"><span class="nav-number">1.1.</span> <span class="nav-text">调用顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用场景"><span class="nav-number">1.2.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initialize"><span class="nav-number">2.</span> <span class="nav-text">initialize</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调用顺序-1"><span class="nav-number">2.1.</span> <span class="nav-text">调用顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全"><span class="nav-number">2.2.</span> <span class="nav-text">线程安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.3.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用场景-1"><span class="nav-number">2.4.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.5.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

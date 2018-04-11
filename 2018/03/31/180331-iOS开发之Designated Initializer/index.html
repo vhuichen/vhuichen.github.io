@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-4/50413485.jpg?imageView2/2/w/600">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-4/93397245.jpg?imageView2/2/w/700">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-4/37631710.jpg?imageView2/2/w/500">
-<meta property="og:updated_time" content="2018-04-09T16:06:04.093Z">
+<meta property="og:updated_time" content="2018-04-11T14:53:23.219Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS开发之Designated Initializer(指定初始化方法)">
 <meta name="twitter:description" content="序言NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以在编译的时候帮我们找出潜在的问题。如果一个类中的初始化方法没有用 NS_DESIGNATED_INITIALIZER 修饰，说明这个方法是便利初始化方法（Convenience Initializer）。
@@ -274,8 +274,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-10T00:06:04+08:00" content="2018-04-10">
-				2018-04-10
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:53:23+08:00" content="2018-04-11">
+				2018-04-11
 			    </time>
 			  </span>
 			
@@ -328,9 +328,9 @@
 
       
         <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以在编译的时候帮我们找出潜在的问题。<br>如果一个类中的初始化方法没有用 NS_DESIGNATED_INITIALIZER 修饰，说明这个方法是便利初始化方法（Convenience Initializer）。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="comment">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="comment">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="comment">#else</span></div><div class="line"><span class="comment">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="comment">#endif</span></div><div class="line"><span class="comment">#endif</span></div></pre></td></tr></table></figure>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="meta">#else</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#endif</span></div><div class="line"><span class="meta">#endif</span></div></pre></td></tr></table></figure>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>看看官方的接口是怎么使用的。   </p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// UIViewController</div><div class="line">- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div><div class="line"></div><div class="line">// UIView</div><div class="line">- (instancetype)initWithFrame:(CGRect)frame NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div><div class="line"></div><div class="line">// UITableViewCell</div><div class="line">- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier NS_AVAILABLE_IOS(3_0) NS_DESIGNATED_INITIALIZER;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// UIViewController</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithNibName:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)nibNameOrNil bundle:(<span class="keyword">nullable</span> <span class="built_in">NSBundle</span> *)nibBundleOrNil <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UIView</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">CGRect</span>)frame <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UITableViewCell</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithStyle:(<span class="built_in">UITableViewCellStyle</span>)style reuseIdentifier:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)reuseIdentifier <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_0) <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>两个指定初始化方法分别对应纯代码方式和文件（Xib、Storyboard）方式创建。</p>
 </blockquote>
@@ -456,7 +456,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
