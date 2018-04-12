@@ -96,7 +96,7 @@ string在编译时和运行时分别时什么类型的对象?NSString *string = 
 string在编译时和运行时分别时什么类型的对象?NSString *string = [[NSDate alloc] init]; // 原题是 NSData，我改为 NSDate，方便我后面发消息">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-12/15455244.jpg">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-12/78772051.jpg">
-<meta property="og:updated_time" content="2018-04-12T15:08:06.010Z">
+<meta property="og:updated_time" content="2018-04-12T15:21:11.515Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS基础之编译时与运行时">
 <meta name="twitter:description" content="序言从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   
@@ -276,7 +276,7 @@ string在编译时和运行时分别时什么类型的对象?NSString *string = 
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-12T23:08:06+08:00" content="2018-04-12">
+			    <time itemprop="dateUpdated" datetime="2018-04-12T23:21:11+08:00" content="2018-04-12">
 				2018-04-12
 			    </time>
 			  </span>
@@ -335,11 +335,11 @@ string在编译时和运行时分别时什么类型的对象?NSString *string = 
 </blockquote>
 <p>直接这样写编译器会报警告！  </p>
 <blockquote>
-<p>Incompatible pointer types initializing ‘NSString <em>‘ with an expression of type ‘NSDate </em>‘</p>
+<p>Incompatible pointer types initializing ‘NSString *‘ with an expression of type ‘NSDate *‘</p>
 </blockquote>
 <p>可以使用类型转换消除这个警告   </p>
 <blockquote>
-<p><strong>NSString <em>string = (NSString </em>)[[NSDate alloc] init];</strong></p>
+<p><strong>NSString *string = (NSString *)[[NSDate alloc] init];</strong></p>
 </blockquote>
 <p>此时编译器已经没有任何警告了，然后我们给 “string” 这个对象发消息看看会出现什么情况   </p>
 <h4 id="直接调用方法"><a href="#直接调用方法" class="headerlink" title="直接调用方法"></a>直接调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</div><div class="line"><span class="comment">//调用 NSString 的方法，编译通过</span></div><div class="line">[string stringByAppendingString:<span class="string">@"abc"</span>];</div><div class="line"><span class="comment">//调用 NSDate 的方法，编译不通过</span></div><div class="line"><span class="comment">//提示：No visible @interface for 'NSString' declares the selector 'isEqualToDate:'</span></div><div class="line">[string isEqualToDate:[<span class="built_in">NSDate</span> date]];</div></pre></td></tr></table></figure>
