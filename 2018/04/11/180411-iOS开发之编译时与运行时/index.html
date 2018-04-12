@@ -84,36 +84,25 @@
 
 
 
-<meta name="description" content="控制器结构图设置
-
-self.navigationItem.title = “123”   
-
-运行，但设置的navigationItem.title并没有显示出来。    
-查找问题打开Debug View Hierarchy（视图层次结构调试），可以看到下面的结构图左边：右边：可以看到总共有两个UINavgationBar,我们自己设置title并没有显示到顶层（被遮住了），所以会看不到设置的">
+<meta name="description" content="序言从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   
+题目
+string在编译时和运行时分别时什么类型的对象?NSString *string = [[NSDate alloc] init]; // 原题是 NSData，我改为 NSDate，方便我后面发消息">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS基础之navigationItem.title设置但不显示">
-<meta property="og:url" content="http://yoursite.com/2017/01/27/170127-iOS基础之navigationItem.title设置但不显示/index.html">
+<meta property="og:title" content="iOS基础之编译时与运行时">
+<meta property="og:url" content="http://yoursite.com/2018/04/11/180411-iOS开发之编译时与运行时/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="控制器结构图设置
-
-self.navigationItem.title = “123”   
-
-运行，但设置的navigationItem.title并没有显示出来。    
-查找问题打开Debug View Hierarchy（视图层次结构调试），可以看到下面的结构图左边：右边：可以看到总共有两个UINavgationBar,我们自己设置title并没有显示到顶层（被遮住了），所以会看不到设置的">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-27/84440891.jpg">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-29/71287113.jpg">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-29/62998207.jpg">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-29/99794372.jpg">
-<meta property="og:updated_time" content="2018-03-23T14:55:30.684Z">
+<meta property="og:description" content="序言从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   
+题目
+string在编译时和运行时分别时什么类型的对象?NSString *string = [[NSDate alloc] init]; // 原题是 NSData，我改为 NSDate，方便我后面发消息">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-12/15455244.jpg">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-12/78772051.jpg">
+<meta property="og:updated_time" content="2018-04-12T15:08:06.010Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS基础之navigationItem.title设置但不显示">
-<meta name="twitter:description" content="控制器结构图设置
-
-self.navigationItem.title = “123”   
-
-运行，但设置的navigationItem.title并没有显示出来。    
-查找问题打开Debug View Hierarchy（视图层次结构调试），可以看到下面的结构图左边：右边：可以看到总共有两个UINavgationBar,我们自己设置title并没有显示到顶层（被遮住了），所以会看不到设置的">
-<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-1-27/84440891.jpg">
+<meta name="twitter:title" content="iOS基础之编译时与运行时">
+<meta name="twitter:description" content="序言从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   
+题目
+string在编译时和运行时分别时什么类型的对象?NSString *string = [[NSDate alloc] init]; // 原题是 NSData，我改为 NSDate，方便我后面发消息">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-12/15455244.jpg">
 
 
 
@@ -134,10 +123,10 @@ self.navigationItem.title = “123”
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/01/27/170127-iOS基础之navigationItem.title设置但不显示/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/11/180411-iOS开发之编译时与运行时/"/>
 
 
-  <title> iOS基础之navigationItem.title设置但不显示 | vhuichen </title>
+  <title> iOS基础之编译时与运行时 | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -267,7 +256,7 @@ self.navigationItem.title = “123”
             
             
               
-                iOS基础之navigationItem.title设置但不显示
+                iOS基础之编译时与运行时
               
             
           </h1>
@@ -279,16 +268,16 @@ self.navigationItem.title = “123”
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-27T09:52:30+08:00" content="2017-01-27">
-              2017-01-27
+            <time itemprop="dateCreated" datetime="2018-04-11T00:00:00+08:00" content="2018-04-11">
+              2018-04-11
             </time>
           </span>
           
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-03-23T22:55:30+08:00" content="2018-03-23">
-				2018-03-23
+			    <time itemprop="dateUpdated" datetime="2018-04-12T23:08:06+08:00" content="2018-04-12">
+				2018-04-12
 			    </time>
 			  </span>
 			
@@ -340,13 +329,29 @@ self.navigationItem.title = “123”
       
 
       
-        <h3 id="控制器结构图"><a href="#控制器结构图" class="headerlink" title="控制器结构图"></a>控制器结构图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-27/84440891.jpg" alt=""><br>设置</p>
-<blockquote>
-<p>self.navigationItem.title = “123”   </p>
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   </p>
+<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p><strong>string在编译时和运行时分别时什么类型的对象?</strong><br><strong>NSString *string = [[NSDate alloc] init]; // 原题是 NSData，我改为 NSDate，方便我后面发消息</strong>   </p>
 </blockquote>
-<p>运行，但设置的navigationItem.title并没有显示出来。    </p>
-<h3 id="查找问题"><a href="#查找问题" class="headerlink" title="查找问题"></a>查找问题</h3><p>打开Debug View Hierarchy（视图层次结构调试），可以看到下面的结构图<br>左边：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-29/71287113.jpg" alt=""><br>右边：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-29/62998207.jpg" alt=""><br>可以看到总共有两个UINavgationBar,我们自己设置title并没有显示到顶层（被遮住了），所以会看不到设置的title。</p>
-<h3 id="解决方法1"><a href="#解决方法1" class="headerlink" title="解决方法1"></a>解决方法1</h3><p>将第一个Navigation Controller删掉，Tab Bar Controller 直接作为根控制器，如下图：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-29/99794372.jpg" alt=""><br>还有其他的方法一样也是可以解决的。</p>
+<p>直接这样写编译器会报警告！  </p>
+<blockquote>
+<p>Incompatible pointer types initializing ‘NSString <em>‘ with an expression of type ‘NSDate </em>‘</p>
+</blockquote>
+<p>可以使用类型转换消除这个警告   </p>
+<blockquote>
+<p><strong>NSString <em>string = (NSString </em>)[[NSDate alloc] init];</strong></p>
+</blockquote>
+<p>此时编译器已经没有任何警告了，然后我们给 “string” 这个对象发消息看看会出现什么情况   </p>
+<h4 id="直接调用方法"><a href="#直接调用方法" class="headerlink" title="直接调用方法"></a>直接调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</div><div class="line"><span class="comment">//调用 NSString 的方法，编译通过</span></div><div class="line">[string stringByAppendingString:<span class="string">@"abc"</span>];</div><div class="line"><span class="comment">//调用 NSDate 的方法，编译不通过</span></div><div class="line"><span class="comment">//提示：No visible @interface for 'NSString' declares the selector 'isEqualToDate:'</span></div><div class="line">[string isEqualToDate:[<span class="built_in">NSDate</span> date]];</div></pre></td></tr></table></figure>
+<p>从上面提示的注释信息可以看出，编译器认为 “string” 就是 NSString 类型的对象。调用 NSDate 的方法编译不通过。<br>然后，运行Demo，结果程序直接崩溃，提示：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-12/15455244.jpg" alt=""></p>
+<blockquote>
+<p>-[_NSZeroData stringByAppendingString:]: unrecognized selector sent to instance 0x1010d12e0</p>
+</blockquote>
+<p>显然程序是找不到 “stringByAppendingString” 方法才崩溃的。</p>
+<h4 id="通过-performSelector-调用方法"><a href="#通过-performSelector-调用方法" class="headerlink" title="通过 performSelector 调用方法"></a>通过 performSelector 调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</div><div class="line"><span class="comment">//编译通过，运行崩溃</span></div><div class="line">[string performSelector:<span class="keyword">@selector</span>(stringByAppendingString:) withObject:<span class="string">@"abc"</span> afterDelay:<span class="number">0</span>];</div><div class="line"><span class="comment">//编译通过，运行通过</span></div><div class="line">[string performSelector:<span class="keyword">@selector</span>(isEqualToDate:) withObject:[<span class="built_in">NSDate</span> date] afterDelay:<span class="number">0</span>];</div></pre></td></tr></table></figure>
+<p>通过 performSelector 给 “string” 对象发 “stringByAppendingString” 消息，依然是崩溃。发 “isEqualToDate” 消息，成功。</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>在编译的时候 “string” 是 NSString 类型的对象，所以给 “string” 对象发送 NSString 特有的消息可以通过编译。<br>而在运行的时候 “string” 是 NSDate 类型的对象，这就是为什么给 “string” 对象发送 “stringByAppendingString” 消息会崩溃，而 发送 “isEqualToDate” 消息则成功的原因。<br>从下图也可以看出运行的时候的类型为 NSDate<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-12/78772051.jpg" alt=""></p>
+<h3 id="编译时-amp-运行时"><a href="#编译时-amp-运行时" class="headerlink" title="编译时 &amp; 运行时"></a>编译时 &amp; 运行时</h3><p>编译时类型由声明该变量时使用的类型决定，运行时类型由实际赋给该变量的对象决定。<br>编译时会对语言进行语法检测，并编译成机器语言，由于OC的动态性，代码能否执行成功还得到运行时才能检测出来。<br>运行时会把编译好的代码装到内存中运行，这时候会对对象的类型、方法等进行检测，如果检测失败可能会直接崩溃。  </p>
 
       
     </div>
@@ -378,17 +383,13 @@ self.navigationItem.title = “123”
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/" rel="next" title="使用GitHub Desktop管理别的仓库">
-                <i class="fa fa-chevron-left"></i> 使用GitHub Desktop管理别的仓库
+              <a href="/2018/04/10/180410-iOS开发之理解load和initialize/" rel="next" title="iOS开发之理解load和initialize">
+                <i class="fa fa-chevron-left"></i> iOS开发之理解load和initialize
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/19/170519-iOS基础之理解NSNumericSearch/" rel="prev" title="iOS基础之理解NSNumericSearch">
-                iOS基础之理解NSNumericSearch <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -502,7 +503,7 @@ self.navigationItem.title = “123”
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#控制器结构图"><span class="nav-number">1.</span> <span class="nav-text">控制器结构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查找问题"><span class="nav-number">2.</span> <span class="nav-text">查找问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法1"><span class="nav-number">3.</span> <span class="nav-text">解决方法1</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目"><span class="nav-number">1.0.1.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#直接调用方法"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">直接调用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过-performSelector-调用方法"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">通过 performSelector 调用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结论"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译时-amp-运行时"><span class="nav-number">1.0.2.</span> <span class="nav-text">编译时 & 运行时</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
