@@ -246,6 +246,159 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/13/180413-《Effective Objective-C 2.0》阅读笔记(一)/" itemprop="url">
+                  《Effective Objective-C 2.0》阅读笔记(一)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-13T00:00:00+08:00" content="2018-04-13">
+              2018-04-13
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-17T23:18:07+08:00" content="2018-04-17">
+				2018-04-17
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第一章：熟悉-Objective-C-语言"><a href="#第一章：熟悉-Objective-C-语言" class="headerlink" title="第一章：熟悉 Objective-C 语言"></a>第一章：熟悉 Objective-C 语言</h1><h2 id="了解-Objective-C-语言的起源"><a href="#了解-Objective-C-语言的起源" class="headerlink" title="了解 Objective-C 语言的起源"></a>了解 Objective-C 语言的起源</h2><h4 id="消息结构"><a href="#消息结构" class="headerlink" title="消息结构"></a>消息结构</h4><p>Objective-C 使用的是“消息结构”（messaging structure）而非“函数调用”（function calling）。<br>使用消息结构的语言，其运行时所执行的代码由运行环境决定。而使用函数调用的语言，则由编译器决定。  </p>
+<blockquote>
+<p>在C/C++中，如果使用的函数是多态，那么运行时会根据“虚方法表”（virtual table）来查找应该执行哪个函数实现。而采用消息结构的语言则都是在运行的时候才查找要执行的方法。</p>
+</blockquote>
+<h4 id="运行期组件（runtime-component）"><a href="#运行期组件（runtime-component）" class="headerlink" title="运行期组件（runtime component）"></a>运行期组件（runtime component）</h4><p>Objective-C 中重要工作都由运行期组件完成，而非编译器。里面包含了面向对象所需的全部数据结构及函数。其本质是与开发者所编写的代码相链接的动态库。</p>
+<h4 id="对象内存分配"><a href="#对象内存分配" class="headerlink" title="对象内存分配"></a>对象内存分配</h4><p>对象所占有的内存总是分配到堆空间（Head）中，而指向对象的指针则是分配到栈（stack）中。分配到堆中的内存必须进行管理，分配到栈上用于保存对象地址的内存，则会在栈帧弹出时自动处理。<br>当遇到非指针类型变量的时候，变量可能会分配到栈空间，比如：结构体。</p>
+<h2 id="在类的头文件中尽量少引用其他头文件"><a href="#在类的头文件中尽量少引用其他头文件" class="headerlink" title="在类的头文件中尽量少引用其他头文件"></a>在类的头文件中尽量少引用其他头文件</h2><h4 id="向前声明（forward-declaring）"><a href="#向前声明（forward-declaring）" class="headerlink" title="向前声明（forward declaring）"></a>向前声明（forward declaring）</h4><p>如果只需要知道有那么一个类名，则不需要引用该类名的头文件（不需要知道其他细节），这时可以向前声明该类，既使用：</p>
+<blockquote>
+<p>@class className;  </p>
+</blockquote>
+<p>然后在实现文件中引入该头文件。这样可以降低类与类之间的耦合。<br>引入头文件的时机应该尽量延后，只有当确定要引用该头文件的时候才引用。将大量的头文件引入到头文件中，会增加文件之间的依赖性，从而增加编译时间。   </p>
+<h4 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h4><p>向前申明可以解决两个类之间的循环引用。文章说道：</p>
+<blockquote>
+<p>使用 #import 虽然不会导致引用循环，但却意味着两个类有一个不能被正确编译。</p>
+</blockquote>
+<p>不过，这句话我。。。。无法理解！！！  </p>
+<h4 id="头文件需要引用协议"><a href="#头文件需要引用协议" class="headerlink" title="头文件需要引用协议"></a>头文件需要引用协议</h4><p>如果要使用某个协议，则不能使用向前声明，为了不引用整个头文件，可以将协议放到“class-continuation 分类”中，或者单独放到一个文件中，然后使用 #import 引用头文件，这样就不会出现上面说的问题。</p>
+<h2 id="多用字面量语法，少用与之等价的方法"><a href="#多用字面量语法，少用与之等价的方法" class="headerlink" title="多用字面量语法，少用与之等价的方法"></a>多用字面量语法，少用与之等价的方法</h2><p>使用字面量语法可以缩减代码长度，提高代码可读性。也要确保创建对象的时候不能为nil。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string0 = [[<span class="built_in">NSString</span> alloc] initWithString:<span class="string">@"123"</span>];</div><div class="line"><span class="built_in">NSString</span> *string1 = <span class="string">@"123"</span>;</div><div class="line">    </div><div class="line"><span class="built_in">NSNumber</span> *number0 = [<span class="built_in">NSNumber</span> numberWithInt:<span class="number">1</span>];</div><div class="line"><span class="built_in">NSNumber</span> *number1 = @<span class="number">1</span>;</div><div class="line">    </div><div class="line"><span class="built_in">NSArray</span> *array0 = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@"cat"</span>, <span class="string">@"dog"</span>, <span class="string">@"fish"</span>, <span class="literal">nil</span>];</div><div class="line"><span class="built_in">NSString</span> *cat0 = [array0 objectAtIndex:<span class="number">0</span>];</div><div class="line"><span class="built_in">NSArray</span> *array1 = @[<span class="string">@"cat"</span>, <span class="string">@"dog"</span>, <span class="string">@"fish"</span>];</div><div class="line"><span class="built_in">NSString</span> *cat1 = array1[<span class="number">0</span>];</div><div class="line">    </div><div class="line"><span class="built_in">NSDictionary</span> *dictionary0 = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:<span class="string">@"key0"</span>, <span class="string">@"value0"</span>, <span class="string">@"key1"</span>, <span class="string">@"value1"</span>, <span class="literal">nil</span>];</div><div class="line"><span class="built_in">NSString</span> *value0 = [dictionary0 objectForKey:<span class="string">@"key0"</span>];</div><div class="line">	</div><div class="line"><span class="built_in">NSDictionary</span> *dictionary1 = @&#123;<span class="string">@"key0"</span>:<span class="string">@"value0"</span>, <span class="string">@"key1"</span>:<span class="string">@"value1"</span>&#125;;</div><div class="line"><span class="built_in">NSString</span> *value1 = dictionary1[<span class="string">@"key1"</span>];</div></pre></td></tr></table></figure>
+<h2 id="多用类型常量，少用-define-预处理指令"><a href="#多用类型常量，少用-define-预处理指令" class="headerlink" title="多用类型常量，少用 #define 预处理指令"></a>多用类型常量，少用 #define 预处理指令</h2><h4 id="使用-define-无法确定类型信息"><a href="#使用-define-无法确定类型信息" class="headerlink" title="使用 #define 无法确定类型信息"></a>使用 #define 无法确定类型信息</h4><p>比如下面的代码用 #define 无法预知 kAnimationDuration 的数据类型，不利于编写开发文档。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#define kAnimationDuration 0.1</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">NSTimeInterval</span> kAnimationDuration = <span class="number">0.1</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">float</span> kAnimationDuration = <span class="number">0.1</span>;</div></pre></td></tr></table></figure>
+<h4 id="static-const-修饰"><a href="#static-const-修饰" class="headerlink" title="static const 修饰"></a>static const 修饰</h4><p>如果一个变量用 static const 修饰，那么编译器不会创建符号，而是会像 #define 预处理指令一样，在编译的时候将所有的变量替换成常值。</p>
+<h4 id="extern-声明全局变量"><a href="#extern-声明全局变量" class="headerlink" title="extern 声明全局变量"></a>extern 声明全局变量</h4><p>使用 static const 修饰的变量只能在本文件内使用，但有时候需要对外公布这个变量，比如该变量作为“通知”的key的时候，此时可以稍微改一下。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .h文件 声明一个变量</span></div><div class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> VCHLoginNotification;</div><div class="line"><span class="comment">// .m文件 定义一个变量</span></div><div class="line"><span class="built_in">NSString</span> *<span class="keyword">const</span> VCHLoginNotification = <span class="string">@"kLoginNotification"</span>;</div></pre></td></tr></table></figure>
+<p>这种变量会保存在“全局符号表”中。为了避免命名冲突，这种变量应该加上类名前缀。</p>
+<h4 id="判断-const-修饰的是对象还是指针-自己理解"><a href="#判断-const-修饰的是对象还是指针-自己理解" class="headerlink" title="判断 const 修饰的是对象还是指针(自己理解)"></a>判断 const 修饰的是对象还是指针(自己理解)</h4><p>const 修饰的是右边的第一个字符  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">float</span> <span class="keyword">const</span> valueFloat0 = <span class="number">0.1</span>; <span class="comment">//[1]</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">float</span> valueFloat1 = <span class="number">0.1</span>; <span class="comment">//[2]</span></div><div class="line"><span class="built_in">NSString</span> <span class="keyword">const</span> * string0 = <span class="string">@"abc"</span>; <span class="comment">//[3]</span></div><div class="line"><span class="built_in">NSString</span> * <span class="keyword">const</span> string1 = <span class="string">@"abc"</span>; <span class="comment">//[4]</span></div><div class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> * string2 = <span class="string">@"abc"</span>; <span class="comment">//[5]</span></div><div class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> * <span class="keyword">const</span> string3 = <span class="string">@"abc"</span>; <span class="comment">//[6]</span></div><div class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> <span class="keyword">const</span> * string4 = <span class="string">@"abc"</span>; <span class="comment">//[7]</span></div></pre></td></tr></table></figure>
+<p>[1] const 右边第一个字符是 valueFloat0，表示 valueFloat0 里面的值是不变的。valueFloat0  不能是左值。<br>[2] const 右边第一个字符是 float，而 float 指的就是 valueFloat1，所以 valueFloat1 的值是不变的。valueFloat1 不能是左值。<br>[3] const 右边第一个字符是 string0，string0 是一个指针，所以 string0 指向的地址是不变的。string0 不能是左值。<br>[4] const 右边第一个字符是 string1（指针），所以 string1 指向的地址是不变的。string1 不能是左值。<br>[5] const 右边第一个字符是 NSString，表示的是 @”abc” 这个对象，所以 @”abc 是不可变对象。不可以通过 string2 这个指针来修改它指向的对象的内容。(这里刚好 @”abc” 是不能修改的，就算指向的对象是可以被修改的，也不能通过 const 修饰的指针去修改)<br>[6] 第一个 const 右边第一个字符是 NSString， 等同于 [5]。第二个 const 等同于 [4]。<br>[7] 等同于 [6]  </p>
+<h2 id="用枚举表示状态、选项、状态码"><a href="#用枚举表示状态、选项、状态码" class="headerlink" title="用枚举表示状态、选项、状态码"></a>用枚举表示状态、选项、状态码</h2><p>枚举可以提高代码可读性。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 状态、状态码</span></div><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIViewAnimationTransition</span>) &#123;</div><div class="line">    <span class="built_in">UIViewAnimationTransitionNone</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionFlipFromLeft</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionFlipFromRight</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionCurlUp</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionCurlDown</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 可组合选项</span></div><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_OPTIONS</span>(<span class="built_in">NSUInteger</span>, <span class="built_in">UIViewAutoresizing</span>) &#123;</div><div class="line">    <span class="built_in">UIViewAutoresizingNone</span>                 = <span class="number">0</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleLeftMargin</span>   = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleWidth</span>        = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleRightMargin</span>  = <span class="number">1</span> &lt;&lt; <span class="number">2</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleTopMargin</span>    = <span class="number">1</span> &lt;&lt; <span class="number">3</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleHeight</span>       = <span class="number">1</span> &lt;&lt; <span class="number">4</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleBottomMargin</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>enum 用来表示状态，options 用来表示可组合的选项。</p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>1、用枚举处理 switch 的时候不要实现 default 分支。这样加入新的分支后，编译器就会提示开发者。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/11/180411-iOS开发之编译时与运行时/" itemprop="url">
                   iOS基础之编译时与运行时
                 </a>
@@ -268,7 +421,7 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-12T23:21:11+08:00" content="2018-04-12">
+			    <time itemprop="dateUpdated" datetime="2018-04-12T23:22:35+08:00" content="2018-04-12">
 				2018-04-12
 			    </time>
 			  </span>
@@ -1199,138 +1352,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/22/180322-iOS开发之封装FMDB/" itemprop="url">
-                  iOS开发之封装FMDB
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-22T20:12:39+08:00" content="2018-03-22">
-              2018-03-22
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-11T22:54:17+08:00" content="2018-04-11">
-				2018-04-11
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>之前在项目中使用过，写出来记录一下。</p>
-<h3 id="常用类-FMDatabaseQueue-FMDatabase"><a href="#常用类-FMDatabaseQueue-FMDatabase" class="headerlink" title="常用类 FMDatabaseQueue FMDatabase"></a>常用类 FMDatabaseQueue FMDatabase</h3><h4 id="FMDatabase"><a href="#FMDatabase" class="headerlink" title="FMDatabase"></a>FMDatabase</h4><p>FMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。</p>
-<h4 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h4><p>使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。</p>
-<h3 id="考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase"><a href="#考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase" class="headerlink" title="考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase"></a>考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase</h3><p>方法如下：   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-<p>如果要处理事务，则使用下面的方法            </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDeferredTransaction:^(FMDatabase * _Nonnull db, <span class="built_in">BOOL</span> * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-<p>不管是使用 inDatabase 还是 inDeferredTransaction 都是同步的，所以在这里不需要任何处理。</p>
-<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">BOOL</span> isOK = <span class="literal">NO</span>;</div><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db executeQuery:sql];</div><div class="line">	isOK = results.next;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
-<p><strong>备注：</strong> 在block内处理完FMResultSet的相关逻辑，就算不调用 [results close] ，也不会报错，可能是由于block处理完，就自动释放了这个类。但注意不要在block外面使用FMResultSet。</p>
-<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p>Demo中目前没有加入keyid，操作不当会出现多个相同的数据，只能以后再改了。。。。<br><a href="https://github.com/vhuichen/VCHFMDB" target="_blank" rel="external">GitHub Demo</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1376,7 +1397,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-count">27</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1393,7 +1414,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
