@@ -1,0 +1,693 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第二章：对象、消息、运行期(1)“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。
+第6条：理解 “属性” 这一概念“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。
+对象布局对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第二章阅读笔记(1)">
+<meta property="og:url" content="http://yoursite.com/2018/04/17/180417-《Effective Objective-C 2.0》第二章阅读笔记(1)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第二章：对象、消息、运行期(1)“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。
+第6条：理解 “属性” 这一概念“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。
+对象布局对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换">
+<meta property="og:updated_time" content="2018-04-21T16:02:20.768Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第二章阅读笔记(1)">
+<meta name="twitter:description" content="第二章：对象、消息、运行期(1)“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。
+第6条：理解 “属性” 这一概念“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。
+对象布局对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/17/180417-《Effective Objective-C 2.0》第二章阅读笔记(1)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第二章阅读笔记(1) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第二章阅读笔记(1)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-17T00:00:00+08:00" content="2018-04-17">
+              2018-04-17
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-22T00:02:20+08:00" content="2018-04-22">
+				2018-04-22
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第二章：对象、消息、运行期-1"><a href="#第二章：对象、消息、运行期-1" class="headerlink" title="第二章：对象、消息、运行期(1)"></a><center>第二章：对象、消息、运行期(1)</center></h1><p>“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。</p>
+<h2 id="第6条：理解-“属性”-这一概念"><a href="#第6条：理解-“属性”-这一概念" class="headerlink" title="第6条：理解 “属性” 这一概念"></a>第6条：理解 “属性” 这一概念</h2><p>“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。</p>
+<h4 id="对象布局"><a href="#对象布局" class="headerlink" title="对象布局"></a>对象布局</h4><p>对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换成偏移量，这个偏移量是“硬编码”，表示该变量距离对象内存起始地址有多远。<br>当类增加了实例变量时，原来的偏移量就已经不再适用，所以这时候需要重新编译。偏移量保存在类对象中，会在运行时查找。</p>
+<h4 id="应用程序二进制接口（Application-Binary-Interface，ABI）"><a href="#应用程序二进制接口（Application-Binary-Interface，ABI）" class="headerlink" title="应用程序二进制接口（Application Binary Interface，ABI）"></a>应用程序二进制接口（Application Binary Interface，ABI）</h4><blockquote>
+<p>应用程序二进制接口描述了应用程序和操作系统之间，一个应用和它的库之间，或者应用的组成部分之间的低层接口。ABI不同于应用程序接口（API），API定义了源代码和库之间的接口，因此同样的代码可以在支持这个API的任何系统中编译，然而ABI允许编译好的目标代码在使用兼容ABI的系统中无需改动就能运行。（百度百科）</p>
+</blockquote>
+<p>ABI定义了许多内容（标准），其中一项就是生成代码时所应遵循的规范，有了这种规范，我们就可以在分类和实现文件定义实例变量，可以将实例变量从接口文件中移开，以便保护和类实现相关的内部信息。</p>
+<h4 id="synthesize-amp-dynamic"><a href="#synthesize-amp-dynamic" class="headerlink" title="@synthesize &amp; @dynamic"></a>@synthesize &amp; @dynamic</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span></span></div><div class="line"><span class="keyword">@synthesize</span> firstName = _myFirstName;</div><div class="line"><span class="keyword">@dynamic</span> firstName;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>@synthesize 用来指定实例变量的名称。<br>@dynamic 告诉编译器不要自动生成实例变量，也不要生成 setter 和 getter 方法。这时编译器不会报错，而是在运行时查找。</p>
+<h4 id="属性特质"><a href="#属性特质" class="headerlink" title="属性特质"></a>属性特质</h4><p>原子性，读写权限，内存管理（assign、strong、weak、unsafe_unretained、copy），方法名</p>
+<h5 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h5><p>iOS 开发的时候应该尽量使用 nonatomic，使用 atomic 会严重影响性能。</p>
+<h5 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h5><p>readwrite 同时生成setter 和 getter 方法。<br>readonly 只生成 getter 方法。  </p>
+<h5 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h5><p>当属性类型为 NSString 时，一定要用 copy 修饰，防止当传递过来的值是 NSMutableString 类型，从而可能会在不知情的情况下更改属性的值。</p>
+<h2 id="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"><a href="#第7条：在对象内部尽量直接访问实例变量（感觉有歧义）" class="headerlink" title="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"></a>第7条：在对象内部尽量直接访问实例变量（感觉有歧义）</h2><p>在对象外面，应该通过属性访问实例变量。在对象内部，除了几种特殊的情况下，读取实例变量应该采用直接访问的形式，设置实例变量则采用属性来设置。</p>
+<h4 id="对象内部不要直接设置实例（有歧义）"><a href="#对象内部不要直接设置实例（有歧义）" class="headerlink" title="对象内部不要直接设置实例（有歧义）"></a>对象内部不要直接设置实例（有歧义）</h4><p>这样做不会调用 setter 方法，也就绕过了相关属性定义的“内存管理语义”，比如使用了 copy 特质，直接访问不会拷贝该属性，只会保留新值并释放旧值。此外当设置了KVO时，直接设置实例也不会触发KVO。</p>
+<h4 id="初始化时应该直接访问实例"><a href="#初始化时应该直接访问实例" class="headerlink" title="初始化时应该直接访问实例"></a>初始化时应该直接访问实例</h4><p>如果父类初始化使用 setter 方法设置属性，而子类又重写了这个 setter 方法，那么子类初始化时，父类也会初始化，这时父类将会调用子类的 setter 方法。<br>例外：如果待初始化的实例变量申明在父类中，而子类无法直接访问此实例变量，这时就需要调用 setter 方法了。</p>
+<blockquote>
+<p>dealloc 方法中也应该直接读写实例变量  </p>
+</blockquote>
+<h4 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h4><p>如果某个属性使用了懒加载，那就必须使用 getter 方法了。</p>
+<h2 id="第8条：理解-“对象同等性”-这一概念"><a href="#第8条：理解-“对象同等性”-这一概念" class="headerlink" title="第8条：理解 “对象同等性” 这一概念"></a>第8条：理解 “对象同等性” 这一概念</h2><p>“对象同等性” 可以理解为某种意义上两个对象相等，这个“相等”是我们自定义的。官方给我们定义了一些判断两个对象是否“相等”的方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSString</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToString:(<span class="built_in">NSString</span> *)aString;</div><div class="line"></div><div class="line"><span class="comment">// NSData</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToData:(<span class="built_in">NSData</span> *)other;</div><div class="line"></div><div class="line"><span class="comment">// NSDictionary</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToDictionary:(<span class="built_in">NSDictionary</span>&lt;KeyType, ObjectType&gt; *)otherDictionary;</div></pre></td></tr></table></figure>
+<h4 id="对象完全相等"><a href="#对象完全相等" class="headerlink" title="对象完全相等"></a>对象完全相等</h4><p>用 “==” 判断两个对象是否是同一个对象，这里判断的是指针。</p>
+<h4 id="自定义-“相等”"><a href="#自定义-“相等”" class="headerlink" title="自定义 “相等”"></a>自定义 “相等”</h4><p>通过 NSObject 协议中的两个方法自定义 “相等”。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object;  </div><div class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span> hash;</div></pre></td></tr></table></figure>
+<p>自定义一个 Person 类，包含一个 email 属性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>()</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>假定对象的 email 属性值相同，就认为这两个类“相同”，那么自定义方法如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isEqualToPerson:(Person *)otherPerson &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="literal">nil</span> == otherPerson) <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == otherPerson) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([_email isEqualToString:otherPerson.email]) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object &#123;</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> <span class="keyword">class</span>] != [object <span class="keyword">class</span>]) <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> isEqualToPerson:object];</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 如果两个对象相等，则其哈希码一定相同。反之，如果哈希码相同，这两个对象不一定相同。</span></div><div class="line"><span class="comment">// 考虑到性能问题，hash 方法要保证高效率</span></div><div class="line">- (<span class="built_in">NSUInteger</span>)hash &#123;</div><div class="line">	<span class="comment">// 此处逻辑可以自定义</span></div><div class="line">    <span class="keyword">return</span> [_email hash];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSArray</span></div><div class="line">- (<span class="built_in">BOOL</span>)containsObject:(ObjectType)anObject;</div><div class="line"><span class="comment">// NSSet</span></div><div class="line">- (<span class="built_in">BOOL</span>)containsObject:(ObjectType)anObject;</div></pre></td></tr></table></figure>
+<p>使用 NSArray 调用 containsObject 这个方法，会直接调用 isEqual 方法判断两个对象是否相等。测试发现这里并没有调用 hash 方法，原因不明，例子如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line">Person *aPerson = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,i]];</div><div class="line">	[array addObject:p];</div><div class="line">	aPerson = p;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([array containsObject:aPerson]) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"array has 'aPerson'"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再使用 NSSet 看看是怎么执行的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableSet</span> *sets = [<span class="built_in">NSMutableSet</span> set];</div><div class="line">Person *aPerson = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,i]];</div><div class="line">	[sets addObject:p];</div><div class="line">	aPerson = p;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([sets containsObject:aPerson]) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"array has 'aPerson'"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>NSSet 在 addObject 和 containsObject 方法中都会调用 hash 方法。再 addObject 方法中会调用 isEqual 方法，而 containsObject 方法中则不再调用。NSArray 则是在 containsObject 方法中调用 isEqual 方法。</p>
+<blockquote>
+<p>不同的集合会使用不同的逻辑判断是否“相等”。</p>
+</blockquote>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>在 NSSet 中， hash 方法是判断的第一步，应该保证此方法的高效性，同时也要考虑 <strong>哈希碰撞</strong> 发生的概率。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/13/180413-《Effective Objective-C 2.0》第一章阅读笔记/" rel="next" title="《Effective Objective-C 2.0》第一章阅读笔记">
+                <i class="fa fa-chevron-left"></i> 《Effective Objective-C 2.0》第一章阅读笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章：对象、消息、运行期-1"><span class="nav-number">1.</span> <span class="nav-text">第二章：对象、消息、运行期(1)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第6条：理解-“属性”-这一概念"><span class="nav-number">1.1.</span> <span class="nav-text">第6条：理解 “属性” 这一概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象布局"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">对象布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用程序二进制接口（Application-Binary-Interface，ABI）"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">应用程序二进制接口（Application Binary Interface，ABI）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#synthesize-amp-dynamic"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">@synthesize & @dynamic</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#属性特质"><span class="nav-number">1.1.0.4.</span> <span class="nav-text">属性特质</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原子性"><span class="nav-number">1.1.0.4.1.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#读写权限"><span class="nav-number">1.1.0.4.2.</span> <span class="nav-text">读写权限</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#copy"><span class="nav-number">1.1.0.4.3.</span> <span class="nav-text">copy</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"><span class="nav-number">1.2.</span> <span class="nav-text">第7条：在对象内部尽量直接访问实例变量（感觉有歧义）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象内部不要直接设置实例（有歧义）"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">对象内部不要直接设置实例（有歧义）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化时应该直接访问实例"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">初始化时应该直接访问实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#懒加载"><span class="nav-number">1.2.0.3.</span> <span class="nav-text">懒加载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第8条：理解-“对象同等性”-这一概念"><span class="nav-number">1.3.</span> <span class="nav-text">第8条：理解 “对象同等性” 这一概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象完全相等"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">对象完全相等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义-“相等”"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">自定义 “相等”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#典型应用"><span class="nav-number">1.3.0.3.</span> <span class="nav-text">典型应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">1.3.0.4.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
