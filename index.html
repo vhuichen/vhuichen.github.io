@@ -246,6 +246,289 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/21/180421-尾调用优化/" itemprop="url">
+                  尾调用优化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-21T00:00:00+08:00" content="2018-04-21">
+              2018-04-21
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-23T21:04:34+08:00" content="2018-04-23">
+				2018-04-23
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>看《Effective Objective-C 2.0》这本书发现“尾调用”这个词汇，之前没接触过，记录下来。</p>
+<h3 id="什么是尾调用"><a href="#什么是尾调用" class="headerlink" title="什么是尾调用"></a>什么是尾调用</h3><p>“尾调用”是指一个函数的最后一项操作是调用另一个函数，即被调用函数的返回值就是当前函数的返回值。例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func1:i];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</div><div class="line">    	<span class="keyword">return</span> [<span class="keyword">self</span> func2:i];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">    	<span class="keyword">return</span> [<span class="keyword">self</span> func1:i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面的例子不属于尾调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func1:i] + <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">int</span> value = [<span class="keyword">self</span> func1:i]</div><div class="line">    <span class="keyword">return</span> value;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a>尾递归</h3><p>如果函数在尾部调用的是自身，那么就叫做“尾递归”。    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func0:i];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h3><p>当一个函数是尾调用时，那么当前函数开辟的栈空间就已经不需要再使用了。被调用函数不需要开辟新的栈空间，而是直接使用当前函数的栈空间（更新原有栈），再把被调用函数的返回地址替换成当前函数的返回地址，这就是“尾调用优化”。使用“尾调用优化”技术，可以避免栈溢出。 </p>
+<h3 id="尾递归优化（例子）"><a href="#尾递归优化（例子）" class="headerlink" title="尾递归优化（例子）"></a>尾递归优化（例子）</h3><blockquote>
+<p>求n!</p>
+</blockquote>
+<p>没有使用尾调用时代码是这样写的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)factorial0:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> n * [<span class="keyword">self</span> factorial0:n - <span class="number">1</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>程序第一次进入 factorial0 函数时需要在栈中分配内存用来保存 n 值。然后在每一次递归调用 factorial0 时都需要再分配新的内存来保存新的变量 n（这里的每一个 n 值都是不一样的，内存也是不一样的），空间复杂度O(n)。这样栈就会一直叠加，最后可能造成栈溢出。  </p>
+<p>使用了尾调用时代码是这样写的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)factorial1:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> factorial1:n total:<span class="number">1</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)factorial1:(<span class="keyword">int</span>)n total:(<span class="keyword">int</span>)total &#123;</div><div class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> total;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> factorial1:n - <span class="number">1</span> total:total * n];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>factorial1 只执行一次，不影响，空间复杂度O(1)。<br>程序第一次进入 factorial1:count 函数时需要在栈中分配内存用来保存 n 值。当第二次调用 factorial1:count 时，由于是尾调用，此时第一次分配的栈空间已经不需要再用了，所以第二次调用的时候直接使用原有栈，不需要分配额外的内存。空间复杂度O(1)。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/20/180420-《Effective Objective-C 2.0》第二章阅读笔记(2)/" itemprop="url">
+                  《Effective Objective-C 2.0》第二章阅读笔记(2)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-20T00:00:00+08:00" content="2018-04-20">
+              2018-04-20
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-23T21:04:34+08:00" content="2018-04-23">
+				2018-04-23
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第二章：对象、消息、运行期-2"><a href="#第二章：对象、消息、运行期-2" class="headerlink" title="第二章：对象、消息、运行期(2)"></a><center>第二章：对象、消息、运行期(2)</center></h1><h2 id="第9条：以-“类族模式”-模式隐藏实现细节"><a href="#第9条：以-“类族模式”-模式隐藏实现细节" class="headerlink" title="第9条：以 “类族模式” 模式隐藏实现细节"></a>第9条：以 “类族模式” 模式隐藏实现细节</h2><p>类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。</p>
+<h4 id="自定义-“类族模式”"><a href="#自定义-“类族模式”" class="headerlink" title="自定义 “类族模式”"></a>自定义 “类族模式”</h4><p>定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Person</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType;</div><div class="line">- (<span class="keyword">void</span>)doWork;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType &#123;</div><div class="line">    <span class="keyword">switch</span> (personType) &#123;</div><div class="line">        <span class="keyword">case</span> PersonTypeA:</div><div class="line">            <span class="keyword">return</span> [PersonA new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> PersonTypeB:</div><div class="line">            <span class="keyword">return</span> [PersonB new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> PersonTypeC:</div><div class="line">            <span class="keyword">return</span> [PersonC new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="comment">//SubClasses implement this</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonA</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonA</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonA</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonA Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonB</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonB</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonB</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonB Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonC</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonC</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonC</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonC Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>接口调用如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">Person *personA = [Person personWithType:PersonTypeA];</div><div class="line">Person *personB = [Person personWithType:PersonTypeB];</div><div class="line">Person *personC = [Person personWithType:PersonTypeC];</div><div class="line"></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personA <span class="keyword">class</span>]);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personB <span class="keyword">class</span>]);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personC <span class="keyword">class</span>]);</div><div class="line"></div><div class="line">[personA doWork];</div><div class="line">[personB doWork];</div><div class="line">[personC doWork];</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// PersonA</span></div><div class="line"><span class="comment">// PersonB</span></div><div class="line"><span class="comment">// PersonC</span></div><div class="line"><span class="comment">// do PersonA Work</span></div><div class="line"><span class="comment">// do PersonB Work</span></div><div class="line"><span class="comment">// do PersonC Work</span></div></pre></td></tr></table></figure>
+<p>这样就只需要传入不同的 Type 就可以实现不同的任务。这种实现模式就叫做“类族模式”。</p>
+<h2 id="第10条：在既有类中使用关联对象存放自定义数据"><a href="#第10条：在既有类中使用关联对象存放自定义数据" class="headerlink" title="第10条：在既有类中使用关联对象存放自定义数据"></a>第10条：在既有类中使用关联对象存放自定义数据</h2><p>可以通过“关联对象”这项特性，给某个类关联多个对象，这些对象可以通过 key 区分。在关联对象的时候需要指明对象的“存储策略”，用来维护相应的“内存管理语义”。“存储策略”由 objc_AssociationPolicy 这个枚举维护。下面给出 objc_AssociationPolicy 枚举的取值以及等效的 @property 属性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Policies related to associative references.</div><div class="line"> * These are options to objc_setAssociatedObject()</div><div class="line"> */</div><div class="line"><span class="keyword">typedef</span> OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</div><div class="line">    OBJC_ASSOCIATION_ASSIGN = <span class="number">0</span>,           <span class="comment">/**&lt; Specifies a weak reference to the associated object. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = <span class="number">1</span>, <span class="comment">/**&lt; Specifies a strong reference to the associated object. </span></div><div class="line">                                            *   The association is not made atomically. */</div><div class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = <span class="number">3</span>,   <span class="comment">/**&lt; Specifies that the associated object is copied. </span></div><div class="line">                                            *   The association is not made atomically. */</div><div class="line">    OBJC_ASSOCIATION_RETAIN = <span class="number">01401</span>,       <span class="comment">/**&lt; Specifies a strong reference to the associated object.</span></div><div class="line">                                            *   The association is made atomically. */</div><div class="line">    OBJC_ASSOCIATION_COPY = <span class="number">01403</span>          <span class="comment">/**&lt; Specifies that the associated object is copied.</span></div><div class="line">                                            *   The association is made atomically. */</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-20/99689322.jpg" alt=""><br>对应的3个方法为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 设置关联对象</span></div><div class="line"><span class="keyword">void</span> objc_setAssociatedObject(<span class="keyword">id</span> _Nonnull object, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key,<span class="keyword">id</span> _Nullable value, objc_AssociationPolicy policy);</div><div class="line"><span class="comment">// 获取关联对象</span></div><div class="line"><span class="keyword">id</span> objc_getAssociatedObject(<span class="keyword">id</span> _Nonnull object, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key);                         </div><div class="line"><span class="comment">// 移除关联对象</span></div><div class="line"><span class="keyword">void</span> objc_removeAssociatedObjects(<span class="keyword">id</span> _Nonnull object)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>系统没有给出移除单个关联对象的接口，如果要移除某个关联对象，可以通过给该关联对象的 key 设置一个空值来实现。<br>void objc_setAssociatedObject(object, key, nil, policy);</p>
+</blockquote>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>当我们需要使用 UIAlertView 时，一般会这样写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)showAlert &#123;</div><div class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"title"</span> message:<span class="string">@"message"</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@"Cancel"</span> otherButtonTitles:<span class="string">@"Confirm"</span>, <span class="literal">nil</span>];</div><div class="line">	[alertView show];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</div><div class="line">    <span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</div><div class="line">        </div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当存在多个 UIAlertView 时，委托方法里面就需要对 alertView 进行判断。使用关联对象可以简化这里的逻辑</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">void</span> *kAlertKey = <span class="string">@"kAlertKey"</span>;</div><div class="line">- (<span class="keyword">void</span>)showAlert &#123;</div><div class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"title"</span> message:<span class="string">@"message"</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@"Cancel"</span> otherButtonTitles:<span class="string">@"confirm"</span>, <span class="literal">nil</span>];</div><div class="line">	</div><div class="line">	<span class="keyword">void</span> (^block)(<span class="built_in">NSInteger</span>) = ^(<span class="built_in">NSInteger</span> buttonIndex) &#123;</div><div class="line">		<span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</div><div class="line">            </div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</div><div class="line">            </div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">	objc_setAssociatedObject(alertView, kAlertKey, block, OBJC_ASSOCIATION_COPY);</div><div class="line">	[alertView show];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</div><div class="line">    <span class="keyword">void</span> (^block)(<span class="built_in">NSInteger</span>) = objc_getAssociatedObject(alertView, kAlertKey);</div><div class="line">    block(buttonIndex);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>当关联对象需要捕获了其他变量，可能会造成引用循环。使用关联对象会降低代码的可读性，增加调试的难度。应谨慎使用。</p>
+<h2 id="第11条：理解-objc-msgSend-的作用"><a href="#第11条：理解-objc-msgSend-的作用" class="headerlink" title="第11条：理解 objc_msgSend 的作用"></a>第11条：理解 objc_msgSend 的作用</h2><p>给对象发消息</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnValue = [someObject msgName:parameter];</div></pre></td></tr></table></figure>
+<p>编译器会转换为</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnValue = objc_msgSend(someObject, <span class="keyword">@selector</span>(msgName:), parameter);</div></pre></td></tr></table></figure>
+<p>objc_msgSend 会在接受者类中搜寻“方法列表”，如果找到对应的方法，则转跳实现代码。如果没找到就沿着继承类向上找。如果最终还是找不到该方法，则进行“消息转发”。同时 objc_msgSend 还会将找到的方法缓存在“快速映射表”，如果下次还需要执行该方法，就会先从“快速映射表”中查找，这样执行起来会快很多。<br>每个类都会有一张类似于字典一样的表格，方法名是 Key ，对应的 Value 则保存着函数指针。objc_msgSend 就是通过这个表格来寻找应该执行的方法并跳转其实现的。这些工作由“动态消息派发系统”来处理。</p>
+<h4 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h4><p>“尾调用”是指一个函数最后一项操作是调用另一个函数，即被调用的函数的返回值就是当前函数的返回值。如果函数在尾部调用的是自身，那么就叫做“尾递归”。<br>尾调用优化是指不需要在当前调用栈上开辟新的栈空间，而是更新原有栈（原有栈的数据已经不需要了），再把调用函数的返回地址替换成当前函数的返回地址。<br>使用“尾调用优化”技术，很大程度上可以避免了栈溢出。  </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/17/180417-《Effective Objective-C 2.0》第二章阅读笔记(1)/" itemprop="url">
                   《Effective Objective-C 2.0》第二章阅读笔记(1)
                 </a>
@@ -1096,271 +1379,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/03/180403-iOS开发之Push Notification/" itemprop="url">
-                  iOS开发之Push Notification
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-03T15:12:39+08:00" content="2018-04-03">
-              2018-04-03
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-03T23:19:46+08:00" content="2018-04-03">
-				2018-04-03
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>iOS远程推送是怎么实现的？</p>
-<h3 id="远程推送逻辑图"><a href="#远程推送逻辑图" class="headerlink" title="远程推送逻辑图"></a>远程推送逻辑图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg" alt=""></p>
-<p>1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。<br>2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。<br>3、 APP 将 Device Token 发送给自己的服务器。<br>4、 当服务器发生APP感兴趣事件的时候，服务器将该消息以及对应的 Device Token 发送给APNS。<br>5、 APNS 再根据 Device Token 将消息发送给对应的APP（用户）。   </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/31/180331-iOS开发之Designated Initializer/" itemprop="url">
-                  iOS开发之Designated Initializer(指定初始化方法)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-31T00:00:00+08:00" content="2018-03-31">
-              2018-03-31
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-11T22:53:23+08:00" content="2018-04-11">
-				2018-04-11
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以在编译的时候帮我们找出潜在的问题。<br>如果一个类中的初始化方法没有用 NS_DESIGNATED_INITIALIZER 修饰，说明这个方法是便利初始化方法（Convenience Initializer）。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="meta">#else</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#endif</span></div><div class="line"><span class="meta">#endif</span></div></pre></td></tr></table></figure>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>看看官方的接口是怎么使用的。   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// UIViewController</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithNibName:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)nibNameOrNil bundle:(<span class="keyword">nullable</span> <span class="built_in">NSBundle</span> *)nibBundleOrNil <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UIView</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">CGRect</span>)frame <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UITableViewCell</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithStyle:(<span class="built_in">UITableViewCellStyle</span>)style reuseIdentifier:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)reuseIdentifier <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_0) <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>两个指定初始化方法分别对应纯代码方式和文件（Xib、Storyboard）方式创建。</p>
-</blockquote>
-<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>在OC中它想表达的意思大概就是：当你alloc了一个类的时候，必须直接或间接调用这个类的其中一个带有 NS_DESIGNATED_INITIALIZER 后缀的初始化方法。不然初始化不完全，编译器会报出一个警告！下图是官方给的逻辑图。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/50413485.jpg?imageView2/2/w/600" alt=""></p>
-<blockquote>
-<p>这里有两个约束<br>约束1、便利初始化方法只能调用本类的初始化方法，最终一定会调用本类的指定初始化方法。<br>约束2、子类的指定初始化方法一定会调用父类的指定初始化方法。</p>
-</blockquote>
-<p>当存在多个初始化方法的时候，流程如下图。这里的 Secondary initializer 就是 Convenience (便利初始化方法)<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/93397245.jpg?imageView2/2/w/700" alt=""></p>
-<blockquote>
-<p>这里便利初始化方法最终调用了本类的指定初始化方法，本类的指定初始化方法调用了父类的指定初始化方法。满足了约束1和约束2。</p>
-</blockquote>
-<p>子类要先初始化父类，然后再初始化实例变量。如下图<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/37631710.jpg?imageView2/2/w/500" alt=""></p>
-<blockquote>
-<p>子类的指定初始化方法调用了父类的指定初始化方法。满足了约束2。</p>
-</blockquote>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://developer.apple.com/library/content/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150-CH1-SW8" target="_blank" rel="external">Object Initialization</a><br><a href="https://developer.apple.com/library/content/documentation/General/Conceptual/CocoaEncyclopedia/Initialization/Initialization.html" target="_blank" rel="external">Concepts in Objective-C Programming: Object Initialization</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1406,7 +1424,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1423,7 +1441,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

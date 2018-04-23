@@ -1,0 +1,681 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第二章：对象、消息、运行期(2)第9条：以 “类族模式” 模式隐藏实现细节类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。
+自定义 “类族模式”定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第二章阅读笔记(2)">
+<meta property="og:url" content="http://yoursite.com/2018/04/20/180420-《Effective Objective-C 2.0》第二章阅读笔记(2)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第二章：对象、消息、运行期(2)第9条：以 “类族模式” 模式隐藏实现细节类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。
+自定义 “类族模式”定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-20/99689322.jpg">
+<meta property="og:updated_time" content="2018-04-23T13:04:34.139Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第二章阅读笔记(2)">
+<meta name="twitter:description" content="第二章：对象、消息、运行期(2)第9条：以 “类族模式” 模式隐藏实现细节类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。
+自定义 “类族模式”定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-20/99689322.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/20/180420-《Effective Objective-C 2.0》第二章阅读笔记(2)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第二章阅读笔记(2) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第二章阅读笔记(2)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-20T00:00:00+08:00" content="2018-04-20">
+              2018-04-20
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-23T21:04:34+08:00" content="2018-04-23">
+				2018-04-23
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第二章：对象、消息、运行期-2"><a href="#第二章：对象、消息、运行期-2" class="headerlink" title="第二章：对象、消息、运行期(2)"></a><center>第二章：对象、消息、运行期(2)</center></h1><h2 id="第9条：以-“类族模式”-模式隐藏实现细节"><a href="#第9条：以-“类族模式”-模式隐藏实现细节" class="headerlink" title="第9条：以 “类族模式” 模式隐藏实现细节"></a>第9条：以 “类族模式” 模式隐藏实现细节</h2><p>类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。</p>
+<h4 id="自定义-“类族模式”"><a href="#自定义-“类族模式”" class="headerlink" title="自定义 “类族模式”"></a>自定义 “类族模式”</h4><p>定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Person</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType;</div><div class="line">- (<span class="keyword">void</span>)doWork;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType &#123;</div><div class="line">    <span class="keyword">switch</span> (personType) &#123;</div><div class="line">        <span class="keyword">case</span> PersonTypeA:</div><div class="line">            <span class="keyword">return</span> [PersonA new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> PersonTypeB:</div><div class="line">            <span class="keyword">return</span> [PersonB new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> PersonTypeC:</div><div class="line">            <span class="keyword">return</span> [PersonC new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="comment">//SubClasses implement this</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonA</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonA</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonA</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonA Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonB</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonB</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonB</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonB Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonC</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonC</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonC</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonC Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>接口调用如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">Person *personA = [Person personWithType:PersonTypeA];</div><div class="line">Person *personB = [Person personWithType:PersonTypeB];</div><div class="line">Person *personC = [Person personWithType:PersonTypeC];</div><div class="line"></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personA <span class="keyword">class</span>]);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personB <span class="keyword">class</span>]);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personC <span class="keyword">class</span>]);</div><div class="line"></div><div class="line">[personA doWork];</div><div class="line">[personB doWork];</div><div class="line">[personC doWork];</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// PersonA</span></div><div class="line"><span class="comment">// PersonB</span></div><div class="line"><span class="comment">// PersonC</span></div><div class="line"><span class="comment">// do PersonA Work</span></div><div class="line"><span class="comment">// do PersonB Work</span></div><div class="line"><span class="comment">// do PersonC Work</span></div></pre></td></tr></table></figure>
+<p>这样就只需要传入不同的 Type 就可以实现不同的任务。这种实现模式就叫做“类族模式”。</p>
+<h2 id="第10条：在既有类中使用关联对象存放自定义数据"><a href="#第10条：在既有类中使用关联对象存放自定义数据" class="headerlink" title="第10条：在既有类中使用关联对象存放自定义数据"></a>第10条：在既有类中使用关联对象存放自定义数据</h2><p>可以通过“关联对象”这项特性，给某个类关联多个对象，这些对象可以通过 key 区分。在关联对象的时候需要指明对象的“存储策略”，用来维护相应的“内存管理语义”。“存储策略”由 objc_AssociationPolicy 这个枚举维护。下面给出 objc_AssociationPolicy 枚举的取值以及等效的 @property 属性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Policies related to associative references.</div><div class="line"> * These are options to objc_setAssociatedObject()</div><div class="line"> */</div><div class="line"><span class="keyword">typedef</span> OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</div><div class="line">    OBJC_ASSOCIATION_ASSIGN = <span class="number">0</span>,           <span class="comment">/**&lt; Specifies a weak reference to the associated object. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = <span class="number">1</span>, <span class="comment">/**&lt; Specifies a strong reference to the associated object. </span></div><div class="line">                                            *   The association is not made atomically. */</div><div class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = <span class="number">3</span>,   <span class="comment">/**&lt; Specifies that the associated object is copied. </span></div><div class="line">                                            *   The association is not made atomically. */</div><div class="line">    OBJC_ASSOCIATION_RETAIN = <span class="number">01401</span>,       <span class="comment">/**&lt; Specifies a strong reference to the associated object.</span></div><div class="line">                                            *   The association is made atomically. */</div><div class="line">    OBJC_ASSOCIATION_COPY = <span class="number">01403</span>          <span class="comment">/**&lt; Specifies that the associated object is copied.</span></div><div class="line">                                            *   The association is made atomically. */</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-20/99689322.jpg" alt=""><br>对应的3个方法为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 设置关联对象</span></div><div class="line"><span class="keyword">void</span> objc_setAssociatedObject(<span class="keyword">id</span> _Nonnull object, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key,<span class="keyword">id</span> _Nullable value, objc_AssociationPolicy policy);</div><div class="line"><span class="comment">// 获取关联对象</span></div><div class="line"><span class="keyword">id</span> objc_getAssociatedObject(<span class="keyword">id</span> _Nonnull object, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key);                         </div><div class="line"><span class="comment">// 移除关联对象</span></div><div class="line"><span class="keyword">void</span> objc_removeAssociatedObjects(<span class="keyword">id</span> _Nonnull object)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>系统没有给出移除单个关联对象的接口，如果要移除某个关联对象，可以通过给该关联对象的 key 设置一个空值来实现。<br>void objc_setAssociatedObject(object, key, nil, policy);</p>
+</blockquote>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>当我们需要使用 UIAlertView 时，一般会这样写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)showAlert &#123;</div><div class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"title"</span> message:<span class="string">@"message"</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@"Cancel"</span> otherButtonTitles:<span class="string">@"Confirm"</span>, <span class="literal">nil</span>];</div><div class="line">	[alertView show];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</div><div class="line">    <span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</div><div class="line">        </div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当存在多个 UIAlertView 时，委托方法里面就需要对 alertView 进行判断。使用关联对象可以简化这里的逻辑</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">void</span> *kAlertKey = <span class="string">@"kAlertKey"</span>;</div><div class="line">- (<span class="keyword">void</span>)showAlert &#123;</div><div class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"title"</span> message:<span class="string">@"message"</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@"Cancel"</span> otherButtonTitles:<span class="string">@"confirm"</span>, <span class="literal">nil</span>];</div><div class="line">	</div><div class="line">	<span class="keyword">void</span> (^block)(<span class="built_in">NSInteger</span>) = ^(<span class="built_in">NSInteger</span> buttonIndex) &#123;</div><div class="line">		<span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</div><div class="line">            </div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</div><div class="line">            </div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">	objc_setAssociatedObject(alertView, kAlertKey, block, OBJC_ASSOCIATION_COPY);</div><div class="line">	[alertView show];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</div><div class="line">    <span class="keyword">void</span> (^block)(<span class="built_in">NSInteger</span>) = objc_getAssociatedObject(alertView, kAlertKey);</div><div class="line">    block(buttonIndex);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>当关联对象需要捕获了其他变量，可能会造成引用循环。使用关联对象会降低代码的可读性，增加调试的难度。应谨慎使用。</p>
+<h2 id="第11条：理解-objc-msgSend-的作用"><a href="#第11条：理解-objc-msgSend-的作用" class="headerlink" title="第11条：理解 objc_msgSend 的作用"></a>第11条：理解 objc_msgSend 的作用</h2><p>给对象发消息</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnValue = [someObject msgName:parameter];</div></pre></td></tr></table></figure>
+<p>编译器会转换为</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnValue = objc_msgSend(someObject, <span class="keyword">@selector</span>(msgName:), parameter);</div></pre></td></tr></table></figure>
+<p>objc_msgSend 会在接受者类中搜寻“方法列表”，如果找到对应的方法，则转跳实现代码。如果没找到就沿着继承类向上找。如果最终还是找不到该方法，则进行“消息转发”。同时 objc_msgSend 还会将找到的方法缓存在“快速映射表”，如果下次还需要执行该方法，就会先从“快速映射表”中查找，这样执行起来会快很多。<br>每个类都会有一张类似于字典一样的表格，方法名是 Key ，对应的 Value 则保存着函数指针。objc_msgSend 就是通过这个表格来寻找应该执行的方法并跳转其实现的。这些工作由“动态消息派发系统”来处理。</p>
+<h4 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h4><p>“尾调用”是指一个函数最后一项操作是调用另一个函数，即被调用的函数的返回值就是当前函数的返回值。如果函数在尾部调用的是自身，那么就叫做“尾递归”。<br>尾调用优化是指不需要在当前调用栈上开辟新的栈空间，而是更新原有栈（原有栈的数据已经不需要了），再把调用函数的返回地址替换成当前函数的返回地址。<br>使用“尾调用优化”技术，很大程度上可以避免了栈溢出。  </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/17/180417-《Effective Objective-C 2.0》第二章阅读笔记(1)/" rel="next" title="《Effective Objective-C 2.0》第二章阅读笔记(1)">
+                <i class="fa fa-chevron-left"></i> 《Effective Objective-C 2.0》第二章阅读笔记(1)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/21/180421-尾调用优化/" rel="prev" title="尾调用优化">
+                尾调用优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章：对象、消息、运行期-2"><span class="nav-number">1.</span> <span class="nav-text">第二章：对象、消息、运行期(2)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第9条：以-“类族模式”-模式隐藏实现细节"><span class="nav-number">1.1.</span> <span class="nav-text">第9条：以 “类族模式” 模式隐藏实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义-“类族模式”"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">自定义 “类族模式”</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第10条：在既有类中使用关联对象存放自定义数据"><span class="nav-number">1.2.</span> <span class="nav-text">第10条：在既有类中使用关联对象存放自定义数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#示例"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第11条：理解-objc-msgSend-的作用"><span class="nav-number">1.3.</span> <span class="nav-text">第11条：理解 objc_msgSend 的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#尾调用优化"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">尾调用优化</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
