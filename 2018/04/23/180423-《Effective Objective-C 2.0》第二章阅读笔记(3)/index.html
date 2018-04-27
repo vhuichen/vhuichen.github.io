@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第二章：对象、消息、运行期(3)第12条：理解消息转发机制当一个对象接收到无法解读的消息后，就会开启“消息转发”机制。如果消息转发也无法解读消息，程序就会抛出异常：
+
+unrecognized selector sent to instance xxxx
+
+消息转发分为两大阶段：
+第一阶段：动态方法解析征询接受者能否动态添加方法来处理这个消息。此时会调用以下两个方法之一：
+1234// 以类方法调">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第二章阅读笔记(3)">
+<meta property="og:url" content="http://yoursite.com/2018/04/23/180423-《Effective Objective-C 2.0》第二章阅读笔记(3)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第二章：对象、消息、运行期(3)第12条：理解消息转发机制当一个对象接收到无法解读的消息后，就会开启“消息转发”机制。如果消息转发也无法解读消息，程序就会抛出异常：
+
+unrecognized selector sent to instance xxxx
+
+消息转发分为两大阶段：
+第一阶段：动态方法解析征询接受者能否动态添加方法来处理这个消息。此时会调用以下两个方法之一：
+1234// 以类方法调">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-24/55820526.jpg">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-24/29661179.jpg">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-24/58460381.jpg">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-25/33685437.jpg">
+<meta property="og:updated_time" content="2018-04-26T15:49:10.333Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第二章阅读笔记(3)">
+<meta name="twitter:description" content="第二章：对象、消息、运行期(3)第12条：理解消息转发机制当一个对象接收到无法解读的消息后，就会开启“消息转发”机制。如果消息转发也无法解读消息，程序就会抛出异常：
+
+unrecognized selector sent to instance xxxx
+
+消息转发分为两大阶段：
+第一阶段：动态方法解析征询接受者能否动态添加方法来处理这个消息。此时会调用以下两个方法之一：
+1234// 以类方法调">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-4-24/55820526.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/23/180423-《Effective Objective-C 2.0》第二章阅读笔记(3)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第二章阅读笔记(3) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第二章阅读笔记(3)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-23T00:00:00+08:00" content="2018-04-23">
+              2018-04-23
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-26T23:49:10+08:00" content="2018-04-26">
+				2018-04-26
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第二章：对象、消息、运行期-3"><a href="#第二章：对象、消息、运行期-3" class="headerlink" title="第二章：对象、消息、运行期(3)"></a><center>第二章：对象、消息、运行期(3)</center></h1><h2 id="第12条：理解消息转发机制"><a href="#第12条：理解消息转发机制" class="headerlink" title="第12条：理解消息转发机制"></a>第12条：理解消息转发机制</h2><p>当一个对象接收到无法解读的消息后，就会开启“消息转发”机制。如果消息转发也无法解读消息，程序就会抛出异常：</p>
+<blockquote>
+<p>unrecognized selector sent to instance xxxx</p>
+</blockquote>
+<p>消息转发分为两大阶段：</p>
+<h3 id="第一阶段：动态方法解析"><a href="#第一阶段：动态方法解析" class="headerlink" title="第一阶段：动态方法解析"></a>第一阶段：动态方法解析</h3><p>征询接受者能否动态添加方法来处理这个消息。此时会调用以下两个方法之一：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 以类方法调用时触发</span></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel</div><div class="line"><span class="comment">// 以实例方法调用时触发</span></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel</div></pre></td></tr></table></figure>
+<p>如果需要在动态解析时处理消息，那么实现代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> run(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"missRun -- run"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel &#123;</div><div class="line">    <span class="keyword">if</span> (sel == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"sel == %@"</span>,<span class="built_in">NSStringFromSelector</span>(sel));</div><div class="line">        class_addMethod([<span class="keyword">self</span> <span class="keyword">class</span>], sel, (IMP)run, <span class="string">"v@:"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:sel];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 注意这里 class_addMethod 的第一个参数是 [self superclass]</span></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel &#123;</div><div class="line">    <span class="keyword">if</span> (sel == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"sel == %@"</span>,<span class="built_in">NSStringFromSelector</span>(sel));</div><div class="line">        class_addMethod([<span class="keyword">self</span> superclass], sel, (IMP)run, <span class="string">"v@:"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:sel];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>外部调用  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//Person *person = [[Person alloc] init];</span></div><div class="line"><span class="comment">//[person performSelector:NSSelectorFromString(@"missRun") withObject:nil];</span></div><div class="line"></div><div class="line">[Person performSelector:<span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>) withObject:<span class="literal">nil</span>];</div></pre></td></tr></table></figure>
+<p>此时在外部调用 missRun 方法，最终将会访问 <strong>void run(id self, SEL _cmd)</strong> 方法。</p>
+<blockquote>
+<p>IMP 指向的函数必须要有 <strong>id self, SEL _cmd</strong> 这两个参数。  </p>
+</blockquote>
+<p>class_addMethod 的最后一个参数 <strong>“v@:”</strong> 中，v 表示返回值 void ， @ 表示第一个参数类型为 id ，: 表示 SEL 。具体可看文档 <a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html" target="_blank" rel="external">Type Encodings</a></p>
+<h3 id="第二阶段：完整的消息转发机制"><a href="#第二阶段：完整的消息转发机制" class="headerlink" title="第二阶段：完整的消息转发机制"></a>第二阶段：完整的消息转发机制</h3><p>接受者尝试能否将这条消息转发给其他接受者接收，如果不行就启用“完整的消息转发”。</p>
+<h4 id="备用接受者"><a href="#备用接受者" class="headerlink" title="备用接受者"></a>备用接受者</h4><p>此时会调用下面的方法  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">id</span>)forwardingTargetForSelector:(SEL)aSelector &#123;</div><div class="line">    Sutdent *student = [[Sutdent alloc] init];</div><div class="line">    <span class="keyword">if</span> ([student respondsToSelector:aSelector]) &#123;</div><div class="line">        <span class="keyword">return</span> student;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> forwardingTargetForSelector:aSelector];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="完整的消息转发"><a href="#完整的消息转发" class="headerlink" title="完整的消息转发"></a>完整的消息转发</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)aSelector &#123;</div><div class="line">    <span class="keyword">if</span> (aSelector == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        <span class="keyword">return</span> [<span class="built_in">NSMethodSignature</span> signatureWithObjCTypes:<span class="string">"v@:"</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> methodSignatureForSelector:aSelector];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)anInvocation &#123;</div><div class="line">    <span class="keyword">if</span> ([anInvocation selector] == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        Sutdent *student = [[Sutdent alloc] init];</div><div class="line">        [anInvocation invokeWithTarget:student];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>“备用接受者”和“完整的消息转发”区别在于，“完整的消息转发”中可以改变消息的内容。</p>
+<h3 id="消息转发流程图"><a href="#消息转发流程图" class="headerlink" title="消息转发流程图"></a>消息转发流程图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/55820526.jpg" alt=""><br>接受者在每一步均有机会处理消息，越到最后，处理的代价会越高。</p>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p><a href="https://github.com/vhuichen/MessageForwarding.git" target="_blank" rel="external">GitHub: MessageForwarding</a></p>
+<h2 id="第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）"><a href="#第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）" class="headerlink" title="第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）"></a>第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）</h2><p>类对象的方法列表会将“方法名”映射带相应的方法实现上，“动态消息派发系统”会根据这个表找到相应的方法。这些方法均以函数指针的方式表示。这种指针就是 IMP 。下图是 NSString 的部分方法映射表。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/29661179.jpg" alt=""><br>Objective-C 运行时系统提供了几个方法可以用来操作这张表。开发者可以在运行时新增方法，改变方法对应的实现，也可以交换两个方法的具体实现。例如我们可以让方法映射表变成下图这样<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/58460381.jpg" alt=""><br>实现起来也是很简单的，创建一个 NSString 的分类，在 +load 方法中实现  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(lowercaseString));</div><div class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(uppercaseString));</div><div class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = <span class="string">@"This is a String"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"lowercaseString = %@"</span>,string.lowercaseString);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"uppercaseString = %@"</span>,string.uppercaseString);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// lowercaseString = THIS IS A STRING</span></div><div class="line"><span class="comment">// uppercaseString = this is a string</span></div></pre></td></tr></table></figure>
+<p>此时 lowercaseString 和 uppercaseString 的方法实现已经替换过来了。<br>lowercaseString 方法对应的是 uppercaseString 的方法实现。<br>uppercaseString 方法对应的是 lowercaseString 的方法实现。<br>所以打印出来的log是反过来的。当然这个没有什么意义。  </p>
+<p>下面实现一个功能：每次调用 lowercaseString 都打印出相应的log出来  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(lowercaseString));</div><div class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(vch_lowercaseString));</div><div class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_lowercaseString &#123;</div><div class="line">    <span class="built_in">NSString</span> *string = [<span class="keyword">self</span> vch_lowercaseString];</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"----%@"</span>,string);</div><div class="line">    <span class="keyword">return</span> string;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = <span class="string">@"This is a String"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"lowercaseString = %@"</span>,string.lowercaseString);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// ----this is a string</span></div><div class="line"><span class="comment">// lowercaseString = this is a string</span></div></pre></td></tr></table></figure>
+<p>由于 lowercaseString 和 vch_lowercaseString 交换了方法实现，所以当我们调用 lowercaseString 方法的时候，执行的是 vch_lowercaseString 里面的方法。所以才会打印出 log 出来。  </p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p><strong>使用 method swizzling “黑魔法”，开发者可以在原有实现中添加新的功能。</strong></p>
+<h2 id="第14条：理解-“类对象”-的本质"><a href="#第14条：理解-“类对象”-的本质" class="headerlink" title="第14条：理解 “类对象” 的本质"></a>第14条：理解 “类对象” 的本质</h2><p>看看下面的两个语句  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string0 = <span class="string">@"this is a string"</span>;</div><div class="line"><span class="keyword">id</span> string1 = <span class="string">@"this is a string"</span>;</div></pre></td></tr></table></figure>
+<p>两个语句都创建了一个 NSSring 类型的对象，在编译时，编译器会将 string0 按照 NSString 类型来检测，string1 按照 id 类型来检测。string0 直接调用 NSString 的方法编译器不会报错，string1 直接调用 NSString 的方法则编译器报错。 而在运行时两个对象表示的意思是一样的。</p>
+<p>在 objc.h 中是这样定义 id 类型的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// objc.h</span></div><div class="line"></div><div class="line"><span class="comment">/// An opaque type that represents an Objective-C class.</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</div><div class="line"></div><div class="line"><span class="comment">/// Represents an instance of a class.</span></div><div class="line"><span class="keyword">struct</span> objc_object &#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/// A pointer to an instance of a class.</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_object *<span class="keyword">id</span>;</div></pre></td></tr></table></figure>
+<p>可以看出 id 是 objc_object 结构体类型的指针，objc_object 包含了一个 Class 类型的变量 isa ，Class 是 objc_class 类型的指针。<br>再看看 NSObject.h 中的定义</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSObject.h</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt; </span>&#123;</div><div class="line"><span class="meta">#pragma clang diagnostic push</span></div><div class="line"><span class="meta">#pragma clang diagnostic ignored <span class="meta-string">"-Wobjc-interface-ivars"</span></span></div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line"><span class="meta">#pragma clang diagnostic pop</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里面包含了一个 Class 类型的变量 isa 。这个 Class 也就是 objc_class 类型的指针。<br>事实上每个实例变量都会包含一个 objc_object 结构体，该结构体的第一个成员变量就是 isa 指针。既然是指针，那么 objc_class 也是一个对象，我们称之为“类对象”，这个类对象是一个单例，程序运行中只存在一份。   </p>
+<p>再看看 runtime.h 是怎么定义 objc_class 结构体的。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// runtime.h</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> objc_class &#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line"></div><div class="line"><span class="meta">#if !__OBJC2__</span></div><div class="line">    Class _Nullable super_class                              OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * _Nonnull name                               OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> version                                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> info                                                OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;</div><div class="line"><span class="meta">#endif</span></div><div class="line"></div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
+<p>objc_class 的第一个成员变量也是 isa 指针。它指向的是类的元类（metaclass）。objc_class 负责保存类的实例变量、方法列表、缓存方法列表、协议列表等。元类（metaclass）则负责保存类方法列表。</p>
+<h3 id="继承体系图"><a href="#继承体系图" class="headerlink" title="继承体系图"></a>继承体系图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-25/33685437.jpg" alt=""><br>每一个实例对象都有一个 isa 指针指向其类对象，用来表明其类型，类对象也有一个 isa 指针，指向其元类，元类同样存在一个 isa 指针，指向其根元类，根元类的 isa 指针则指向自身。这些类对象则构成了类的继承体系。</p>
+<h3 id="在继承体系中查询类型信息"><a href="#在继承体系中查询类型信息" class="headerlink" title="在继承体系中查询类型信息"></a>在继承体系中查询类型信息</h3><p><strong>isMemberOfClass</strong>  不包含父类，用来判断是否是某个特定类的实例。（需要考虑“类族”）<br><strong>isKindOfClass</strong>    包含父类，用来判断是否是某个特定类或者派生类的实例。  </p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>1、类本质也是一个对象（类对象）。<br>2、类对象会在程序第一次使用时创建一次，是个单例。<br>3、类对象是一种数据结构。存储了类的版本、描述信息、大小、变量列表、方法列表、方法缓存、协议列表等。<br>4、元类中保存了类方法列表。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/21/180421-尾调用优化/" rel="next" title="尾调用优化">
+                <i class="fa fa-chevron-left"></i> 尾调用优化
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章：对象、消息、运行期-3"><span class="nav-number">1.</span> <span class="nav-text">第二章：对象、消息、运行期(3)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第12条：理解消息转发机制"><span class="nav-number">1.1.</span> <span class="nav-text">第12条：理解消息转发机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段：动态方法解析"><span class="nav-number">1.1.1.</span> <span class="nav-text">第一阶段：动态方法解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二阶段：完整的消息转发机制"><span class="nav-number">1.1.2.</span> <span class="nav-text">第二阶段：完整的消息转发机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#备用接受者"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">备用接受者</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完整的消息转发"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">完整的消息转发</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息转发流程图"><span class="nav-number">1.1.3.</span> <span class="nav-text">消息转发流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo"><span class="nav-number">1.1.4.</span> <span class="nav-text">Demo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）"><span class="nav-number">1.2.</span> <span class="nav-text">第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用途"><span class="nav-number">1.2.1.</span> <span class="nav-text">用途</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第14条：理解-“类对象”-的本质"><span class="nav-number">1.3.</span> <span class="nav-text">第14条：理解 “类对象” 的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#继承体系图"><span class="nav-number">1.3.1.</span> <span class="nav-text">继承体系图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在继承体系中查询类型信息"><span class="nav-number">1.3.2.</span> <span class="nav-text">在继承体系中查询类型信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
