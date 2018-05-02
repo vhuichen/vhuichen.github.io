@@ -84,19 +84,22 @@
 
 
 
-<meta name="description" content="创建NSString的分类，用来获取字符串的字节长度用两种方法实现
-12345678910111213141516////  NSString+VCHProperty.h//  SmartWatch////  Created by chenhui on 2016/11/22.//  Copyright © 2016年 vhuichen. All rights reserved.//#import">
+<meta name="description" content="序言在我的所有项目里面，“登录成功”以及“退出登录”都是需要却换根控制器的，方法很简单，直接设置一个新的控制器就行了。这样做两个界面之间就是直接一闪就跳换过去了，给人体验不太友好。所以在这里可以加个动画优化体验。
+实现由于 rootViewController 是放到 keyWindow 上的，所以可以在设置 rootViewController 时给 keyWindow 加上动画。
+.h 头文件">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS基础之计算字符串长度">
-<meta property="og:url" content="http://yoursite.com/2016/11/30/161130-iOS基础之计算字符串长度/index.html">
+<meta property="og:title" content="iOS基础之动画切换根控制器">
+<meta property="og:url" content="http://yoursite.com/2018/04/29/180429-iOS基础之动画切换根控制器/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="创建NSString的分类，用来获取字符串的字节长度用两种方法实现
-12345678910111213141516////  NSString+VCHProperty.h//  SmartWatch////  Created by chenhui on 2016/11/22.//  Copyright © 2016年 vhuichen. All rights reserved.//#import">
-<meta property="og:updated_time" content="2017-06-27T15:02:28.000Z">
+<meta property="og:description" content="序言在我的所有项目里面，“登录成功”以及“退出登录”都是需要却换根控制器的，方法很简单，直接设置一个新的控制器就行了。这样做两个界面之间就是直接一闪就跳换过去了，给人体验不太友好。所以在这里可以加个动画优化体验。
+实现由于 rootViewController 是放到 keyWindow 上的，所以可以在设置 rootViewController 时给 keyWindow 加上动画。
+.h 头文件">
+<meta property="og:updated_time" content="2018-05-02T15:25:09.191Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS基础之计算字符串长度">
-<meta name="twitter:description" content="创建NSString的分类，用来获取字符串的字节长度用两种方法实现
-12345678910111213141516////  NSString+VCHProperty.h//  SmartWatch////  Created by chenhui on 2016/11/22.//  Copyright © 2016年 vhuichen. All rights reserved.//#import">
+<meta name="twitter:title" content="iOS基础之动画切换根控制器">
+<meta name="twitter:description" content="序言在我的所有项目里面，“登录成功”以及“退出登录”都是需要却换根控制器的，方法很简单，直接设置一个新的控制器就行了。这样做两个界面之间就是直接一闪就跳换过去了，给人体验不太友好。所以在这里可以加个动画优化体验。
+实现由于 rootViewController 是放到 keyWindow 上的，所以可以在设置 rootViewController 时给 keyWindow 加上动画。
+.h 头文件">
 
 
 
@@ -117,10 +120,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/30/161130-iOS基础之计算字符串长度/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/29/180429-iOS基础之动画切换根控制器/"/>
 
 
-  <title> iOS基础之计算字符串长度 | vhuichen </title>
+  <title> iOS基础之动画切换根控制器 | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -250,7 +253,7 @@
             
             
               
-                iOS基础之计算字符串长度
+                iOS基础之动画切换根控制器
               
             
           </h1>
@@ -262,16 +265,16 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-30T21:34:11+08:00" content="2016-11-30">
-              2016-11-30
+            <time itemprop="dateCreated" datetime="2018-04-29T00:00:00+08:00" content="2018-04-29">
+              2018-04-29
             </time>
           </span>
           
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2017-06-27T23:02:28+08:00" content="2017-06-27">
-				2017-06-27
+			    <time itemprop="dateUpdated" datetime="2018-05-02T23:25:09+08:00" content="2018-05-02">
+				2018-05-02
 			    </time>
 			  </span>
 			
@@ -323,11 +326,18 @@
       
 
       
-        <p>创建NSString的分类，用来获取字符串的字节长度<br>用两种方法实现</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.h</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength;</div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>实现方法</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.m</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHProperty.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selfLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)[<span class="keyword">self</span> cStringUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="built_in">NSUInteger</span> encodingLength = [<span class="keyword">self</span> lengthOfBytesUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; encodingLength; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (*p) &#123;</div><div class="line">            selfLength++;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selfLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selflLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">self</span>.length; i++) &#123;</div><div class="line">        <span class="keyword">unichar</span> uc = [<span class="keyword">self</span> characterAtIndex:i];</div><div class="line">        selflLength += isascii(uc) ? <span class="number">1</span> : <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selflLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>经测试两种方法都可以获取到字符串的字节长度</p>
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>在我的所有项目里面，“登录成功”以及“退出登录”都是需要却换根控制器的，方法很简单，直接设置一个新的控制器就行了。这样做两个界面之间就是直接一闪就跳换过去了，给人体验不太友好。所以在这里可以加个动画优化体验。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>由于 rootViewController 是放到 keyWindow 上的，所以可以在设置 rootViewController 时给 keyWindow 加上动画。</p>
+<p>.h 头文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>.m 实现文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"UIWindow+VCHAnimalWindow.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype &#123;</div><div class="line">    [<span class="keyword">self</span> vch_setRootViewController:rootViewController animalType:<span class="string">@"oglFlip"</span> subtype:subtype duration:<span class="number">.5</span>f];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration &#123;</div><div class="line">    <span class="built_in">CATransition</span> *animation = [<span class="built_in">CATransition</span> animation];</div><div class="line">    [animation setDuration:duration];</div><div class="line">    [animation setType:type];</div><div class="line">    [animation setSubtype:subtype];</div><div class="line">    [<span class="keyword">self</span>.layer addAnimation:animation forKey:<span class="string">@"VCHAnimalUIWindow"</span>];</div><div class="line">    [<span class="keyword">self</span> setRootViewController:rootViewController];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>CATransition 的父类 CAAnimation 中有一个属性 removedOnCompletion ，默认值为 YES 。<br>也就是说当动画结束后，会自动移除动画对象，不需要再手动管理内存。</p>
+</blockquote>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// [[UIApplication sharedApplication].keyWindow setRootViewController:ctrl];</span></div><div class="line">[[<span class="built_in">UIApplication</span> sharedApplication].keyWindow vch_setRootViewController:ctrl withOglFlipSubtype:kCATransitionFromRight];</div></pre></td></tr></table></figure>
+<h1 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h1><p>一开始想到的是通过 runtime 来实现，这样做优点就是不需要修改调用语句，缺点就是无法传参。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">UIWindow</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(setRootViewController:));</div><div class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">UIWindow</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(vch_setRootViewController:));</div><div class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController &#123;</div><div class="line">    <span class="built_in">CATransition</span> *animation = [<span class="built_in">CATransition</span> animation];</div><div class="line">    [animation setDuration:<span class="number">.5</span>f];</div><div class="line">    [animation setType:<span class="string">@"oglFlip"</span>];</div><div class="line">    [animation setSubtype:kCATransitionFromRight];</div><div class="line">    [<span class="keyword">self</span>.layer addAnimation:animation forKey:<span class="string">@"VCHAnimalUIWindow"</span>];</div><div class="line">    [<span class="keyword">self</span> vch_setRootViewController:rootViewController];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
 
       
     </div>
@@ -359,17 +369,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/01/161101-iOS基础之开机启动SVN服务/" rel="next" title="iOS基础之开机启动SVN服务">
-                <i class="fa fa-chevron-left"></i> iOS基础之开机启动SVN服务
+              <a href="/2018/04/26/180426-《Effective Objective-C 2.0》第三章阅读笔记/" rel="next" title="《Effective Objective-C 2.0》第三章阅读笔记">
+                <i class="fa fa-chevron-left"></i> 《Effective Objective-C 2.0》第三章阅读笔记
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/" rel="prev" title="使用GitHub Desktop管理别的仓库">
-                使用GitHub Desktop管理别的仓库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -483,7 +489,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调用"><span class="nav-number">2.0.1.</span> <span class="nav-text">调用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thinking"><span class="nav-number">3.</span> <span class="nav-text">Thinking</span></a></li></ol></div>
             
           </div>
         </section>
