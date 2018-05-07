@@ -246,6 +246,164 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/02/180502-《Effective Objective-C 2.0》第四章阅读笔记/" itemprop="url">
+                  《Effective Objective-C 2.0》第四章阅读笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-02T00:00:00+08:00" content="2018-05-02">
+              2018-05-02
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-08T00:31:49+08:00" content="2018-05-08">
+				2018-05-08
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第四章：协议与分类"><a href="#第四章：协议与分类" class="headerlink" title="第四章：协议与分类"></a><center>第四章：协议与分类</center></h1><p>Objective-C 语言有一项特性叫 “协议”（protocol），与 Java 的“接口”（interface）类似。</p>
+<blockquote>
+<p>Java接口是一系列方法的声明，是一些方法特征的集合，一个接口只有方法的特征没有方法的实现，因此这些方法可以在不同的地方被不同的类实现，而这些实现可以具有不同的行为（功能）。</p>
+</blockquote>
+<p>protocol 定义了一套公用的接口，和 Java 的接口同样，一个接口只有方法特征没有方法的实现，不同的类可以实现不同的行为。本质上和 Java 的接口是相同的。  </p>
+<p>Objective-C 不支持多重继承，所以我们可以将某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是实现委托模式。</p>
+<p>“分类”也是 Objective-C 的一个重要特性。利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
+<h2 id="第23条：通过委托与数据源协议进行对象间通信"><a href="#第23条：通过委托与数据源协议进行对象间通信" class="headerlink" title="第23条：通过委托与数据源协议进行对象间通信"></a>第23条：通过委托与数据源协议进行对象间通信</h2><p>对象之间的通信使用最广泛的就是“委托模式”。定义一套接口，某对象若想接受另一对象的委托，则需遵循此接口，以便其成为“委托对象”。此模式可将数据与业务逻辑解耦。</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>委托属性一定要用 weak 修饰，不然会造成循环引用。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">PersonDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></div><div class="line"><span class="keyword">@required</span></div><div class="line">- (<span class="built_in">NSDate</span> *)whatTimeIsIt;</div><div class="line"></div><div class="line"><span class="keyword">@optional</span></div><div class="line">- (<span class="built_in">BOOL</span>)isNiceDay;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span>&lt;PersonDelegate&gt; personDelegate;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>委托协议的方法一般会定义“可选的”（optional），当我们在调用这些方法之前就需要先判断委托对象是否有实现这个方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSDate</span> *date = [<span class="keyword">self</span>.personDelegate whatTimeIsIt];</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"date = %@"</span>,date);</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.personDelegate respondsToSelector:<span class="keyword">@selector</span>(isNiceDay)]) &#123;</div><div class="line">        <span class="built_in">BOOL</span> isNiceDay = [<span class="keyword">self</span>.personDelegate isNiceDay];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"isNiceDay:%zd"</span>,isNiceDay);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>如果需要经常调用某个可选方法，可以用一个状态变量来保存“是否实现这个方法”的状态，如果有多个可选方法也可以用结构体来保存状态。这样做可以大大提高程序效率。</p>
+<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><p>委托对象需要先遵守这个协议。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">Person *person = [[Person alloc] initWithEmail:<span class="string">@"123@163.com"</span>];</div><div class="line">person.personDelegate = <span class="keyword">self</span>;</div><div class="line">[person doWork];</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// log</span></div><div class="line"><span class="comment">// date = Thu May  3 19:43:05 2018</span></div><div class="line"><span class="comment">// isNiceDay:1</span></div></pre></td></tr></table></figure>
+<h2 id="第24条：将类的实现代码分散到便于管理的数个分类中"><a href="#第24条：将类的实现代码分散到便于管理的数个分类中" class="headerlink" title="第24条：将类的实现代码分散到便于管理的数个分类中"></a>第24条：将类的实现代码分散到便于管理的数个分类中</h2><p>可以将类相同功能部分分散到单独的分类中，方便管理。也应该将私有方法放到名为 “private” 的分类中，以“隐藏”实现细节。官方的 NSString 就分成了好几个分类。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>, <span class="title">NSMutableCopying</span>, <span class="title">NSSecureCoding</span>&gt;</span></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringExtensionMethods</span>)</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringEncodingDetection</span>)</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSItemProvider</span>) &lt;<span class="title">NSItemProviderReading</span>, <span class="title">NSItemProviderWriting</span>&gt;</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSExtendedStringPropertyListParsing</span>)</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringDeprecated</span>)</span></div><div class="line"><span class="comment">// 5</span></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h2 id="第25条：总是为第三方类的分类名称加前缀"><a href="#第25条：总是为第三方类的分类名称加前缀" class="headerlink" title="第25条：总是为第三方类的分类名称加前缀"></a>第25条：总是为第三方类的分类名称加前缀</h2><p>向第三方类中添加分类时，应给分类名称以及方法加上项目专用的名称。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>这样做很大程度上避免了分类方法和原类方法相同的可能。</p>
+<h2 id="第26条：勿在分类中申明属性"><a href="#第26条：勿在分类中申明属性" class="headerlink" title="第26条：勿在分类中申明属性"></a>第26条：勿在分类中申明属性</h2><p>直接在分类中申明属性编译器只会给一个编译警告。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在分类中定义一个属性</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> (<span class="title">Special</span>)</span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="built_in">NSString</span> *name;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// Property 'name' requires method 'name' to be defined - use @dynamic or provide a method implementation in this category</span></div><div class="line"><span class="comment">// Property 'name' requires method 'setName:' to be defined - use @dynamic or provide a method implementation in this category</span></div></pre></td></tr></table></figure>
+<p>提示使用 @dynamic 修饰属性或者提供属性的 getter 和 setter 方法。如果没有实现，那么程序会在运行时检测。</p>
+<h4 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h4><p>通过关联对象可以为分类实现属性的功能。使用时应注意内存管理问题。这种方法应该在必要的情况下才使用。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name &#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="string">"kPersonSpecial_name"</span>, name, OBJC_ASSOCIATION_COPY);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)name &#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="string">"kPersonSpecial_name"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>总之,在必要的情况下可以通过关联对象声明属性，但这种方法应该尽量少用。</p>
+</blockquote>
+<h2 id="第27条：使用-“class-continuation-分类”-隐藏实现细节"><a href="#第27条：使用-“class-continuation-分类”-隐藏实现细节" class="headerlink" title="第27条：使用 “class-continuation 分类” 隐藏实现细节"></a>第27条：使用 “class-continuation 分类” 隐藏实现细节</h2><p>类中经常会包含一些无需对外公布的方法及实例变量。这些内容可以对外公布，并写明其为私有。Objective-C 的动态消息系统方式决定了其不可能实现真正的私有方法和私有实例变量。然而，我们最好还是只把确定需要公布的那部分内容公开。此时我们可以将这部分内容放到“class-continuation 分类”中。<br>“class-continuation 分类” 与其他的分类不同，它必须定义在实现文件中，这是唯一能声明实例变量的分类，而且此分类没有特定的实现文件，其中的方法都应该定义在主实现文件里。<br>若对象遵循的协议只应视为私有，也可在“class-continuation 分类”中声明。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> _count;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) Person *person;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h2 id="第28条：通过协议提供匿名对象"><a href="#第28条：通过协议提供匿名对象" class="headerlink" title="第28条：通过协议提供匿名对象"></a>第28条：通过协议提供匿名对象</h2><p>协议定义了一系列方法，遵从此协议的对象应该实现它们，如果这些方法不是可选的，那么就必须实现。我们可以用协议把自己所写的API之中的实现细节隐藏起来，将返回的对象设计为遵从此协议的纯id类型。这样的话，想要隐藏的类名就不会出现在API之中了。若是接口背后有多个不同的实现类，而你又不想指明具体使用哪个类，那么可以考虑用这个办法，因为有时候这些类可能会变，有时候它们又无法容纳于标准的类继承体系中，因而不能以某个公共基类来统一表示。此概念称为“匿名对象”。<br>例如在定义“受委托者”这个对象时，可以这样写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;VCHDelegate&gt; delegate;</div></pre></td></tr></table></figure>
+<p>任何遵循了 VCHDelegate 这个协议的对象都可以充当这个属性。对于具备此属性的类来说，delegate就是”匿名的”。<br>处理数据库连接(database connection)的程序库也用这个思路，以匿名对象来表示从另一个库中所返回的对象。对于处理连接所用的那个类，你也许不想让外人知道其名字，因为不同的数据库可能要用到不同的类来处理。如果没办法令其都继承自同一基类，那么就得返回id类型。不过我们可以把所有数据库连接都具备的那些方法放到协议中，令返回的对象遵从此协议。协议可以这样写:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)connect;</div><div class="line">- (<span class="keyword">void</span>)disconnect;</div><div class="line">- (<span class="built_in">BOOL</span>)isConnected;</div><div class="line">- (<span class="built_in">NSArray</span> *)performQuery:(<span class="built_in">NSString</span> *)query;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>然后可以用“数据库处理器”单例来提供数据库连接，接口可以这样写：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span>;  </span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCDatabaseManger</span>:<span class="title">NSObject</span>  </span></div><div class="line"></div><div class="line">+ (<span class="keyword">id</span>)sharedInstance;  </div><div class="line">- (<span class="keyword">id</span>&lt;EOCDatabaseConnection&gt;) connectionWithIdentifier:(<span class="built_in">NSString</span> *)identifier;  </div><div class="line"></div><div class="line"><span class="keyword">@end</span>;</div></pre></td></tr></table></figure>
+<p>这样的话，处理数据库连接所用的类的名称就不会泄漏了，有可能来自不同框架的那些类现在均可以经由同一个方法来返回。使用此API的人仅仅要求所返回的对象能用来连接、断开并查询数据库即可。至于使用的哪种数据库则不需要关心。如果后续需要更改数据库，那么此时也不需要更改接口。我们关心的并不是对象的类型，而是对象有没有实现相关的方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/29/180429-iOS基础之动画切换根控制器/" itemprop="url">
                   iOS基础之动画切换根控制器
                 </a>
@@ -1289,150 +1447,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/11/180411-iOS开发之编译时与运行时/" itemprop="url">
-                  iOS基础之编译时与运行时
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-11T00:00:00+08:00" content="2018-04-11">
-              2018-04-11
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-12T23:22:35+08:00" content="2018-04-12">
-				2018-04-12
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   </p>
-<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><blockquote>
-<p><strong>string在编译时和运行时分别时什么类型的对象?</strong><br><strong>NSString *string = [[NSDate alloc] init]; // 原题是 NSData，我改为 NSDate，方便我后面发消息</strong>   </p>
-</blockquote>
-<p>直接这样写编译器会报警告！  </p>
-<blockquote>
-<p>Incompatible pointer types initializing ‘NSString *‘ with an expression of type ‘NSDate *‘</p>
-</blockquote>
-<p>可以使用类型转换消除这个警告   </p>
-<blockquote>
-<p><strong>NSString *string = (NSString *)[[NSDate alloc] init];</strong></p>
-</blockquote>
-<p>此时编译器已经没有任何警告了，然后我们给 “string” 这个对象发消息看看会出现什么情况   </p>
-<h4 id="直接调用方法"><a href="#直接调用方法" class="headerlink" title="直接调用方法"></a>直接调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</div><div class="line"><span class="comment">//调用 NSString 的方法，编译通过</span></div><div class="line">[string stringByAppendingString:<span class="string">@"abc"</span>];</div><div class="line"><span class="comment">//调用 NSDate 的方法，编译不通过</span></div><div class="line"><span class="comment">//提示：No visible @interface for 'NSString' declares the selector 'isEqualToDate:'</span></div><div class="line">[string isEqualToDate:[<span class="built_in">NSDate</span> date]];</div></pre></td></tr></table></figure>
-<p>从上面提示的注释信息可以看出，编译器认为 “string” 就是 NSString 类型的对象。调用 NSDate 的方法编译不通过。<br>然后，运行Demo，结果程序直接崩溃，提示：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-12/15455244.jpg" alt=""></p>
-<blockquote>
-<p>-[_NSZeroData stringByAppendingString:]: unrecognized selector sent to instance 0x1010d12e0</p>
-</blockquote>
-<p>显然程序是找不到 “stringByAppendingString” 方法才崩溃的。</p>
-<h4 id="通过-performSelector-调用方法"><a href="#通过-performSelector-调用方法" class="headerlink" title="通过 performSelector 调用方法"></a>通过 performSelector 调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</div><div class="line"><span class="comment">//编译通过，运行崩溃</span></div><div class="line">[string performSelector:<span class="keyword">@selector</span>(stringByAppendingString:) withObject:<span class="string">@"abc"</span> afterDelay:<span class="number">0</span>];</div><div class="line"><span class="comment">//编译通过，运行通过</span></div><div class="line">[string performSelector:<span class="keyword">@selector</span>(isEqualToDate:) withObject:[<span class="built_in">NSDate</span> date] afterDelay:<span class="number">0</span>];</div></pre></td></tr></table></figure>
-<p>通过 performSelector 给 “string” 对象发 “stringByAppendingString” 消息，依然是崩溃。发 “isEqualToDate” 消息，成功。</p>
-<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>在编译的时候 “string” 是 NSString 类型的对象，所以给 “string” 对象发送 NSString 特有的消息可以通过编译。<br>而在运行的时候 “string” 是 NSDate 类型的对象，这就是为什么给 “string” 对象发送 “stringByAppendingString” 消息会崩溃，而 发送 “isEqualToDate” 消息则成功的原因。<br>从下图也可以看出运行的时候的类型为 NSDate<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-12/78772051.jpg" alt=""></p>
-<h3 id="编译时-amp-运行时"><a href="#编译时-amp-运行时" class="headerlink" title="编译时 &amp; 运行时"></a>编译时 &amp; 运行时</h3><p>编译时类型由声明该变量时使用的类型决定，运行时类型由实际赋给该变量的对象决定。<br>编译时会对语言进行语法检测，并编译成机器语言，由于OC的动态性，代码能否执行成功还得到运行时才能检测出来。<br>运行时会把编译好的代码装到内存中运行，这时候会对对象的类型、方法等进行检测，如果检测失败可能会直接崩溃。  </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1478,7 +1492,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
