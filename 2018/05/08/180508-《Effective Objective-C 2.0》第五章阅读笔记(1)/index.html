@@ -1,0 +1,683 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第五章：内存管理(1)ARC 几乎把所有内存管理事宜都交由编译器来决定，开发者只需专注于业务逻辑。  
+第29条：理解引用计数Objective-C 语言使用引用计数来管理内存，每个对象都有个可以递增或递减的计数器。如果想使某个对象继续存活，那就递增其引用计数；用完了之后，就递减其计数。计数变为0，就表示没人关注此对象了，于是，就可以把它销毁。
+引用计数的工作原理在引用计数架构下，对象有个计数器，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第五章阅读笔记(1)">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/180508-《Effective Objective-C 2.0》第五章阅读笔记(1)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第五章：内存管理(1)ARC 几乎把所有内存管理事宜都交由编译器来决定，开发者只需专注于业务逻辑。  
+第29条：理解引用计数Objective-C 语言使用引用计数来管理内存，每个对象都有个可以递增或递减的计数器。如果想使某个对象继续存活，那就递增其引用计数；用完了之后，就递减其计数。计数变为0，就表示没人关注此对象了，于是，就可以把它销毁。
+引用计数的工作原理在引用计数架构下，对象有个计数器，">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-8/55922608.jpg">
+<meta property="og:updated_time" content="2018-05-09T16:27:04.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第五章阅读笔记(1)">
+<meta name="twitter:description" content="第五章：内存管理(1)ARC 几乎把所有内存管理事宜都交由编译器来决定，开发者只需专注于业务逻辑。  
+第29条：理解引用计数Objective-C 语言使用引用计数来管理内存，每个对象都有个可以递增或递减的计数器。如果想使某个对象继续存活，那就递增其引用计数；用完了之后，就递减其计数。计数变为0，就表示没人关注此对象了，于是，就可以把它销毁。
+引用计数的工作原理在引用计数架构下，对象有个计数器，">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-8/55922608.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/180508-《Effective Objective-C 2.0》第五章阅读笔记(1)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第五章阅读笔记(1) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第五章阅读笔记(1)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-08T00:00:00+08:00" content="2018-05-08">
+              2018-05-08
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-10T00:27:04+08:00" content="2018-05-10">
+				2018-05-10
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第五章：内存管理-1"><a href="#第五章：内存管理-1" class="headerlink" title="第五章：内存管理(1)"></a><center>第五章：内存管理(1)</center></h1><p>ARC 几乎把所有内存管理事宜都交由编译器来决定，开发者只需专注于业务逻辑。  </p>
+<h2 id="第29条：理解引用计数"><a href="#第29条：理解引用计数" class="headerlink" title="第29条：理解引用计数"></a>第29条：理解引用计数</h2><p>Objective-C 语言使用引用计数来管理内存，每个对象都有个可以递增或递减的计数器。如果想使某个对象继续存活，那就递增其引用计数；用完了之后，就递减其计数。计数变为0，就表示没人关注此对象了，于是，就可以把它销毁。</p>
+<h3 id="引用计数的工作原理"><a href="#引用计数的工作原理" class="headerlink" title="引用计数的工作原理"></a>引用计数的工作原理</h3><p>在引用计数架构下，对象有个计数器，用以表示当前有多少个事物想令此对象继续存活下去。这在 Objective-C 中叫做“引用计数”（reference count）。NSObject协议声明了下面三个方法用于操作计数器，以递增或递减其值：<br>retain：递增保留计数。<br>release：递减保留计数。<br>autorelease：待稍后清理“自动释放池”（autorelease pool）时，再递减保留计数。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSObject</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">instancetype</span>)<span class="keyword">retain</span> OBJC_ARC_UNAVAILABLE;</div><div class="line">- (<span class="keyword">oneway</span> <span class="keyword">void</span>)release OBJC_ARC_UNAVAILABLE;</div><div class="line">- (<span class="keyword">instancetype</span>)autorelease OBJC_ARC_UNAVAILABLE;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>对象创建出来时，其引用计数至少为1。若想令其继续存活，则调用 retain 方法。要是某部分代码不再使用此对象，不想令其继续存活，那就调用 release 或 autorelease 方法。最终当引用计数归零时，对象就回收了（deallocated），也就是说，系统会将其占用的内存标记为“可重用”（reuse）。此时，所有指向该对象的引用也都变得无效了。</p>
+<h4 id="调用-release-之后，就已经无法保证所指的对象仍然存活"><a href="#调用-release-之后，就已经无法保证所指的对象仍然存活" class="headerlink" title="调用 release 之后，就已经无法保证所指的对象仍然存活"></a>调用 release 之后，就已经无法保证所指的对象仍然存活</h4><p>例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSNumber</span> *number = [[<span class="built_in">NSNumber</span> alloc] initWithInt:<span class="number">1234</span>];</div><div class="line">[array addObject:number];</div><div class="line">[number release];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"number = %@"</span>,number);</div></pre></td></tr></table></figure>
+<p>调用 release 之后，其引用计数降至0，那么 number 对象所占内存也许会回收，那么再调用NSLog可能会使应用程序崩溃。这里说“可能”，是因为对象所占的内存在“解除分配”（deallocated）之后，只是放回“可用内存池”（avaliable pool）。如果执行 NSLog 时尚未覆写对象内存，那么该对象仍然有效，这时程序不会崩溃。</p>
+<h3 id="属性存取方法中的内存管理"><a href="#属性存取方法中的内存管理" class="headerlink" title="属性存取方法中的内存管理"></a>属性存取方法中的内存管理</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)setFoo:(<span class="keyword">id</span>)foo &#123;</div><div class="line">    [foo <span class="keyword">retain</span>];</div><div class="line">    [_foo release];</div><div class="line">    _foo = foo;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里需要注意的是必须先 retain 对象，然后再 release 。原因就是新对象和旧对象可能是同一个对象，这时如果先 release 这个对象，可能会导致系统永久回收对象。之后再 retain 也无法再复生。</p>
+<h3 id="自动释放池"><a href="#自动释放池" class="headerlink" title="自动释放池"></a>自动释放池</h3><p>调用 release 会立刻递减对象的保留计数，而且还有可能令系统回收此对象，然而有时候可以不调用它，改为调用 autorelease ，此方法会在稍后递减计数，通常是在下一次“事件循环”（event loop）时递减，不过也可能执行得更早些（why ？？后面会提到）。<br>这个特性很有用，例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)stringValue &#123;</div><div class="line">    <span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@"I am this: %@"</span>,<span class="keyword">self</span>];</div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在 MRC 环境下，此时 str 对象的引用计数会比期望值多1 ，因为 alloc 会使引用计数加1，但却没有释放。这时就应该用 autorelease 。此方法可以保证对象在跨越“方法调用边界”（method call boundary）后一定存活。实际上，释放操作会在清空最外层的自动释放池时执行，除非你有自己的自动释放池，否则这个时机指的就是当前线程的下一次事件循环。    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)stringValue &#123;</div><div class="line">    <span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@"I am this: %@"</span>,<span class="keyword">self</span>];</div><div class="line">    <span class="keyword">return</span> [str autorelease];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h3><p>使用引用计数机制时，经常要注意的一个问题就是“引用循环”（retain cycle），也就是呈环状相互引用的多个对象（如下图）。这将导致内存泄露，因为循环中的对象其引用计数都不会为0。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-8/55922608.jpg" alt=""></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>引用计数机制通过可以递增递减的计数机制来管理内存。对象创建好之后，其引用计数至少为1。若引用计数为正，则对象继续存活。当引用计数降为0时，对象就被销毁了。<br>在对象生命期中，其余对象通过引用来保留或释放此对象。保留与释放操作分别会递增及递减保留计数。</p>
+<h2 id="第30条：用-ARC-简化引用计数"><a href="#第30条：用-ARC-简化引用计数" class="headerlink" title="第30条：用 ARC 简化引用计数"></a>第30条：用 ARC 简化引用计数</h2><p>在 MRC 环境下，下面代码会出现内存泄漏问题   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ([<span class="keyword">self</span> showLogMsg]) &#123;</div><div class="line">	<span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@"I am this: %@"</span>,<span class="keyword">self</span>];</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,str);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原因是 if 语句结束后，并没有释放 str 对象。所以我们必须手动去释放</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ([<span class="keyword">self</span> showLogMsg]) &#123;</div><div class="line">	<span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@"I am this: %@"</span>,<span class="keyword">self</span>];</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,str);</div><div class="line">	[str release];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>而这个操作完全可以交给 ARC (Automatic Reference Counting)来完成，也就是在 ARC 环境下，编译器会在编译时会自动加上内存管理语句。<br>由于 ARC 会自动执行retain、release、autorelease等操作，所以直接在 ARC 下调用这些内存管理方法是非法的。具体来说，不能调用下列方法：<br><strong>retain<br>release<br>autorelease<br>dealloc</strong><br>实际上，ARC在调用这些方法时，并不通过普通的 Objective-C 消息派发机制，而是直接调用其底层C语言版本。这样做性能更好，因为保留及释放操作需要频繁执行，所以直接调用底层函数能节省很多CPU周期。  </p>
+<h3 id="使用-ARC-时必须遵循的方法命名规则"><a href="#使用-ARC-时必须遵循的方法命名规则" class="headerlink" title="使用 ARC 时必须遵循的方法命名规则"></a>使用 ARC 时必须遵循的方法命名规则</h3><p>将内存管理语义在方法名中表示出来早已成为 Objective-C 的惯例，而 ARC 则将之确立为硬性规定。这些规则简单地体现在方法名上。若方法名以下列词语开头，则其返回的对象归调用者所有：<br><strong>alloc<br>new<br>copy<br>mutableCopy</strong><br>归调用者所有的意思是：<strong>调用上述四种方法的那段代码要负责释放方法所返回的对象。</strong><br>举个例子，演示了ARC的用法：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 方法名以关键字 new 开头，ARC 不会加入 retain、release 或 autorelease 语句。</span></div><div class="line">+ (EOCPerson *)newPerson &#123;</div><div class="line">	EOCPerson *person = [[EOCPerson alloc] init]; </div><div class="line">	<span class="keyword">return</span> person; </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 方法名不以关键字开头，ARC 会自动加上 autorelease 语句。</span></div><div class="line">+ (EOCPerson *)somePerson &#123;</div><div class="line">	EOCPerson *person = [[EOCPerson alloc] init]; </div><div class="line">	<span class="keyword">return</span> person; </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ARC 会在函数末尾给 personOne 加上 release 语句。</span></div><div class="line">- (<span class="keyword">void</span>)doSomething &#123;</div><div class="line">	EOCPerson *personOne = [EOCPerson newPerson]; </div><div class="line">	EOCPerson *personTwo = [EOCPerson somePerson]; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>除了会自动调用“保留”与“释放”方法外，ARC 还可以执行一些手工操作很难甚至无法完成的优化。如果发现在同一个对象上执行多次“保留”与“释放”操作，那么ARC有时可以成对地移除这两个操作。  </p>
+<p>一般，在方法中返回自动释放的对象时，要执行一个特殊函数。此时不直接调用对象的 autorelease 方法，而是改为调用 objc_autoreleaseReturnValue 。此函数会检视当前方法返回之后即将要执行的那段代码。若发现那段代码在返回的对象上执行 retain 操作，则设置全局数据结构（此数据结构的具体内容因处理器而已）中的一个标志位而不执行 autorelease 操作。与之相似，如果方法返回了一个自动释放的对象，而调用方法的代码要保留此对象，那么此时不直接执行 retain，而是改为执行objc_retainAutoreleaseReturnValue 函数。此函数要检测刚才提到的那个标志位，若已经置位，则不执行 retain 操作。设置并检测标志位，要比调用 autorelease 和 retain 更快。</p>
+<h3 id="ARC-如何清理实例变量"><a href="#ARC-如何清理实例变量" class="headerlink" title="ARC 如何清理实例变量"></a>ARC 如何清理实例变量</h3><p>ARC 会在 dealloc 方法中自动生成回收对象时所执行的代码。ARC 会借用 Objective-C++ 的一项特性来生成清理例程（cleanup routime）。回收 Objective-C++ 对象时，待回收的对象会调用所有C++对象的析构函数（destructor）。编译器如果发现某个对象里含有C++对象，就会生成名为.cxx_destruct的方法。而ARC则借助此特性，在该方法中生成清理内存所需的代码。<br>如果有非 Objective-C 的对象，比如 CoreFoundation 中的对象或是由malloc()分配在堆中的内存，那么仍然需要手动清理。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>用ARC管理内存，可省去类中的许多的“样板代码”。<br>ARC会在合适的地方插入“保留”及“释放”对象。<br>CoreFoundation 对象不归 ARC 管理，开发者必须实时调用 CFRetain/CFRelease 手动释放。  </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/02/180502-《Effective Objective-C 2.0》第四章阅读笔记/" rel="next" title="《Effective Objective-C 2.0》第四章阅读笔记">
+                <i class="fa fa-chevron-left"></i> 《Effective Objective-C 2.0》第四章阅读笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第五章：内存管理-1"><span class="nav-number">1.</span> <span class="nav-text">第五章：内存管理(1)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第29条：理解引用计数"><span class="nav-number">1.1.</span> <span class="nav-text">第29条：理解引用计数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用计数的工作原理"><span class="nav-number">1.1.1.</span> <span class="nav-text">引用计数的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#调用-release-之后，就已经无法保证所指的对象仍然存活"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">调用 release 之后，就已经无法保证所指的对象仍然存活</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性存取方法中的内存管理"><span class="nav-number">1.1.2.</span> <span class="nav-text">属性存取方法中的内存管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动释放池"><span class="nav-number">1.1.3.</span> <span class="nav-text">自动释放池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用循环"><span class="nav-number">1.1.4.</span> <span class="nav-text">引用循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.5.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第30条：用-ARC-简化引用计数"><span class="nav-number">1.2.</span> <span class="nav-text">第30条：用 ARC 简化引用计数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-ARC-时必须遵循的方法命名规则"><span class="nav-number">1.2.1.</span> <span class="nav-text">使用 ARC 时必须遵循的方法命名规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC-如何清理实例变量"><span class="nav-number">1.2.2.</span> <span class="nav-text">ARC 如何清理实例变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
