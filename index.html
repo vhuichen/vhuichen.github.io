@@ -246,6 +246,307 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/10/180510-iOS基础之UINavigationBar属性设置/" itemprop="url">
+                  iOS基础之 UINavigationBar 属性设置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-10T00:00:00+08:00" content="2018-05-10">
+              2018-05-10
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-11T23:27:39+08:00" content="2018-05-11">
+				2018-05-11
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>用最简单、快捷的方法设置 UINavigationBar 的属性。</p>
+<h3 id="去掉返回按钮的文字，只保留返回箭头"><a href="#去掉返回按钮的文字，只保留返回箭头" class="headerlink" title="去掉返回按钮的文字，只保留返回箭头"></a>去掉返回按钮的文字，只保留返回箭头</h3><p>默认情况下的样式是这样的，现在只需要保留返回箭头，不需要文字。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-10/2817090.jpg" alt=""></p>
+<h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>自定义一个 UIBarButtonItem 。比较麻烦，还要给图片。创建 UINavigationController 的子类，重写 pushViewController 方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)pushViewController:(<span class="built_in">UIViewController</span> *)viewController animated:(<span class="built_in">BOOL</span>)animated &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.childViewControllers.count) &#123;</div><div class="line">        viewController.navigationItem.leftBarButtonItem = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"back"</span>] style:<span class="built_in">UIBarButtonItemStylePlain</span> target:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(back)];</div><div class="line">    &#125;</div><div class="line">    [<span class="keyword">super</span> pushViewController:viewController animated:animated];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)back &#123;</div><div class="line">    [<span class="keyword">self</span> popViewControllerAnimated:<span class="literal">YES</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>将文字偏移到看不到的地方，刚好系统有给出相关的接口。经过实践发现，偏移到左边屏幕之外是最好的方法。同样创建 UINavigationController 的子类，在 initialize 中实现以下方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="built_in">UIBarButtonItem</span> *item = [<span class="built_in">UIBarButtonItem</span> appearance];</div><div class="line">	[item setBackButtonTitlePositionAdjustment:<span class="built_in">UIOffsetMake</span>(<span class="built_in">NSIntegerMin</span>, <span class="number">0</span>) forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用这个方法同样可以将箭头往右偏移。</p>
+<h3 id="设置属性和图片颜色"><a href="#设置属性和图片颜色" class="headerlink" title="设置属性和图片颜色"></a>设置属性和图片颜色</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="built_in">UIBarButtonItem</span> *item = [<span class="built_in">UIBarButtonItem</span> appearance];</div><div class="line">	<span class="built_in">NSMutableDictionary</span> *attrs = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">	attrs[<span class="built_in">NSForegroundColorAttributeName</span>] = [<span class="built_in">UIColor</span> whiteColor]; <span class="comment">// 文字颜色</span></div><div class="line">	[item setTitleTextAttributes:attrs forState:<span class="built_in">UIControlStateNormal</span>];</div><div class="line">	item.tintColor = [<span class="built_in">UIColor</span> whiteColor]; <span class="comment">// 图片颜色</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="设置返回按钮图片"><a href="#设置返回按钮图片" class="headerlink" title="设置返回按钮图片"></a>设置返回按钮图片</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</div><div class="line">	<span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@"back"</span>];</div><div class="line">	bar.backIndicatorImage = image;</div><div class="line">	bar.backIndicatorTransitionMaskImage = image;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="去掉-UINavigationBar-下边线"><a href="#去掉-UINavigationBar-下边线" class="headerlink" title="去掉 UINavigationBar 下边线"></a>去掉 UINavigationBar 下边线</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</div><div class="line">    [bar setBackgroundImage:[[<span class="built_in">UIImage</span> alloc] init] forBarPosition:<span class="built_in">UIBarPositionAny</span> barMetrics:<span class="built_in">UIBarMetricsDefault</span>];</div><div class="line">    [bar setShadowImage:[[<span class="built_in">UIImage</span> alloc] init]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="给-UINavigationBar-加阴影"><a href="#给-UINavigationBar-加阴影" class="headerlink" title="给 UINavigationBar 加阴影"></a>给 UINavigationBar 加阴影</h3><p>这里我创建一个分类，可以直接调用这个方法来设置。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UINavigationBar</span> (<span class="title">VCHDropShadow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)dropShadowWithOffset:(<span class="built_in">CGSize</span>)offset</div><div class="line">                      radius:(<span class="built_in">CGFloat</span>)radius</div><div class="line">                       color:(<span class="built_in">UIColor</span> *)color</div><div class="line">                     opacity:(<span class="built_in">CGFloat</span>)opacity &#123;</div><div class="line">    <span class="comment">// 也可以不创建 path ，直接使用。</span></div><div class="line">    <span class="built_in">CGMutablePathRef</span> path = <span class="built_in">CGPathCreateMutable</span>();</div><div class="line">    <span class="built_in">CGPathAddRect</span>(path, <span class="literal">NULL</span>, <span class="keyword">self</span>.bounds);</div><div class="line">    <span class="keyword">self</span>.layer.shadowPath = path;</div><div class="line">    <span class="built_in">CGPathCloseSubpath</span>(path);</div><div class="line">    <span class="built_in">CGPathRelease</span>(path);</div><div class="line">    </div><div class="line">    <span class="keyword">self</span>.layer.shadowColor = color.CGColor;</div><div class="line">    <span class="keyword">self</span>.layer.shadowOffset = offset;</div><div class="line">    <span class="keyword">self</span>.layer.shadowRadius = radius;</div><div class="line">    <span class="keyword">self</span>.layer.shadowOpacity = opacity;</div><div class="line"> 	</div><div class="line">    <span class="keyword">self</span>.clipsToBounds = <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(2)/" itemprop="url">
+                  《Effective Objective-C 2.0》第五章阅读笔记(2)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-09T00:00:00+08:00" content="2018-05-09">
+              2018-05-09
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-11T23:29:50+08:00" content="2018-05-11">
+				2018-05-11
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第五章：内存管理-2"><a href="#第五章：内存管理-2" class="headerlink" title="第五章：内存管理(2)"></a><center>第五章：内存管理(2)</center></h1><h2 id="第31条：在-dealloc-方法中只释放引用并解除监听"><a href="#第31条：在-dealloc-方法中只释放引用并解除监听" class="headerlink" title="第31条：在 dealloc 方法中只释放引用并解除监听"></a>第31条：在 dealloc 方法中只释放引用并解除监听</h2><p>对象经历其生命期后，最终会为系统所回收，这时候就会执行 dealloc 方法。也就是引用计数为0时调用，且在生命期内仅调用一次，并且我们也无法控制其什么时候调用。</p>
+<p>在这个方法里会释放所有的方法引用，也就是把 Objective-C 对象全部释放。ARC 会生成一个 .cxx_destruct 方法，在 dealloc 中为你自动添加这些释放代码。但也有一些对象是需要自己手动释放。</p>
+<h4 id="释放-CoreFoundation-对象"><a href="#释放-CoreFoundation-对象" class="headerlink" title="释放 CoreFoundation 对象"></a>释放 CoreFoundation 对象</h4><p>CoreFoundation 对象必须手动释放，因为这个是由纯C生成的。这些对象最好在不需要时就立刻释放掉，没必要等到 dealloc 才释放。</p>
+<h4 id="释放-KVO-amp-amp-NSNotificationCenter"><a href="#释放-KVO-amp-amp-NSNotificationCenter" class="headerlink" title="释放 KVO &amp;&amp; NSNotificationCenter"></a>释放 KVO &amp;&amp; NSNotificationCenter</h4><p>如果有 KVO 那么最迟应该在这里将其释放。如果注册了通知也应该最迟在这里移除。不然可能会造成程序崩溃。</p>
+<h4 id="释放由对象管理的资源"><a href="#释放由对象管理的资源" class="headerlink" title="释放由对象管理的资源"></a>释放由对象管理的资源</h4><p>如果此对象管理者某些资源，那么也要在这里释放掉。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>不要在 dealloc 中调用属性的存取方法。<br>不要在这里调用异步方法，因为对象已经处于回收状态了。<br>不需要用的资源应该及时释放，系统不能保证每个 dealloc 方法都会执行。</p>
+<h2 id="第32条：编写“异常安全代码”时留意内存管理问题"><a href="#第32条：编写“异常安全代码”时留意内存管理问题" class="headerlink" title="第32条：编写“异常安全代码”时留意内存管理问题"></a>第32条：编写“异常安全代码”时留意内存管理问题</h2><p>有时候我们需要编写异常代码来捕获并处理异常，发生异常时应该如何管理内存是个值得深究的问题。先看看在MRC环境下应该怎么处理，直接上代码</p>
+<pre><code class="objc"><span class="keyword">@try</span> { 
+    EOCSomeClass *object = [[EOCSomeClass alloc]init]; 
+    [object doSomethingThatMayThrow]; 
+    [object release]; 
+} <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) { 
+    <span class="built_in">NSLog</span>(<span class="string">@"there was an error."</span>); 
+}
+</code></pre>
+<p>事实上当 doSomethingThatMayThrow 发生异常时，就会直接跳出，不会再往下执行，所以 release 方法无法执行，也就出现内存泄漏了。<br>使用 @finally 可以解决这个问题  </p>
+<pre><code class="objc">EOCSomeClass *object = <span class="literal">nil</span>;
+<span class="keyword">@try</span> {
+    object = [[EOCSomeClass alloc] init]; 
+    [object doSomethingThatMayThrow];
+} <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) {
+    <span class="built_in">NSLog</span>(<span class="string">@"there was an error."</span>);
+} <span class="keyword">@finally</span> {
+    [object release];
+}
+</code></pre>
+<p>在 ARC 环境下，也会出现这样的问题，由于 ARC 不能调用 release 方法。上面的代码同样会出问题    </p>
+<pre><code class="objc"><span class="keyword">@try</span> { 
+    EOCSomeClass *object = [[EOCSomeClass alloc] init];
+    [object doSomethingThatMayThrow];
+} <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) {
+    <span class="built_in">NSLog</span>(<span class="string">@"there was an error."</span>);
+} <span class="keyword">@finally</span> {
+
+}
+</code></pre>
+<p>默认情况下 如果 doSomethingThatMayThrow 出现异常了，那么 ARC 也不会自动去处理这个问题。导致 object 这个对象无法回收。虽然默认状况下不能处理这个问题，但ARC依然能生成这种安全处理异常所用的附加代码。<strong>-fobjc-arc-exception</strong> 这个编译器标志用来开启此功能。打开这个标志会加入大量的样例代码，会影响运行期的性能。<br>处于 Objective-C++ 模式时，编译器会自动把 <strong>-fobjc-arc-exception</strong> 标志打开，因为C++处理异常所用的代码与ARC实现的附加代码类似，所以令ARC加入自己的代码以安全处理异常，其性能损失并不太大。</p>
+<blockquote>
+<p>这里需要了解的是，Objective-C中，只有当应用程序必须因异常状况而终止时才抛出异常。因此，如果应用程序即将终止，那么是否还会发生内存泄露就已经无关紧要了。在应用程序必须立即终止的情况下，还去添加安全处理异常所用的附加代码是没有意义的。</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>捕获异常时，一定要注意将try块内所创立的对象清理干净。<br>在默认情况下，ARC不生成安全处理异常所需的清理代码。开启编译器标志后，可生成这种代码，不过会导致应用程序变大，而且会降低运行效率。</p>
+<h2 id="第33条：用弱引用避免循环引用"><a href="#第33条：用弱引用避免循环引用" class="headerlink" title="第33条：用弱引用避免循环引用"></a>第33条：用弱引用避免循环引用</h2><p>对象图里经常会出现一种情况，就是几个对象都以某种方式互相引用，从而形成”环“。由于 Objective-C 内存管理模型使用引用计数架构，所以这种情况通常会泄露内存，因为最后没有别的东西会引用环中的对象。这样的话，环里的对象就无法为外界所访问了，但对象之间尚有引用，这些引用使得他们都能继续存活下去，而不会为系统所回收。<br>如下图是最简单的一种内存泄漏，两个对象相互引用，永远无法释放。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-11/81656748.jpg" alt=""> </p>
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><p>避免循环引用的最佳方式就是弱引用，即表示“非拥有关系”。有两个关键字可以用来修饰这种方式，分别是 unsafe_unretained 和 weak 。</p>
+<h4 id="unsafe-unretained"><a href="#unsafe-unretained" class="headerlink" title="unsafe_unretained"></a>unsafe_unretained</h4><p>用 unsafe_unretained 修饰的属性特质，其语义同 assign 特质等价，然而 assign 通常只用于数值类型，unsafe_unretained 则多用于对象类型。这个词本身就表明其所修饰的属性可能无法安全使用。也就是 unsafe_unretained 修饰的属性所指向的对象即使已经释放，unsafe_unretained 修饰的属性的值也不会自动置nil(相对于weak)。</p>
+<h4 id="weak"><a href="#weak" class="headerlink" title="weak"></a>weak</h4><p>weak 和 unsafe_unretained 同样用于修饰对象，唯一不同的是，当 weak 修饰的属性所指的对象被系统回收时，weak会自动置nil。</p>
+<p>下图可以看出两者之间的区别。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-11/50645693.jpg" alt=""><br>当对象释放时，unsafe_unretained 属性仍然指向那个已经回收的实例，而weak属性则指向nil。所以 使用 weak 比 unsafe_unretained 安全。</p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>如果某对象不归你所拥有，而只是需要使用这个对象，那么就应该用“弱引用”。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/08/180508-《Effective Objective-C 2.0》第五章阅读笔记(1)/" itemprop="url">
                   《Effective Objective-C 2.0》第五章阅读笔记(1)
                 </a>
@@ -1137,311 +1438,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/20/180420-《Effective Objective-C 2.0》第二章阅读笔记(2)/" itemprop="url">
-                  《Effective Objective-C 2.0》第二章阅读笔记(2)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-20T00:00:00+08:00" content="2018-04-20">
-              2018-04-20
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-23T21:04:34+08:00" content="2018-04-23">
-				2018-04-23
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第二章：对象、消息、运行期-2"><a href="#第二章：对象、消息、运行期-2" class="headerlink" title="第二章：对象、消息、运行期(2)"></a><center>第二章：对象、消息、运行期(2)</center></h1><h2 id="第9条：以-“类族模式”-模式隐藏实现细节"><a href="#第9条：以-“类族模式”-模式隐藏实现细节" class="headerlink" title="第9条：以 “类族模式” 模式隐藏实现细节"></a>第9条：以 “类族模式” 模式隐藏实现细节</h2><p>类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。</p>
-<h4 id="自定义-“类族模式”"><a href="#自定义-“类族模式”" class="headerlink" title="自定义 “类族模式”"></a>自定义 “类族模式”</h4><p>定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Person</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType;</div><div class="line">- (<span class="keyword">void</span>)doWork;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType &#123;</div><div class="line">    <span class="keyword">switch</span> (personType) &#123;</div><div class="line">        <span class="keyword">case</span> PersonTypeA:</div><div class="line">            <span class="keyword">return</span> [PersonA new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> PersonTypeB:</div><div class="line">            <span class="keyword">return</span> [PersonB new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> PersonTypeC:</div><div class="line">            <span class="keyword">return</span> [PersonC new];</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="comment">//SubClasses implement this</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonA</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonA</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonA</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonA Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonB</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonB</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonB</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonB Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Subclass PersonC</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonC</span> : <span class="title">Person</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonC</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"do PersonC Work"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>接口调用如下：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">Person *personA = [Person personWithType:PersonTypeA];</div><div class="line">Person *personB = [Person personWithType:PersonTypeB];</div><div class="line">Person *personC = [Person personWithType:PersonTypeC];</div><div class="line"></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personA <span class="keyword">class</span>]);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personB <span class="keyword">class</span>]);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[personC <span class="keyword">class</span>]);</div><div class="line"></div><div class="line">[personA doWork];</div><div class="line">[personB doWork];</div><div class="line">[personC doWork];</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// PersonA</span></div><div class="line"><span class="comment">// PersonB</span></div><div class="line"><span class="comment">// PersonC</span></div><div class="line"><span class="comment">// do PersonA Work</span></div><div class="line"><span class="comment">// do PersonB Work</span></div><div class="line"><span class="comment">// do PersonC Work</span></div></pre></td></tr></table></figure>
-<p>这样就只需要传入不同的 Type 就可以实现不同的任务。这种实现模式就叫做“类族模式”。</p>
-<h2 id="第10条：在既有类中使用关联对象存放自定义数据"><a href="#第10条：在既有类中使用关联对象存放自定义数据" class="headerlink" title="第10条：在既有类中使用关联对象存放自定义数据"></a>第10条：在既有类中使用关联对象存放自定义数据</h2><p>可以通过“关联对象”这项特性，给某个类关联多个对象，这些对象可以通过 key 区分。在关联对象的时候需要指明对象的“存储策略”，用来维护相应的“内存管理语义”。“存储策略”由 objc_AssociationPolicy 这个枚举维护。下面给出 objc_AssociationPolicy 枚举的取值以及等效的 @property 属性。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Policies related to associative references.</div><div class="line"> * These are options to objc_setAssociatedObject()</div><div class="line"> */</div><div class="line"><span class="keyword">typedef</span> OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</div><div class="line">    OBJC_ASSOCIATION_ASSIGN = <span class="number">0</span>,           <span class="comment">/**&lt; Specifies a weak reference to the associated object. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = <span class="number">1</span>, <span class="comment">/**&lt; Specifies a strong reference to the associated object. </span></div><div class="line">                                            *   The association is not made atomically. */</div><div class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = <span class="number">3</span>,   <span class="comment">/**&lt; Specifies that the associated object is copied. </span></div><div class="line">                                            *   The association is not made atomically. */</div><div class="line">    OBJC_ASSOCIATION_RETAIN = <span class="number">01401</span>,       <span class="comment">/**&lt; Specifies a strong reference to the associated object.</span></div><div class="line">                                            *   The association is made atomically. */</div><div class="line">    OBJC_ASSOCIATION_COPY = <span class="number">01403</span>          <span class="comment">/**&lt; Specifies that the associated object is copied.</span></div><div class="line">                                            *   The association is made atomically. */</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-20/99689322.jpg" alt=""><br>对应的3个方法为：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 设置关联对象</span></div><div class="line"><span class="keyword">void</span> objc_setAssociatedObject(<span class="keyword">id</span> _Nonnull object, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key,<span class="keyword">id</span> _Nullable value, objc_AssociationPolicy policy);</div><div class="line"><span class="comment">// 获取关联对象</span></div><div class="line"><span class="keyword">id</span> objc_getAssociatedObject(<span class="keyword">id</span> _Nonnull object, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key);                         </div><div class="line"><span class="comment">// 移除关联对象</span></div><div class="line"><span class="keyword">void</span> objc_removeAssociatedObjects(<span class="keyword">id</span> _Nonnull object)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>系统没有给出移除单个关联对象的接口，如果要移除某个关联对象，可以通过给该关联对象的 key 设置一个空值来实现。<br>void objc_setAssociatedObject(object, key, nil, policy);</p>
-</blockquote>
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>当我们需要使用 UIAlertView 时，一般会这样写：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)showAlert &#123;</div><div class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"title"</span> message:<span class="string">@"message"</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@"Cancel"</span> otherButtonTitles:<span class="string">@"Confirm"</span>, <span class="literal">nil</span>];</div><div class="line">	[alertView show];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</div><div class="line">    <span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</div><div class="line">        </div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>当存在多个 UIAlertView 时，委托方法里面就需要对 alertView 进行判断。使用关联对象可以简化这里的逻辑</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">void</span> *kAlertKey = <span class="string">@"kAlertKey"</span>;</div><div class="line">- (<span class="keyword">void</span>)showAlert &#123;</div><div class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"title"</span> message:<span class="string">@"message"</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@"Cancel"</span> otherButtonTitles:<span class="string">@"confirm"</span>, <span class="literal">nil</span>];</div><div class="line">	</div><div class="line">	<span class="keyword">void</span> (^block)(<span class="built_in">NSInteger</span>) = ^(<span class="built_in">NSInteger</span> buttonIndex) &#123;</div><div class="line">		<span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</div><div class="line">            </div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</div><div class="line">            </div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">	objc_setAssociatedObject(alertView, kAlertKey, block, OBJC_ASSOCIATION_COPY);</div><div class="line">	[alertView show];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</div><div class="line">    <span class="keyword">void</span> (^block)(<span class="built_in">NSInteger</span>) = objc_getAssociatedObject(alertView, kAlertKey);</div><div class="line">    block(buttonIndex);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>当关联对象需要捕获了其他变量，可能会造成引用循环。使用关联对象会降低代码的可读性，增加调试的难度。应谨慎使用。</p>
-<h2 id="第11条：理解-objc-msgSend-的作用"><a href="#第11条：理解-objc-msgSend-的作用" class="headerlink" title="第11条：理解 objc_msgSend 的作用"></a>第11条：理解 objc_msgSend 的作用</h2><p>给对象发消息</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnValue = [someObject msgName:parameter];</div></pre></td></tr></table></figure>
-<p>编译器会转换为</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnValue = objc_msgSend(someObject, <span class="keyword">@selector</span>(msgName:), parameter);</div></pre></td></tr></table></figure>
-<p>objc_msgSend 会在接受者类中搜寻“方法列表”，如果找到对应的方法，则转跳实现代码。如果没找到就沿着继承类向上找。如果最终还是找不到该方法，则进行“消息转发”。同时 objc_msgSend 还会将找到的方法缓存在“快速映射表”，如果下次还需要执行该方法，就会先从“快速映射表”中查找，这样执行起来会快很多。<br>每个类都会有一张类似于字典一样的表格，方法名是 Key ，对应的 Value 则保存着函数指针。objc_msgSend 就是通过这个表格来寻找应该执行的方法并跳转其实现的。这些工作由“动态消息派发系统”来处理。</p>
-<h4 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h4><p>“尾调用”是指一个函数最后一项操作是调用另一个函数，即被调用的函数的返回值就是当前函数的返回值。如果函数在尾部调用的是自身，那么就叫做“尾递归”。<br>尾调用优化是指不需要在当前调用栈上开辟新的栈空间，而是更新原有栈（原有栈的数据已经不需要了），再把调用函数的返回地址替换成当前函数的返回地址。<br>使用“尾调用优化”技术，很大程度上可以避免了栈溢出。  </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/17/180417-《Effective Objective-C 2.0》第二章阅读笔记(1)/" itemprop="url">
-                  《Effective Objective-C 2.0》第二章阅读笔记(1)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-17T00:00:00+08:00" content="2018-04-17">
-              2018-04-17
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-22T00:02:20+08:00" content="2018-04-22">
-				2018-04-22
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第二章：对象、消息、运行期-1"><a href="#第二章：对象、消息、运行期-1" class="headerlink" title="第二章：对象、消息、运行期(1)"></a><center>第二章：对象、消息、运行期(1)</center></h1><p>“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。</p>
-<h2 id="第6条：理解-“属性”-这一概念"><a href="#第6条：理解-“属性”-这一概念" class="headerlink" title="第6条：理解 “属性” 这一概念"></a>第6条：理解 “属性” 这一概念</h2><p>“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。</p>
-<h4 id="对象布局"><a href="#对象布局" class="headerlink" title="对象布局"></a>对象布局</h4><p>对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换成偏移量，这个偏移量是“硬编码”，表示该变量距离对象内存起始地址有多远。<br>当类增加了实例变量时，原来的偏移量就已经不再适用，所以这时候需要重新编译。偏移量保存在类对象中，会在运行时查找。</p>
-<h4 id="应用程序二进制接口（Application-Binary-Interface，ABI）"><a href="#应用程序二进制接口（Application-Binary-Interface，ABI）" class="headerlink" title="应用程序二进制接口（Application Binary Interface，ABI）"></a>应用程序二进制接口（Application Binary Interface，ABI）</h4><blockquote>
-<p>应用程序二进制接口描述了应用程序和操作系统之间，一个应用和它的库之间，或者应用的组成部分之间的低层接口。ABI不同于应用程序接口（API），API定义了源代码和库之间的接口，因此同样的代码可以在支持这个API的任何系统中编译，然而ABI允许编译好的目标代码在使用兼容ABI的系统中无需改动就能运行。（百度百科）</p>
-</blockquote>
-<p>ABI定义了许多内容（标准），其中一项就是生成代码时所应遵循的规范，有了这种规范，我们就可以在分类和实现文件定义实例变量，可以将实例变量从接口文件中移开，以便保护和类实现相关的内部信息。</p>
-<h4 id="synthesize-amp-dynamic"><a href="#synthesize-amp-dynamic" class="headerlink" title="@synthesize &amp; @dynamic"></a>@synthesize &amp; @dynamic</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span></span></div><div class="line"><span class="keyword">@synthesize</span> firstName = _myFirstName;</div><div class="line"><span class="keyword">@dynamic</span> firstName;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>@synthesize 用来指定实例变量的名称。<br>@dynamic 告诉编译器不要自动生成实例变量，也不要生成 setter 和 getter 方法。这时编译器不会报错，而是在运行时查找。</p>
-<h4 id="属性特质"><a href="#属性特质" class="headerlink" title="属性特质"></a>属性特质</h4><p>原子性，读写权限，内存管理（assign、strong、weak、unsafe_unretained、copy），方法名</p>
-<h5 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h5><p>iOS 开发的时候应该尽量使用 nonatomic，使用 atomic 会严重影响性能。</p>
-<h5 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h5><p>readwrite 同时生成setter 和 getter 方法。<br>readonly 只生成 getter 方法。  </p>
-<h5 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h5><p>当属性类型为 NSString 时，一定要用 copy 修饰，防止当传递过来的值是 NSMutableString 类型，从而可能会在不知情的情况下更改属性的值。</p>
-<h2 id="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"><a href="#第7条：在对象内部尽量直接访问实例变量（感觉有歧义）" class="headerlink" title="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"></a>第7条：在对象内部尽量直接访问实例变量（感觉有歧义）</h2><p>在对象外面，应该通过属性访问实例变量。在对象内部，除了几种特殊的情况下，读取实例变量应该采用直接访问的形式，设置实例变量则采用属性来设置。</p>
-<h4 id="对象内部不要直接设置实例（有歧义）"><a href="#对象内部不要直接设置实例（有歧义）" class="headerlink" title="对象内部不要直接设置实例（有歧义）"></a>对象内部不要直接设置实例（有歧义）</h4><p>这样做不会调用 setter 方法，也就绕过了相关属性定义的“内存管理语义”，比如使用了 copy 特质，直接访问不会拷贝该属性，只会保留新值并释放旧值。此外当设置了KVO时，直接设置实例也不会触发KVO。</p>
-<h4 id="初始化时应该直接访问实例"><a href="#初始化时应该直接访问实例" class="headerlink" title="初始化时应该直接访问实例"></a>初始化时应该直接访问实例</h4><p>如果父类初始化使用 setter 方法设置属性，而子类又重写了这个 setter 方法，那么子类初始化时，父类也会初始化，这时父类将会调用子类的 setter 方法。<br>例外：如果待初始化的实例变量申明在父类中，而子类无法直接访问此实例变量，这时就需要调用 setter 方法了。</p>
-<blockquote>
-<p>dealloc 方法中也应该直接读写实例变量  </p>
-</blockquote>
-<h4 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h4><p>如果某个属性使用了懒加载，那就必须使用 getter 方法了。</p>
-<h2 id="第8条：理解-“对象同等性”-这一概念"><a href="#第8条：理解-“对象同等性”-这一概念" class="headerlink" title="第8条：理解 “对象同等性” 这一概念"></a>第8条：理解 “对象同等性” 这一概念</h2><p>“对象同等性” 可以理解为某种意义上两个对象相等，这个“相等”是我们自定义的。官方给我们定义了一些判断两个对象是否“相等”的方法</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSString</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToString:(<span class="built_in">NSString</span> *)aString;</div><div class="line"></div><div class="line"><span class="comment">// NSData</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToData:(<span class="built_in">NSData</span> *)other;</div><div class="line"></div><div class="line"><span class="comment">// NSDictionary</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToDictionary:(<span class="built_in">NSDictionary</span>&lt;KeyType, ObjectType&gt; *)otherDictionary;</div></pre></td></tr></table></figure>
-<h4 id="对象完全相等"><a href="#对象完全相等" class="headerlink" title="对象完全相等"></a>对象完全相等</h4><p>用 “==” 判断两个对象是否是同一个对象，这里判断的是指针。</p>
-<h4 id="自定义-“相等”"><a href="#自定义-“相等”" class="headerlink" title="自定义 “相等”"></a>自定义 “相等”</h4><p>通过 NSObject 协议中的两个方法自定义 “相等”。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object;  </div><div class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span> hash;</div></pre></td></tr></table></figure>
-<p>自定义一个 Person 类，包含一个 email 属性。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>()</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>假定对象的 email 属性值相同，就认为这两个类“相同”，那么自定义方法如下：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isEqualToPerson:(Person *)otherPerson &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="literal">nil</span> == otherPerson) <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == otherPerson) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([_email isEqualToString:otherPerson.email]) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object &#123;</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> <span class="keyword">class</span>] != [object <span class="keyword">class</span>]) <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> isEqualToPerson:object];</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 如果两个对象相等，则其哈希码一定相同。反之，如果哈希码相同，这两个对象不一定相同。</span></div><div class="line"><span class="comment">// 考虑到性能问题，hash 方法要保证高效率</span></div><div class="line">- (<span class="built_in">NSUInteger</span>)hash &#123;</div><div class="line">	<span class="comment">// 此处逻辑可以自定义</span></div><div class="line">    <span class="keyword">return</span> [_email hash];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSArray</span></div><div class="line">- (<span class="built_in">BOOL</span>)containsObject:(ObjectType)anObject;</div><div class="line"><span class="comment">// NSSet</span></div><div class="line">- (<span class="built_in">BOOL</span>)containsObject:(ObjectType)anObject;</div></pre></td></tr></table></figure>
-<p>使用 NSArray 调用 containsObject 这个方法，会直接调用 isEqual 方法判断两个对象是否相等。测试发现这里并没有调用 hash 方法，原因不明，例子如下：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line">Person *aPerson = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,i]];</div><div class="line">	[array addObject:p];</div><div class="line">	aPerson = p;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([array containsObject:aPerson]) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"array has 'aPerson'"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>再使用 NSSet 看看是怎么执行的。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableSet</span> *sets = [<span class="built_in">NSMutableSet</span> set];</div><div class="line">Person *aPerson = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,i]];</div><div class="line">	[sets addObject:p];</div><div class="line">	aPerson = p;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([sets containsObject:aPerson]) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"array has 'aPerson'"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>NSSet 在 addObject 和 containsObject 方法中都会调用 hash 方法。再 addObject 方法中会调用 isEqual 方法，而 containsObject 方法中则不再调用。NSArray 则是在 containsObject 方法中调用 isEqual 方法。</p>
-<blockquote>
-<p>不同的集合会使用不同的逻辑判断是否“相等”。</p>
-</blockquote>
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>在 NSSet 中， hash 方法是判断的第一步，应该保证此方法的高效性，同时也要考虑 <strong>哈希碰撞</strong> 发生的概率。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1487,7 +1483,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
