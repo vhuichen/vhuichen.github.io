@@ -1,0 +1,688 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,URL Schemes," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="什么是 URL SchemesURL（Uniform Resoure Locator：统一资源定位器）一般就是我们所说的网址，通过 URL 可以访问我们想要访问的服务和资源。
+URL的地址格式排列为：scheme://host:port/path,比如 URL 地址： https://vhuichen.github.io/tags/ ，这里的 https 就是 Schemes 。又比如支付宝的 U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS开发之 URL Schemes">
+<meta property="og:url" content="http://yoursite.com/2018/05/15/180515-iOS开发之 URL Schemes/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="什么是 URL SchemesURL（Uniform Resoure Locator：统一资源定位器）一般就是我们所说的网址，通过 URL 可以访问我们想要访问的服务和资源。
+URL的地址格式排列为：scheme://host:port/path,比如 URL 地址： https://vhuichen.github.io/tags/ ，这里的 https 就是 Schemes 。又比如支付宝的 U">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-15/37536164.jpg">
+<meta property="og:updated_time" content="2018-05-16T13:45:32.408Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS开发之 URL Schemes">
+<meta name="twitter:description" content="什么是 URL SchemesURL（Uniform Resoure Locator：统一资源定位器）一般就是我们所说的网址，通过 URL 可以访问我们想要访问的服务和资源。
+URL的地址格式排列为：scheme://host:port/path,比如 URL 地址： https://vhuichen.github.io/tags/ ，这里的 https 就是 Schemes 。又比如支付宝的 U">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-15/37536164.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/15/180515-iOS开发之 URL Schemes/"/>
+
+
+  <title> iOS开发之 URL Schemes | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS开发之 URL Schemes
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-16T21:45:32+08:00" content="2018-05-16">
+				2018-05-16
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="什么是-URL-Schemes"><a href="#什么是-URL-Schemes" class="headerlink" title="什么是 URL Schemes"></a>什么是 URL Schemes</h3><p>URL（Uniform Resoure Locator：统一资源定位器）一般就是我们所说的网址，通过 URL 可以访问我们想要访问的服务和资源。</p>
+<p>URL的地址格式排列为：<strong>scheme://host:port/path</strong>,比如 URL 地址： <strong><a href="https://vhuichen.github.io/tags/" target="_blank" rel="external">https://vhuichen.github.io/tags/</a></strong> ，这里的 https 就是 Schemes 。又比如支付宝的 URL Schemes 是<strong>alipay://</strong> ，我们在 Safari 的地址栏输入就可以打开支付宝了。</p>
+<p>在iOS系统中，我们可以通过 URL Schemes 开定位APP的位置，通过 URL Schemes 实现APP跳转。一般情况下每个 APP 的 URL Schemes 都是不一样的，如果出现相同的 URL Schemes ，那么最后安装的 APP 的 URL Schemes 有效。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>创建两个Project，ProjectA 和 ProjectB ，设置两个项目的 URL Schemes 和项目名相同（这里只做测试用）。具体怎么设置如下图（白名单后面会讲到），这里只放了一张截图。    </p>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/37536164.jpg" alt=""></p>
+<p>两个 Project 的实现代码实现如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ProjectA</span></div><div class="line">- (<span class="keyword">IBAction</span>)projectButtonClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"ProjectB://"</span>];</div><div class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIApplication</span> sharedApplication] canOpenURL:url]) &#123;</div><div class="line">        [[<span class="built_in">UIApplication</span> sharedApplication] openURL:url];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ProjectB</span></div><div class="line">- (<span class="keyword">IBAction</span>)buttonClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"ProjectA://"</span>];</div><div class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIApplication</span> sharedApplication] canOpenURL:url]) &#123;</div><div class="line">        [[<span class="built_in">UIApplication</span> sharedApplication] openURL:url];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现点击 ProjectA 的按钮跳转到 ProjectB ，点击 ProjectB 的按钮跳转到 ProjectA。就这样简单几句代码实现了应用之间的跳转。</p>
+<h4 id="iOS10-新接口"><a href="#iOS10-新接口" class="headerlink" title="iOS10 新接口"></a>iOS10 新接口</h4><p>在iOS10中，废弃了 <strong>openURL</strong> 这个接口改用下面这个接口  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)openURL:(<span class="built_in">NSURL</span>*)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *, <span class="keyword">id</span>&gt; *)options completionHandler:(<span class="keyword">void</span> (^ __<span class="keyword">nullable</span>)(<span class="built_in">BOOL</span> success))completion <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">10</span>_0) <span class="built_in">NS_EXTENSION_UNAVAILABLE_IOS</span>(<span class="string">""</span>);</div></pre></td></tr></table></figure>
+<p>字典参数 options 目前有一个关键字 <strong>UIApplicationOpenURLOptionUniversalLinksOnly</strong> 对应的值为 BOOL 类型。默认情况下 值为 NO。如果设置成 YES，那么只能通过 URL 对应的APP才能打开这个链接，如果没有安装对应的APP，那么 completionHandler 中就会返回 NO。默认情况下是通过 Safari 来打开这个 URL 的。</p>
+<h3 id="白名单"><a href="#白名单" class="headerlink" title="白名单"></a>白名单</h3><p>iOS9 开始新增了白名单，当没有添加白名单时 调用 <strong>canOpenURL:</strong> 会返回 NO 。并打印出log信息  </p>
+<blockquote>
+<p>-canOpenURL: failed for URL: “ProjectB://“ - error: “This app is not allowed to query for scheme projectb”</p>
+</blockquote>
+<p>添加白名单只需要在 Info.plist 添加 <strong>LSApplicationQueriesSchemes</strong> 关键字，选择数组类型并设置 URL Schemes 的值。具体可以看上图。</p>
+<h3 id="传参"><a href="#传参" class="headerlink" title="传参"></a>传参</h3><p>和我们平时用的 URL 一样，也可以在 URL Schemes 后面加参数，例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ProjectA</span></div><div class="line">- (<span class="keyword">IBAction</span>)projectButtonClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"ProjectB://title=mytitle&amp;content=mycontent"</span>];</div><div class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIApplication</span> sharedApplication] canOpenURL:url]) &#123;</div><div class="line">        [[<span class="built_in">UIApplication</span> sharedApplication] openURL:url];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：参数之间不能有空格</p>
+</blockquote>
+<p>URL Schemes 对应的APP可以在回调函数中处理传过来的参数。</p>
+<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>当应用是通过 URL Schemes 启动时，会调用相应的回调函数，系统提供了三个回调函数。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// iOS9及以上</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)app openURL:(<span class="built_in">NSURL</span> *)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">UIApplicationOpenURLOptionsKey</span>,<span class="keyword">id</span>&gt; *)options &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"B0:%@"</span>,url);</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// iOS8</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application openURL:(<span class="built_in">NSURL</span> *)url sourceApplication:(<span class="built_in">NSString</span> *)sourceApplication annotation:(<span class="keyword">id</span>)annotation &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"B1:%@"</span>,url);</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// iOS8</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application handleOpenURL:(<span class="built_in">NSURL</span> *)url &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"B2:%@"</span>,url);</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>iOS9及以上会优先调用第一个方法，iOS9以下会优先调用第二个方法。<br>这里我们接收到的 url 中就包含了参数信息。</p>
+<h4 id="UIApplicationOpenURLOptionsKey"><a href="#UIApplicationOpenURLOptionsKey" class="headerlink" title="UIApplicationOpenURLOptionsKey"></a>UIApplicationOpenURLOptionsKey</h4><p>最新的回调接口提供了字典参数，这个字典有三个 key  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIKIT_EXTERN</span> <span class="built_in">UIApplicationOpenURLOptionsKey</span> <span class="keyword">const</span> <span class="built_in">UIApplicationOpenURLOptionsSourceApplicationKey</span> <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);   <span class="comment">// value is an NSString containing the bundle ID of the originating application</span></div><div class="line"><span class="built_in">UIKIT_EXTERN</span> <span class="built_in">UIApplicationOpenURLOptionsKey</span> <span class="keyword">const</span> <span class="built_in">UIApplicationOpenURLOptionsAnnotationKey</span> <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);   <span class="comment">// value is a property-list typed object corresponding to what the originating application passed in UIDocumentInteractionController's annotation property</span></div><div class="line"><span class="built_in">UIKIT_EXTERN</span> <span class="built_in">UIApplicationOpenURLOptionsKey</span> <span class="keyword">const</span> <span class="built_in">UIApplicationOpenURLOptionsOpenInPlaceKey</span> <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);   <span class="comment">// value is a bool NSNumber, set to YES if the file needs to be copied before use</span></div></pre></td></tr></table></figure>
+<p>默认情况下，会传入两个参数</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="built_in">UIApplicationOpenURLOptionsOpenInPlaceKey</span> = <span class="number">0</span>;</div><div class="line">    <span class="built_in">UIApplicationOpenURLOptionsSourceApplicationKey</span> = <span class="string">"com.xxxx.ProjectB"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>UIApplicationOpenURLOptionsSourceApplicationKey</strong> 传入的是原应用的Bundle ID<br>我们可以通过判断这个 Bundle ID 来决定执行哪项操作以及返回值。例如我们可以这样写  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)app openURL:(<span class="built_in">NSURL</span> *)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">UIApplicationOpenURLOptionsKey</span>,<span class="keyword">id</span>&gt; *)options &#123;</div><div class="line">    <span class="keyword">if</span>([options[<span class="built_in">UIApplicationOpenURLOptionsSourceApplicationKey</span>] isEqualToString:<span class="string">@"com.xxxx.ProjectB"</span>]) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>疑问：这里我测试发现，不管返回值是否为真，结果都一样。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/URL-Schemes/" rel="tag">#URL Schemes</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/15/180515-iOS基础之一个Workspace下有多个Project/" rel="next" title="iOS基础之一个Workspace下有多个Project">
+                <i class="fa fa-chevron-left"></i> iOS基础之一个Workspace下有多个Project
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-URL-Schemes"><span class="nav-number">1.</span> <span class="nav-text">什么是 URL Schemes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#iOS10-新接口"><span class="nav-number">2.1.</span> <span class="nav-text">iOS10 新接口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#白名单"><span class="nav-number">3.</span> <span class="nav-text">白名单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传参"><span class="nav-number">4.</span> <span class="nav-text">传参</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">5.</span> <span class="nav-text">回调函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UIApplicationOpenURLOptionsKey"><span class="nav-number">5.1.</span> <span class="nav-text">UIApplicationOpenURLOptionsKey</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
