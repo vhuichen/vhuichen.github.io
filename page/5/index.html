@@ -246,6 +246,132 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/30/161130-iOS基础之计算字符串长度/" itemprop="url">
+                  iOS基础之计算字符串长度
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-30T21:34:11+08:00" content="2016-11-30">
+              2016-11-30
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2017-06-27T23:02:28+08:00" content="2017-06-27">
+				2017-06-27
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>创建NSString的分类，用来获取字符串的字节长度<br>用两种方法实现</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.h</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength;</div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>实现方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.m</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHProperty.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selfLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)[<span class="keyword">self</span> cStringUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="built_in">NSUInteger</span> encodingLength = [<span class="keyword">self</span> lengthOfBytesUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; encodingLength; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (*p) &#123;</div><div class="line">            selfLength++;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selfLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selflLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">self</span>.length; i++) &#123;</div><div class="line">        <span class="keyword">unichar</span> uc = [<span class="keyword">self</span> characterAtIndex:i];</div><div class="line">        selflLength += isascii(uc) ? <span class="number">1</span> : <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selflLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>经测试两种方法都可以获取到字符串的字节长度</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/11/01/161101-iOS基础之开机启动SVN服务/" itemprop="url">
                   iOS基础之开机启动SVN服务
                 </a>
@@ -1328,7 +1454,7 @@ Hi,I&apos;m *MarkDown斜体*
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

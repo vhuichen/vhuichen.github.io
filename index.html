@@ -668,6 +668,144 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(3)/" itemprop="url">
+                  《Effective Objective-C 2.0》第五章阅读笔记(3)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-09T00:00:00+08:00" content="2018-05-09">
+              2018-05-09
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-17T21:40:56+08:00" content="2018-05-17">
+				2018-05-17
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第五章：内存管理-3"><a href="#第五章：内存管理-3" class="headerlink" title="第五章：内存管理(3)"></a><center>第五章：内存管理(3)</center></h1><h2 id="第34条：以“自动释放池块”降低内存"><a href="#第34条：以“自动释放池块”降低内存" class="headerlink" title="第34条：以“自动释放池块”降低内存"></a>第34条：以“自动释放池块”降低内存</h2><p>Objective-C 对象的生命期取决于其引用计数。在 Objective-C 的引用计数架构中，有一项特性叫做“自动释放池”（autorelease pool）。释放对象有两种方式：一种是调用 release 方法，使其引用计数立即递减；另一种是调用 autorelease 方法，将其加入“自动释放池”中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空自动释放池时，系统会向其中的对象发送 release 消息。<br><strong>每一次运行循环开始后，系统都会创建一个自动释放池，当一个对象出了作用域之后就会加入到最近的自动释放池中，运行循环结束前会释放自动释放池（池子满了也会释放）。自动释放池工作的原理就是，给每一个池子的每一个对象发送 release 消息。</strong><br>那么问题来了，在一个运行循环中创建了大量的临时变量，这时就会导致内存峰值很高。例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	[<span class="keyword">self</span> doSomethingWithInt:i]; <span class="comment">// 方法内创建了大量的临时变量</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当循环结束时，大量的对象放到自动释放池中，占用了大量的内存。增加一个自动释放池可以解决这样的问题。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	<span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">		[<span class="keyword">self</span> doSomethingWithInt:i];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在循环中加入自动释放池，每次循环结束前都会回收当前池子中的对象。这样程序在执行循环时的峰值就会降低。<br>自动释放池机制就像“栈”（stack）一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。  </p>
+<blockquote>
+<p>创建自动释放池会增加额外的开销，是否需要创建还需要根据实际情况来。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>自动释放池排布在栈中，对象收到 autorelease 消息后，系统将其放入到最顶端的池里。<br>合理运用自动释放池，可降低应用程序的内存峰值。</p>
+<h2 id="第35条：用“僵尸对象”调试内存管理问题"><a href="#第35条：用“僵尸对象”调试内存管理问题" class="headerlink" title="第35条：用“僵尸对象”调试内存管理问题"></a>第35条：用“僵尸对象”调试内存管理问题</h2><p>向已回收的对象发送消息是不安全的。这么做有时可以，有时不行。具体可行与否，完全取决于对象所占内存有没有被其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔崩溃。在没有崩溃的情况下，那块内存可能只复用了其中一部分，所以部分对象中的某些二进制数据依然有效。还有一种可能，就是那块内存恰好为另外一个有效且存货的对象所占据。在这种情况下，运行期系统会把消息转发到新对象那里，而此对象也许能应答，也许不能。如果能，那程序就不崩溃，可你会觉得奇怪：为什么收到消息的对象不是预想的那个呢？若新对象无法响应选择子，则程序依然会崩溃。  </p>
+<p>Cocoa提供了“僵尸对象”（Zombie Object）这个非常方便的功能。启用这项调试功能之后，运行期系统会把所有已经回收的实例转化为特殊的“僵尸对象”，而不是真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象收到消息之后，会抛出异常，其中准确说明了发送过来的消息，并描述了回收之前的那个对象。僵尸对象是调试内存管理问题的最佳方式。  </p>
+<p>点击 Scheme -&gt; Edit Scheme -&gt; Run -&gt; Diagnostics 里面可以设置僵尸模式。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-14/65940260.jpg" alt=""></p>
+<h4 id="Zombie-Object-工作原理"><a href="#Zombie-Object-工作原理" class="headerlink" title="Zombie Object 工作原理"></a>Zombie Object 工作原理</h4><p>Zombie Object 的实现代码深植于 Objective - C 的运行期程序库、Foundation 框架以及 CoreFoundation 框架中。系统在即将回收对象时，如果发现通过环境变量启用了僵尸对象功能，那么还将执行一个附加步骤。这一步就是把对象转化为僵尸对象，而不彻底回收。</p>
+<h4 id="僵尸类如何将把待回收的对象转换成僵尸对象"><a href="#僵尸类如何将把待回收的对象转换成僵尸对象" class="headerlink" title="僵尸类如何将把待回收的对象转换成僵尸对象"></a>僵尸类如何将把待回收的对象转换成僵尸对象</h4><p>这个过程其实就是 NSObject 的 dealloc 方法所做的事。运行期系统如果发现 NSZombieEnabled 环境变量已设置，那么就把 dealloc 方法的“调配“（swizzle）成一个会执行特定代码的方法。执行到程序末尾时，对象所属的类已经变为_NSZombie_OriginalClass了，其中 OriginalClass 指的是原类名。</p>
+<p>代码中的关键之处在于：对象所占内存没有通过调用 free() 方法释放，因此，这块内存不可复用。虽说内存泄漏了，但这只是个调试手段，发布正式应用程序时不会把这项功能打开，所以这种泄漏问题无关紧要。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>打开 “Zombie Object” 这个功能，系统在回收对象时，可以不将其真正的回收，而是将它转为僵尸对象。<br>系统会修改对象的isa指针，令其指向特殊的僵尸类，从而使改对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接收者的消息，然后终止应用程序。</p>
+<h2 id="第36条：不要使用-retainCount"><a href="#第36条：不要使用-retainCount" class="headerlink" title="第36条：不要使用 retainCount"></a>第36条：不要使用 retainCount</h2><p>MRC 环境下，retainCount 所返回的引用计数只是某个给定时间点上的值。该方法并未考虑到系统会稍后把自动释放池清空，因而不会将后续的释放操作从返回值里减去，这样的话，此值就未必能真实反映实际的引用计数了。<br>ARC 环境下已经废弃此接口。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(2)/" itemprop="url">
                   《Effective Objective-C 2.0》第五章阅读笔记(2)
                 </a>
@@ -1254,172 +1392,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/26/180426-《Effective Objective-C 2.0》第三章阅读笔记/" itemprop="url">
-                  《Effective Objective-C 2.0》第三章阅读笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-26T00:00:00+08:00" content="2018-04-26">
-              2018-04-26
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-02T23:29:37+08:00" content="2018-05-02">
-				2018-05-02
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第三章：接口与-API-设计"><a href="#第三章：接口与-API-设计" class="headerlink" title="第三章：接口与 API 设计"></a><center>第三章：接口与 API 设计</center></h1><h2 id="第15条：用前缀避免命名冲突"><a href="#第15条：用前缀避免命名冲突" class="headerlink" title="第15条：用前缀避免命名冲突"></a>第15条：用前缀避免命名冲突</h2><p>选择与公司、应用程序或二者皆有关联的名称作为类名的前缀，并在所有的代码中使用这一前缀。也不仅仅是类名，应用程序中所有名称都应该加前缀。  </p>
-<blockquote>
-<p>苹果宣称保留使用所有“两个字母前缀”的权利，所以我们的前缀必须多于两个字母。  </p>
-</blockquote>
-<h3 id="顶级符号"><a href="#顶级符号" class="headerlink" title="顶级符号"></a>顶级符号</h3><p>在编译好的目标文件中，类实现文件所用的纯 C 函数和全局变量的名称要算作“顶级符号”。比如在类中创建了名为 “completion” 的纯 C 函数，会编译成 “_completion” 存在符号表中。此时如果在别的文件中也创建一个名为 “completion” 的函数，就会发出一个 “duplicate symbol” 的错误。</p>
-<h3 id="避免第三方库冲突"><a href="#避免第三方库冲突" class="headerlink" title="避免第三方库冲突"></a>避免第三方库冲突</h3><p>如果两个第三方库同时引入了相同的第三方库，那么就可能会出现 “duplicate symbol” 的错误。<br><strong>当自己的第三方库引入了别的第三方库的时候，应该给那份第三方库的代码加上自己的前缀。（😆。。。没看懂）</strong></p>
-<h2 id="第16条：提供-“指定初始化方法”"><a href="#第16条：提供-“指定初始化方法”" class="headerlink" title="第16条：提供 “指定初始化方法”"></a>第16条：提供 “指定初始化方法”</h2><p>那些可以为对象提供必要信息以便其能完成工作的初始化方法就叫“指定初始化方法”，这类初始化方法一般在后面会有 NS_DESIGNATED_INITIALIZER 这个宏定义。  </p>
-<h4 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h4><p>之前已经写过一篇相关的文章，可以去这篇文章看看 <a href="https://vhuichen.github.io/2018/03/31/180331-iOS%E5%BC%80%E5%8F%91%E4%B9%8BDesignated%20Initializer/" target="_blank" rel="external">iOS开发之Designated Initializer(指定初始化方法)</a></p>
-<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>如果子类的指定初始化方法和父类的指定初始化方法不一样，那么需要在子类中重写父类的初始化方法。</p>
-<h2 id="第17条：实现-description-方法"><a href="#第17条：实现-description-方法" class="headerlink" title="第17条：实现 description 方法"></a>第17条：实现 description 方法</h2><p>description 方法定义在 NSObject 的协议里面。当想打印某个对象的时候，通常我们会这样做</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Person *p = [[Person alloc] initWithEmail:<span class="string">@"123@163.com"</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,p);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// &lt;Person: 0x109ea6170&gt;</span></div></pre></td></tr></table></figure>
-<p>直接打印对象实际上就是调用了 description 方法。所以我们只需要重写这个方法就可以打印出感兴趣的信息出来。  </p>
-<h4 id="description"><a href="#description" class="headerlink" title="description"></a>description</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)description &#123;</div><div class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"&lt;%@: %p, email = %@&gt;"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, _email];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// &lt;Person: 0x12bd4f090, email = 123@163.com&gt;</span></div></pre></td></tr></table></figure>
-<p>如上，只要我们重写了 description 方法，就可以打印出特定的信息出来。</p>
-<h4 id="debugDescription"><a href="#debugDescription" class="headerlink" title="debugDescription"></a>debugDescription</h4><p>在合适的地方加入断点，然后在调试控制台输入lldb的 “po” 命令，就可以打印出 debugDescription 里面的信息出来</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)debugDescription &#123;</div><div class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"&lt;%@: %p, email = %@&gt;"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, _email];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// &lt;Person: 0x113dbff50, email = 123@163.com&gt;</span></div><div class="line"><span class="comment">// (lldb) po p</span></div><div class="line"><span class="comment">// &lt;Person: 0x113dbff50, email = 123@163.com&gt;</span></div><div class="line"><span class="comment">// (lldb)</span></div></pre></td></tr></table></figure>
-<p>一般我们可以在 description 里面打印主要的信息，而在 debugDescription 里面打印更详细的信息。</p>
-<h2 id="第18条：尽量使用不可变对象"><a href="#第18条：尽量使用不可变对象" class="headerlink" title="第18条：尽量使用不可变对象"></a>第18条：尽量使用不可变对象</h2><p>如果属性是不可变的，那么就应该将它设置成 readonly 。<br>如果把可变对象放到 collection 中，然后又修改其内容，那么很容易破坏 collection 的内部结构，比如：NSSet  </p>
-<blockquote>
-<p>看使用场景，把代码设计成最合逻辑的。</p>
-</blockquote>
-<h2 id="第19条：使用清晰而协调的命名方式"><a href="#第19条：使用清晰而协调的命名方式" class="headerlink" title="第19条：使用清晰而协调的命名方式"></a>第19条：使用清晰而协调的命名方式</h2><p>1、命名要清晰、易懂。<br>2、命名不要太啰嗦。<br>3、驼峰命名（类名首字母要大些，并且要加上前缀）。<br>4、是否要简写要看具体情况。<br>5、加前缀，尽量避免命名冲突。  </p>
-<h2 id="第20条：为私有方法名加前缀"><a href="#第20条：为私有方法名加前缀" class="headerlink" title="第20条：为私有方法名加前缀"></a>第20条：为私有方法名加前缀</h2><p>由于 Objective-C 没有 private 关键字。如果父类的私有方法和子类的方法重名了，那么父类的私有方法将无法执行。<br>苹果自己是通过在私有方法前加下划线（_）来标识的，因此我们就不能再这样做了。  </p>
-<h3 id="怎样有效避免这个问题"><a href="#怎样有效避免这个问题" class="headerlink" title="怎样有效避免这个问题"></a>怎样有效避免这个问题</h3><p>文章给出两个方法。</p>
-<h4 id="加前缀-“p-”"><a href="#加前缀-“p-”" class="headerlink" title="加前缀 “p_”"></a>加前缀 “p_”</h4><p>即 private 的首字母加下划线作为前缀。</p>
-<h4 id="项目前缀加下划线"><a href="#项目前缀加下划线" class="headerlink" title="项目前缀加下划线"></a>项目前缀加下划线</h4><p>比如我的项目前缀是 “VCH”，那么就可以加 “vch_” 作为前缀。不过其实分类的方法很多也是使用前缀加下划线来区别原类的。</p>
-<h2 id="第21条：理解-Objective-C-错误模型"><a href="#第21条：理解-Objective-C-错误模型" class="headerlink" title="第21条：理解 Objective-C 错误模型"></a>第21条：理解 Objective-C 错误模型</h2><h3 id="致命性错误-使用-throw"><a href="#致命性错误-使用-throw" class="headerlink" title="致命性错误 使用 @throw"></a>致命性错误 使用 @throw</h3><p>只有在极端情况下，才使用 @throw 抛出异常，同时也就意味着程序结束，崩溃。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"errorName"</span> reason:<span class="string">@"errorReason"</span> userInfo:@&#123;<span class="string">@"key"</span>:<span class="string">@"value"</span>&#125;];</div></pre></td></tr></table></figure>
-<h3 id="非致命性错误-返回-nil-或-0"><a href="#非致命性错误-返回-nil-或-0" class="headerlink" title="非致命性错误 返回 nil 或 0"></a>非致命性错误 返回 nil 或 0</h3><p>一般对于一些非致命性错误，可以返回 nil 或 0 来提示。</p>
-<h3 id="NSError"><a href="#NSError" class="headerlink" title="NSError"></a>NSError</h3><p>当我们进行一些网络请求时，会返回一些错误，此时可以通过 NSError 把错误信息封装起来，再交给接受者处理。</p>
-<h4 id="Error-domain"><a href="#Error-domain" class="headerlink" title="Error domain"></a>Error domain</h4><p>错误的范围，一般会定义一个全局变量来指示。</p>
-<h4 id="Error-code"><a href="#Error-code" class="headerlink" title="Error code"></a>Error code</h4><p>错误码，一般用一个枚举表示。</p>
-<h4 id="Error-info"><a href="#Error-info" class="headerlink" title="Error info"></a>Error info</h4><p>包含错误的额外信息，字典类型。</p>
-<h4 id="Error-常见处理方法"><a href="#Error-常见处理方法" class="headerlink" title="Error 常见处理方法"></a>Error 常见处理方法</h4><h5 id="交给委托处理"><a href="#交给委托处理" class="headerlink" title="交给委托处理"></a>交给委托处理</h5><p>可以把错误传递给委托对象处理，至于怎么去处理这个错误由委托对象决定。</p>
-<h5 id="返回给调用者"><a href="#返回给调用者" class="headerlink" title="返回给调用者"></a>返回给调用者</h5><p>也可以通过返回值、block等将错误返回给调用者，交由调用者处理错误。</p>
-<h2 id="第22条：理解-NSCopying-协议"><a href="#第22条：理解-NSCopying-协议" class="headerlink" title="第22条：理解 NSCopying 协议"></a>第22条：理解 NSCopying 协议</h2><p>当我们自己的类需要支持拷贝操作时，就需要实现 NSCopying 协议，协议就一个方法。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSCopying</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>具体实现如下</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .h</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span>&lt;<span class="title">NSCopying</span>&gt;</span></div><div class="line"></div><div class="line">- (<span class="keyword">instancetype</span>)initWithEmail:(<span class="built_in">NSString</span> *)email;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// .m</span></div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone &#123;</div><div class="line">    Person *person = [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] initWithEmail:_email];</div><div class="line">    person.name = [_name <span class="keyword">copy</span>];</div><div class="line">    <span class="keyword">return</span> person;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用 NSCopying 协议复制出来的对象是不可变的。</p>
-<h3 id="NSMutableCopying-协议"><a href="#NSMutableCopying-协议" class="headerlink" title="NSMutableCopying 协议"></a>NSMutableCopying 协议</h3><p>当我们需要复制的是可变对象时，就需要实现 NSMutableCopying 这个协议。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSMutableCopying</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)mutableCopyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>如果自定义对象分可变版本和不可变版本，那么就要同时实现 NSCopying 和 NSMutableCopying 协议。</p>
-<h3 id="深拷贝-amp-浅拷贝"><a href="#深拷贝-amp-浅拷贝" class="headerlink" title="深拷贝 &amp; 浅拷贝"></a>深拷贝 &amp; 浅拷贝</h3><p>浅拷贝只会复制指针，拷贝后的对象和原始对象为同一对象。深拷贝则是将对象也拷贝了一份。Foundation 框架下所有的 collection 类在默认情况下都执行浅拷贝。实现 collection 深拷贝的方法类似如下</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">instancetype</span>)initWithSet:(<span class="built_in">NSSet</span>&lt;ObjectType&gt; *)set copyItems:(<span class="built_in">BOOL</span>)flag;</div><div class="line">- (<span class="keyword">instancetype</span>)initWithArray:(<span class="built_in">NSArray</span>&lt;ObjectType&gt; *)array copyItems:(<span class="built_in">BOOL</span>)flag;</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1465,7 +1437,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

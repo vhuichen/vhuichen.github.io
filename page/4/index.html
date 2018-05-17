@@ -246,6 +246,153 @@
             
               
                 
+                <a class="post-title-link" href="/2017/11/05/171105-iOS开发之APP默认语言/" itemprop="url">
+                  iOS开发之APP默认语言
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-05T23:11:54+08:00" content="2017-11-05">
+              2017-11-05
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2017-11-12T21:08:18+08:00" content="2017-11-12">
+				2017-11-12
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p></p><p style="TEXT-INDENT:2em">测试人员在测试的时候，将系统语言设置为没有本地化的语言，然后APP显示的是中文！居然是中文，可我的“Base”语言是英文来的。</p><p></p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p></p><p style="TEXT-INDENT:2em">经过测试后发现原来当将系统语言设置为没有本地化的语言的时候，APP会显示上一次的语言,而不是APP里面设置的“Base”语言。</p><p></p>
+<p></p><p style="TEXT-INDENT:2em">网上搜索一下，大概得到了答案。iOS系统会从语言和地区栏里面按照优先级顺序查找，如下图，系统会检测APP有没有本地化“English”，如果有直接使用，如果没有则检查“简体中文”有没有本地化，最后检测“French”。如果都没有本地化，则使用“Base”语言。如果“Base”也没有则使用默认值（比如“key”值）。</p><br><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-7/49595790.jpg?imageView/2/w/300" alt=""><p></p>
+<p>上图是手机里面的语言和时区界面的截图。<br>APP语言一共有3种，地区为中国。            </p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>系统方法：NSLocalizedString(key, comment) 的宏定义如下   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#define NSLocalizedString(key, comment) \</span></div><div class="line">	    [<span class="built_in">NSBundle</span>.mainBundle localizedStringForKey:(key) value:<span class="string">@""</span> table:<span class="literal">nil</span>]</div><div class="line"><span class="meta">#define NSLocalizedStringFromTable(key, tbl, comment) \</span></div><div class="line">	    [<span class="built_in">NSBundle</span>.mainBundle localizedStringForKey:(key) value:<span class="string">@""</span> table:(tbl)]</div><div class="line"><span class="meta">#define NSLocalizedStringFromTableInBundle(key, tbl, bundle, comment) \</span></div><div class="line">	    [bundle localizedStringForKey:(key) value:<span class="string">@""</span> table:(tbl)]</div><div class="line"><span class="meta">#define NSLocalizedStringWithDefaultValue(key, tbl, bundle, val, comment) \</span></div><div class="line">	    [bundle localizedStringForKey:(key) value:(val) table:(tbl)]</div></pre></td></tr></table></figure>
+<p>只要将bundle更换为指定的语言就行了。<br>这里可以参考第三方库<a href="https://github.com/nicklockwood/iVersion" target="_blank" rel="external">iVersion</a>。</p>
+<blockquote>
+<p>大概步骤如下：<br>先获取到当前语言，然后判断APP是否有本地化该语言，如果有则直接使用，如果没有则使用APP默认语言（一般就是英语）。而不是根据语言优先级来设置语言。</p>
+</blockquote>
+<p>写一段简单的代码，获取所有的系统语言。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两种方法得到的结果相同</span></div><div class="line"><span class="comment">//NSArray *languages = [NSLocale preferredLanguages]; </span></div><div class="line"><span class="built_in">NSArray</span> *languages = [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] objectForKey:<span class="string">@"AppleLanguages"</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"AppleLanguages = %@"</span>,languages);</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//输出</span></div><div class="line">AppleLanguages = (</div><div class="line">    <span class="string">"en-CN"</span>,</div><div class="line">    <span class="string">"zh-Hans-CN"</span>,</div><div class="line">    <span class="string">"fr-CN"</span></div><div class="line">)</div></pre></td></tr></table></figure>
+<p>输出的语言里面刚好对应上面截图的三种语言，结尾的CN对应地区中国。<br>将地区改为美国后，输出如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">AppleLanguages = (</div><div class="line">    <span class="string">"en-US"</span>,</div><div class="line">    <span class="string">"zh-Hans-US"</span>,</div><div class="line">    <span class="string">"fr-US"</span></div><div class="line">)</div></pre></td></tr></table></figure>
+<p>然而系统创建的文件名如下</p>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-10/53378523.jpg" alt="">   </p>
+<p>所以需要将系统创建的lproj文件夹与APP获取到的第一语言对应起来。</p>
+<blockquote>
+<font color="red"><strong>疑问：每一个lproj文件夹相当于一个bundle ！？</strong></font>
+
+</blockquote>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>.h文件   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHLocalization.h</span></div><div class="line"><span class="comment">//  Mr.Security</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2017/11/8.</span></div><div class="line"><span class="comment">//  Copyright © 2017年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#define kNSL(value) ((NSString *)(value)).vch_localization</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">VCHLocalization</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_localization;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>.m文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHLocalization.m</span></div><div class="line"><span class="comment">//  Mr.Security</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2017/11/8.</span></div><div class="line"><span class="comment">//  Copyright © 2017年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHLocalization.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHLocalization</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_localization &#123;</div><div class="line">    <span class="keyword">static</span> <span class="built_in">NSBundle</span> *bundle = <span class="literal">nil</span>;</div><div class="line">    <span class="keyword">if</span> (bundle == <span class="literal">nil</span>) &#123;</div><div class="line">        <span class="built_in">NSString</span> *defaultLanguage = <span class="string">@"en"</span>;</div><div class="line">        <span class="built_in">NSString</span> *currentLanguage = [[<span class="built_in">NSLocale</span> preferredLanguages] count] ? [<span class="built_in">NSLocale</span> preferredLanguages][<span class="number">0</span>] : defaultLanguage;</div><div class="line">        <span class="built_in">NSArray</span> *localizations = [[<span class="built_in">NSBundle</span> mainBundle] localizations];</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; localizations.count; i++) &#123;</div><div class="line">            <span class="built_in">NSString</span> *localization = localizations[i];</div><div class="line">            <span class="keyword">if</span> ([currentLanguage hasPrefix:localization]) &#123;</div><div class="line">                defaultLanguage = localization;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">NSString</span> *bundlePath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:defaultLanguage ofType:<span class="string">@"lproj"</span>];</div><div class="line">        bundle = [<span class="built_in">NSBundle</span> bundleWithPath:bundlePath] ? : [<span class="built_in">NSBundle</span> mainBundle];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [bundle localizedStringForKey:<span class="keyword">self</span> value:<span class="keyword">self</span> table:<span class="literal">nil</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/05/171105-iOS开发之使用SVN管理代码(Cornerstone)/" itemprop="url">
                   iOS开发之使用SVN管理代码(Cornerstone)
                 </a>
@@ -1144,132 +1291,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/30/161130-iOS基础之计算字符串长度/" itemprop="url">
-                  iOS基础之计算字符串长度
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-30T21:34:11+08:00" content="2016-11-30">
-              2016-11-30
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2017-06-27T23:02:28+08:00" content="2017-06-27">
-				2017-06-27
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>创建NSString的分类，用来获取字符串的字节长度<br>用两种方法实现</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.h</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength;</div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>实现方法</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  NSString+VCHProperty.m</span></div><div class="line"><span class="comment">//  SmartWatch</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by chenhui on 2016/11/22.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 vhuichen. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHProperty.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHProperty</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)convertToByteLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selfLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)[<span class="keyword">self</span> cStringUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="built_in">NSUInteger</span> encodingLength = [<span class="keyword">self</span> lengthOfBytesUsingEncoding:<span class="built_in">NSUnicodeStringEncoding</span>];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; encodingLength; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (*p) &#123;</div><div class="line">            selfLength++;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selfLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)asciiLength &#123;</div><div class="line">    <span class="built_in">NSUInteger</span> selflLength = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">self</span>.length; i++) &#123;</div><div class="line">        <span class="keyword">unichar</span> uc = [<span class="keyword">self</span> characterAtIndex:i];</div><div class="line">        selflLength += isascii(uc) ? <span class="number">1</span> : <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> selflLength;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>经测试两种方法都可以获取到字符串的字节长度</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1315,7 +1336,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
