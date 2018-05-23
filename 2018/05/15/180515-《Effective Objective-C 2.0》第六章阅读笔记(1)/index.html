@@ -1,0 +1,704 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第六章：块与大中枢派发(1)第37条：理解“块”这一概念块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。块类型的语法结构如下：
+1return_type (^block_name)(parameters)
+变量捕获block 可以捕获外部变量，例如：  
+12345int additional = 5;int (^addBlock)(int a, int b)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第六章阅读笔记(1)">
+<meta property="og:url" content="http://yoursite.com/2018/05/15/180515-《Effective Objective-C 2.0》第六章阅读笔记(1)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第六章：块与大中枢派发(1)第37条：理解“块”这一概念块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。块类型的语法结构如下：
+1return_type (^block_name)(parameters)
+变量捕获block 可以捕获外部变量，例如：  
+12345int additional = 5;int (^addBlock)(int a, int b)">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg">
+<meta property="og:updated_time" content="2018-05-23T15:34:44.849Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第六章阅读笔记(1)">
+<meta name="twitter:description" content="第六章：块与大中枢派发(1)第37条：理解“块”这一概念块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。块类型的语法结构如下：
+1return_type (^block_name)(parameters)
+变量捕获block 可以捕获外部变量，例如：  
+12345int additional = 5;int (^addBlock)(int a, int b)">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/15/180515-《Effective Objective-C 2.0》第六章阅读笔记(1)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第六章阅读笔记(1) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第六章阅读笔记(1)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-23T23:34:44+08:00" content="2018-05-23">
+				2018-05-23
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第六章：块与大中枢派发-1"><a href="#第六章：块与大中枢派发-1" class="headerlink" title="第六章：块与大中枢派发(1)"></a><center>第六章：块与大中枢派发(1)</center></h1><h2 id="第37条：理解“块”这一概念"><a href="#第37条：理解“块”这一概念" class="headerlink" title="第37条：理解“块”这一概念"></a>第37条：理解“块”这一概念</h2><p>块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。<br>块类型的语法结构如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return_type (^block_name)(parameters)</div></pre></td></tr></table></figure>
+<h4 id="变量捕获"><a href="#变量捕获" class="headerlink" title="变量捕获"></a>变量捕获</h4><p>block 可以捕获外部变量，例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
+<p>block 捕获 additional 变量，仅仅是捕获 additional 那一刻的值，捕获了之后，如果外部 additional 的值改变了，此时并不会影响 block 内部 additional 的值，因为这个值是一个常量，分别存放在两个不同的内存中，是互不干扰的。如果尝试去修改此时 block 内部的additional 变量的值，编译器会报错。<br>事实上，在 ARC 环境下，block 外部的 additional 变量是存放在栈中的，而 block 内部的 additional 变量则是存放在堆中的。<br>那么，如果需要 block 内外共享一份内存呢？这时可以给变量加上 <strong>__block</strong> 关键字。  </p>
+<h4 id="block-关键字修饰变量"><a href="#block-关键字修饰变量" class="headerlink" title="__block 关键字修饰变量"></a>__block 关键字修饰变量</h4><p>下面用 __block 关键字修饰 additional 变量，那么当外部的 additional 变量改变时，里面的 additional 值也会改变。因为这两个是同一个值。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__block <span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    additional = <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
+<p>用 __block 修饰的变量存放在堆中，和 block 中的 additional 共享同一份内存，是同一个数据。</p>
+<h4 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h4><p>如果在 block 中引用了某个对象，比如self，而这个对象正好直接或者间接引用了 block ，那么就会造成引用循环。<br>所以一般在 block 中引用的变量都会使用弱引用。</p>
+<h4 id="块的内部结构"><a href="#块的内部结构" class="headerlink" title="块的内部结构"></a>块的内部结构</h4><p>块本身也是对象，在存放块对象的内存区域中，首个变量是指向Class对象的指针，该指针叫做isa。其余内存里含有块对象正常运转所需的各种信息。下图描述了块对象的内存布局。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg" alt="">  </p>
+<p>在内存布局中，最重要的就是invoke变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个void *型的参数，此参数代表块。</p>
+<p>descriptor 变量是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了 copy 与 dispose 这两个辅助函数所对应的函数指针。辅助函数在拷贝及丢弃块对象时运行，其中会执行一些操作，比方说，前者 copy 要保留捕获的对象，而后者 dispose 则将之释放。</p>
+<p>block 会把它所捕获的所有变量都拷贝一份，拷贝的是指向这些对象的指针变量。invoke函数为何需要把块对象作为参数传进来呢？原因就在于，执行块时，要从内存中把这些捕获到的变量读出来。</p>
+<h4 id="全局块、栈块及堆块"><a href="#全局块、栈块及堆块" class="headerlink" title="全局块、栈块及堆块"></a>全局块、栈块及堆块</h4><p>定义块时，其所占的内存区域是分配在栈中的。这就是说，块只在定义他的那个范围内有效。例如，下面这段代码会有问题：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<p>上面两个 block 都是分配在栈中的，当离开了作用域后，就会将其释放掉，也就是两个 block 只在 if else 内有效。所以离开了 if slse 后在执行 block的话就可能会出问题。若编译器未覆写待执行的 block，则程序照常运行，若覆写，则程序崩溃。</p>
+<p><strong>其实这就是为什么 block 属性要使用 copy 修饰的原因。</strong>给 block 发送 copy 消息将其拷贝。这样就可以把 block 从栈复制到堆了。拷贝后的 block，可以在定义它的范围之外使用。而且，一旦复制到堆上，块就成了带引用计数的对象了。后续的复制操作都不会真的执行复制，只是递增对象的引用计数。 </p>
+<p>给上面的 block 发送 copy 消息就可以保证程序可以正确运行   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<p>此时的 block 是分配到堆的，这样在 if else 外也可以使用。</p>
+<h4 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h4><p>这种块不会捕捉任何状态（比如外围的变量等），运行时也无须有状态来参与。块所使用的整个内存区域，在编译期已经完全确定了，因此，全局块可以声明在全局内存里，而不需要在每次用到的时候于栈中创建。另外，全局块的拷贝操作是个空操作，因为全局块绝不可能为系统所回收。这种块实际上相当于单例。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)() = ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"This is a block"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>此 block 所需的全部信息都能在编译期确定，所以可把它做成全局块。</p>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p>块可以分配在栈、堆或者全局上。分配在栈上的块可以拷贝到堆里，就和标准的 Objective-C 对象一样具备了引用计数。</p>
+<h2 id="第38条：为常用的块类型创建typedef"><a href="#第38条：为常用的块类型创建typedef" class="headerlink" title="第38条：为常用的块类型创建typedef"></a>第38条：为常用的块类型创建typedef</h2><p>一开始我们定义 block 是这样的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> (^variableName)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样做会有两个不友好的问题 </p>
+<h4 id="不易读"><a href="#不易读" class="headerlink" title="不易读"></a>不易读</h4><p>如果我们提供的接口中有好几个 block ，每个 block 中又有好几个参数，这样会感觉比较难读。<br>解决方法是给 block 类型定义一个别名  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> (^EOCSomeBlock)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value);</div><div class="line"></div><div class="line">EOCSomeBlock block = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样使用起来就会简介很多。</p>
+<h4 id="不易修改"><a href="#不易修改" class="headerlink" title="不易修改"></a>不易修改</h4><p>当打算重构 block 的类型签名时，比方说，要给原来的 completion handler block 再加一个参数，如果没有使用别名的话，那么我们需要将所有使用了该 block 的地方都修改，这样显得过于繁杂。如果使用了别名的话，那么只需修改类型定义语句即可。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当要在多个地方使用同种签名的 block 时，应该给该 block 定义一个别名，然后在需要的地方使用该别名定义 block 。</p>
+<h2 id="第39条：用-handler-块降低代码分散程度"><a href="#第39条：用-handler-块降低代码分散程度" class="headerlink" title="第39条：用 handler 块降低代码分散程度"></a>第39条：用 handler 块降低代码分散程度</h2><p>程序在执行任务时，通常需要 “异步执行” ，这样做的好处在于：处理用户界面的显示及触摸操作所用的线程，不会因为要执行I/O或网络通信这类耗时的任务而阻塞。某些情况下，如果应用程序在一定时间内无响应，那么就会自动终止。“系统监控器”（system watchdog）在发现某个应用程序的主线程已经阻塞了一段时间之后，就会令其终止。  </p>
+<p>通常有两种方式可以处理异步代码  </p>
+<h3 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h3><p>使用 delegate 会使代码变得分散，当一个对象同时接收多个同种类型对象的委托时，还需要在委托方法中判断是哪个对象传来的委托。那么代码会变的更加复杂。delegate 一般用在一个委托对象有多个委托事件的情况下，比如：UITableView，其他情况可以使用 block 来实现。</p>
+<h3 id="block"><a href="#block" class="headerlink" title="block"></a>block</h3><p>用 block 处理起来代码会变的更加清晰。block 可以令这种API变得更紧凑，同时也令开发者调用起来更加方便。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)vch_successWithComplete:(VCHAddNewDeviceComplete)complete failure:(VCHFailure)failure &#123;</div><div class="line">    [<span class="keyword">self</span> vch_startWithComplete:^(<span class="keyword">id</span> object) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        complete();</div><div class="line">    &#125; failure:^(<span class="built_in">NSString</span> *error) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        failure(error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我的处理方式是将成功和失败分开处理，也可以用一个 block 来处理两个两种情况，两种方法均有优劣。具体可多看看官方的做法。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在创建对象时，可以使用内联的handler块将相关业务逻辑一并声明。使代码变得更加紧凑。  </p>
+<h2 id="第40条：用-block-引用其所属对象时不要出现引用循环"><a href="#第40条：用-block-引用其所属对象时不要出现引用循环" class="headerlink" title="第40条：用 block 引用其所属对象时不要出现引用循环"></a>第40条：用 block 引用其所属对象时不要出现引用循环</h2><p>书中的例子比较长，我用项目中的一部分代码来替代，意思是一样的   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[<span class="keyword">self</span> queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
+<p>上面的代码会出现引用循环，self -&gt; mj_header -&gt; block -&gt; self 。这个是初学时很容易犯的错误。这种情况下有两种比较常用的方法可以解决这个问题，一种就是用完 block 后，立即将其释放，另一种就是使用 __weak 关键字修饰某一环节。这里我使用第二种方法，代码如下  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[weakSelf queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
+<p>此时 block 弱引用了 self ，这个循环也就被打破了。</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>如果 block 所捕获的对象直接或间接的保留了 block 本身，那么就需要解除引用循环。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/15/180515-iOS开发之 URL Schemes/" rel="next" title="iOS开发之 URL Schemes">
+                <i class="fa fa-chevron-left"></i> iOS开发之 URL Schemes
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第六章：块与大中枢派发-1"><span class="nav-number">1.</span> <span class="nav-text">第六章：块与大中枢派发(1)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第37条：理解“块”这一概念"><span class="nav-number">1.1.</span> <span class="nav-text">第37条：理解“块”这一概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#变量捕获"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">变量捕获</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#block-关键字修饰变量"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">__block 关键字修饰变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用循环"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">引用循环</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#块的内部结构"><span class="nav-number">1.1.0.4.</span> <span class="nav-text">块的内部结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局块、栈块及堆块"><span class="nav-number">1.1.0.5.</span> <span class="nav-text">全局块、栈块及堆块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局块"><span class="nav-number">1.1.0.6.</span> <span class="nav-text">全局块</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#要点"><span class="nav-number">1.1.1.</span> <span class="nav-text">要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第38条：为常用的块类型创建typedef"><span class="nav-number">1.2.</span> <span class="nav-text">第38条：为常用的块类型创建typedef</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不易读"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">不易读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不易修改"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">不易修改</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.2.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第39条：用-handler-块降低代码分散程度"><span class="nav-number">1.3.</span> <span class="nav-text">第39条：用 handler 块降低代码分散程度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#delegate"><span class="nav-number">1.3.1.</span> <span class="nav-text">delegate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block"><span class="nav-number">1.3.2.</span> <span class="nav-text">block</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第40条：用-block-引用其所属对象时不要出现引用循环"><span class="nav-number">1.4.</span> <span class="nav-text">第40条：用 block 引用其所属对象时不要出现引用循环</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

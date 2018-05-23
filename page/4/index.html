@@ -246,6 +246,138 @@
             
               
                 
+                <a class="post-title-link" href="/2018/01/05/180105-iOS开发之单元测试/" itemprop="url">
+                  iOS开发之单元测试
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-05T20:12:33+08:00" content="2018-01-05">
+              2018-01-05
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-11T22:54:31+08:00" content="2018-04-11">
+				2018-04-11
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>单元测试的基本操作。</p>
+<h3 id="新建单元测试文件"><a href="#新建单元测试文件" class="headerlink" title="新建单元测试文件"></a>新建单元测试文件</h3><p>一般项目会默认建立一个单元测试文件，如果没有或者需要创建新的单元测试文件，可以创建一个新的文件，在选择文件类型为Unit Testing 类型。创建好文件后就可以开始了。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-3-27/53340373.jpg" alt=""></p>
+<h3 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h3><h4 id="setup"><a href="#setup" class="headerlink" title="setup"></a>setup</h4><p>开始测试的时候会调用这个方法。可以在这个位置初始化一些对象、数值等。</p>
+<h4 id="tearDown"><a href="#tearDown" class="headerlink" title="tearDown"></a>tearDown</h4><p>测试结束的时候会调用这个方法。一般在这里释放对象。</p>
+<h4 id="testExample"><a href="#testExample" class="headerlink" title="testExample"></a>testExample</h4><p>需要进行单元测试的方法，可以自定义方法名，方法名必须用test开头，返回类型是void。</p>
+<h4 id="testPerformanceExample"><a href="#testPerformanceExample" class="headerlink" title="testPerformanceExample"></a>testPerformanceExample</h4><p>这里可以进行一下性能测试，可以测试代码的执行时间。</p>
+<h3 id="异步单元测试"><a href="#异步单元测试" class="headerlink" title="异步单元测试"></a>异步单元测试</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)testExample &#123;</div><div class="line">    <span class="comment">// This is an example of a functional test case.</span></div><div class="line">    <span class="comment">// Use XCTAssert and related functions to verify your tests produce the correct results.</span></div><div class="line">    <span class="comment">// 单元测试</span></div><div class="line">    </div><div class="line">    <span class="built_in">XCTestExpectation</span> *expectation = [<span class="keyword">self</span> expectationWithDescription:<span class="string">@"出错了。。。。。"</span>];</div><div class="line">    <span class="comment">//[self expectationForNotification:(@"testNoti") object:nil handler:nil];</span></div><div class="line">    </div><div class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line">        sleep(<span class="number">5</span>);</div><div class="line">        <span class="built_in">XCTAssertTrue</span>(<span class="literal">true</span>,<span class="string">@"数据出错"</span>);</div><div class="line">        <span class="comment">//测试成功</span></div><div class="line">        [expectation fulfill];</div><div class="line">        <span class="comment">//[[NSNotificationCenter defaultCenter] postNotificationName:@"testNoti" object:nil];</span></div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> waitForExpectationsWithTimeout:<span class="number">3</span> handler:^(<span class="built_in">NSError</span> * _Nullable error) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div><div class="line"><span class="comment">// 当任务中设置的睡眠时间大于等待时间的时候就会报错。</span></div><div class="line"><span class="comment">// 使用 XCTestExpectation 和 Notification 均能实现。</span></div></pre></td></tr></table></figure>
+<h3 id="时间性能测试"><a href="#时间性能测试" class="headerlink" title="时间性能测试"></a>时间性能测试</h3><p>当 Baseline *（1 - Max STDDEV）大于 Average 时，测试通过，小于则不通过。</p>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-3-27/26837240.jpg" alt=""></p>
+<h3 id="常用断言"><a href="#常用断言" class="headerlink" title="常用断言"></a>常用断言</h3><p>// 如果 expression 不为 true，则提示后面的错误信息。<br>XCTAssertTrue(expression, format…)<br>// 如果 expression 不为 nil，则提示后面的错误信息。<br>XCTAssertNil(expression, …)<br>// 如果 expression1 expression2 不相等，则提示后面的错误信息。<br>XCTAssertEqual(expression1, expression2, format…)   </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>单元测试不需要搭建环境，却可以为我们节省一定的时间，不需要每次调试功能都要一个一个点进去。<br>如果可以将单元测试集成到CI中，将更方便。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/11/05/171105-iOS开发之APP默认语言/" itemprop="url">
                   iOS开发之APP默认语言
                 </a>
@@ -1167,135 +1299,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/12/170112-使用GitHub Desktop 管理别的仓库/" itemprop="url">
-                  使用GitHub Desktop管理别的仓库
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-12T22:22:23+08:00" content="2017-01-12">
-              2017-01-12
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2017-06-27T22:42:30+08:00" content="2017-06-27">
-				2017-06-27
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/GitHub/" itemprop="url" rel="index">
-                    <span itemprop="name">GitHub</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="0-前言"><a href="#0-前言" class="headerlink" title="0.前言"></a>0.前言</h1><p>有些项目不想公开，但使用GitHub Desktop比较方便，于是尝试看看能否通过GitHub Desktop管理别的远程仓库，还好找到了，记下来。</p>
-<h2 id="1-假设当前已经安装好GitHub-Desktop"><a href="#1-假设当前已经安装好GitHub-Desktop" class="headerlink" title="1.假设当前已经安装好GitHub Desktop"></a>1.假设当前已经安装好GitHub Desktop</h2><h2 id="2-以coding为例子，在coding上创建新的仓库"><a href="#2-以coding为例子，在coding上创建新的仓库" class="headerlink" title="2.以coding为例子，在coding上创建新的仓库"></a>2.以coding为例子，在coding上创建新的仓库</h2><h2 id="3-打开终端，cd到指定的目录。使用命令-git-clone-将远程仓库clone下来。"><a href="#3-打开终端，cd到指定的目录。使用命令-git-clone-将远程仓库clone下来。" class="headerlink" title="3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。"></a>3.打开终端，cd到指定的目录。使用命令 git clone 将远程仓库clone下来。</h2><pre><code class="objc">git clone https:<span class="comment">//git.coding.net/xxxxxx/xxx.git</span>
-</code></pre>
-<h2 id="4-打开GitHub-Desktop-点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。"><a href="#4-打开GitHub-Desktop-点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。" class="headerlink" title="4.打开GitHub Desktop 点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。"></a>4.打开GitHub Desktop 点击右上角的“➕”号，选中add，Choose刚才clone的项目，确定。</h2><h2 id="5-完成，至此可以通过GitHub-Desktop操作这个仓库了。"><a href="#5-完成，至此可以通过GitHub-Desktop操作这个仓库了。" class="headerlink" title="5.完成，至此可以通过GitHub Desktop操作这个仓库了。"></a>5.完成，至此可以通过GitHub Desktop操作这个仓库了。</h2>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1336,7 +1344,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
