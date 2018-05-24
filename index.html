@@ -246,8 +246,8 @@
             
               
                 
-                <a class="post-title-link" href="/2018/05/15/180515-《Effective Objective-C 2.0》第六章阅读笔记(1)/" itemprop="url">
-                  《Effective Objective-C 2.0》第六章阅读笔记(1)
+                <a class="post-title-link" href="/2018/05/23/180523-《Effective Objective-C 2.0》第六章阅读笔记(2)/" itemprop="url">
+                  《Effective Objective-C 2.0》第六章阅读笔记(2)
                 </a>
               
             
@@ -260,16 +260,16 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
-              2018-05-15
+            <time itemprop="dateCreated" datetime="2018-05-23T00:00:00+08:00" content="2018-05-23">
+              2018-05-23
             </time>
           </span>
           
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-23T23:34:44+08:00" content="2018-05-23">
-				2018-05-23
+			    <time itemprop="dateUpdated" datetime="2018-05-24T20:46:02+08:00" content="2018-05-24">
+				2018-05-24
 			    </time>
 			  </span>
 			
@@ -318,51 +318,169 @@
       
         
           
-            <h1 id="第六章：块与大中枢派发-1"><a href="#第六章：块与大中枢派发-1" class="headerlink" title="第六章：块与大中枢派发(1)"></a><center>第六章：块与大中枢派发(1)</center></h1><h2 id="第37条：理解“块”这一概念"><a href="#第37条：理解“块”这一概念" class="headerlink" title="第37条：理解“块”这一概念"></a>第37条：理解“块”这一概念</h2><p>块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。<br>块类型的语法结构如下：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return_type (^block_name)(parameters)</div></pre></td></tr></table></figure>
-<h4 id="变量捕获"><a href="#变量捕获" class="headerlink" title="变量捕获"></a>变量捕获</h4><p>block 可以捕获外部变量，例如：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
-<p>block 捕获 additional 变量，仅仅是捕获 additional 那一刻的值，捕获了之后，如果外部 additional 的值改变了，此时并不会影响 block 内部 additional 的值，因为这个值是一个常量，分别存放在两个不同的内存中，是互不干扰的。如果尝试去修改此时 block 内部的additional 变量的值，编译器会报错。<br>事实上，在 ARC 环境下，block 外部的 additional 变量是存放在栈中的，而 block 内部的 additional 变量则是存放在堆中的。<br>那么，如果需要 block 内外共享一份内存呢？这时可以给变量加上 <strong>__block</strong> 关键字。  </p>
-<h4 id="block-关键字修饰变量"><a href="#block-关键字修饰变量" class="headerlink" title="__block 关键字修饰变量"></a>__block 关键字修饰变量</h4><p>下面用 __block 关键字修饰 additional 变量，那么当外部的 additional 变量改变时，里面的 additional 值也会改变。因为这两个是同一个值。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__block <span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    additional = <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
-<p>用 __block 修饰的变量存放在堆中，和 block 中的 additional 共享同一份内存，是同一个数据。</p>
-<h4 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h4><p>如果在 block 中引用了某个对象，比如self，而这个对象正好直接或者间接引用了 block ，那么就会造成引用循环。<br>所以一般在 block 中引用的变量都会使用弱引用。</p>
-<h4 id="块的内部结构"><a href="#块的内部结构" class="headerlink" title="块的内部结构"></a>块的内部结构</h4><p>块本身也是对象，在存放块对象的内存区域中，首个变量是指向Class对象的指针，该指针叫做isa。其余内存里含有块对象正常运转所需的各种信息。下图描述了块对象的内存布局。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg" alt="">  </p>
-<p>在内存布局中，最重要的就是invoke变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个void *型的参数，此参数代表块。</p>
-<p>descriptor 变量是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了 copy 与 dispose 这两个辅助函数所对应的函数指针。辅助函数在拷贝及丢弃块对象时运行，其中会执行一些操作，比方说，前者 copy 要保留捕获的对象，而后者 dispose 则将之释放。</p>
-<p>block 会把它所捕获的所有变量都拷贝一份，拷贝的是指向这些对象的指针变量。invoke函数为何需要把块对象作为参数传进来呢？原因就在于，执行块时，要从内存中把这些捕获到的变量读出来。</p>
-<h4 id="全局块、栈块及堆块"><a href="#全局块、栈块及堆块" class="headerlink" title="全局块、栈块及堆块"></a>全局块、栈块及堆块</h4><p>定义块时，其所占的内存区域是分配在栈中的。这就是说，块只在定义他的那个范围内有效。例如，下面这段代码会有问题：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
-<p>上面两个 block 都是分配在栈中的，当离开了作用域后，就会将其释放掉，也就是两个 block 只在 if else 内有效。所以离开了 if slse 后在执行 block的话就可能会出问题。若编译器未覆写待执行的 block，则程序照常运行，若覆写，则程序崩溃。</p>
-<p><strong>其实这就是为什么 block 属性要使用 copy 修饰的原因。</strong>给 block 发送 copy 消息将其拷贝。这样就可以把 block 从栈复制到堆了。拷贝后的 block，可以在定义它的范围之外使用。而且，一旦复制到堆上，块就成了带引用计数的对象了。后续的复制操作都不会真的执行复制，只是递增对象的引用计数。 </p>
-<p>给上面的 block 发送 copy 消息就可以保证程序可以正确运行   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
-<p>此时的 block 是分配到堆的，这样在 if else 外也可以使用。</p>
-<h4 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h4><p>这种块不会捕捉任何状态（比如外围的变量等），运行时也无须有状态来参与。块所使用的整个内存区域，在编译期已经完全确定了，因此，全局块可以声明在全局内存里，而不需要在每次用到的时候于栈中创建。另外，全局块的拷贝操作是个空操作，因为全局块绝不可能为系统所回收。这种块实际上相当于单例。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)() = ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"This is a block"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>此 block 所需的全部信息都能在编译期确定，所以可把它做成全局块。</p>
-<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p>块可以分配在栈、堆或者全局上。分配在栈上的块可以拷贝到堆里，就和标准的 Objective-C 对象一样具备了引用计数。</p>
-<h2 id="第38条：为常用的块类型创建typedef"><a href="#第38条：为常用的块类型创建typedef" class="headerlink" title="第38条：为常用的块类型创建typedef"></a>第38条：为常用的块类型创建typedef</h2><p>一开始我们定义 block 是这样的</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> (^variableName)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>这样做会有两个不友好的问题 </p>
-<h4 id="不易读"><a href="#不易读" class="headerlink" title="不易读"></a>不易读</h4><p>如果我们提供的接口中有好几个 block ，每个 block 中又有好几个参数，这样会感觉比较难读。<br>解决方法是给 block 类型定义一个别名  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> (^EOCSomeBlock)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value);</div><div class="line"></div><div class="line">EOCSomeBlock block = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>这样使用起来就会简介很多。</p>
-<h4 id="不易修改"><a href="#不易修改" class="headerlink" title="不易修改"></a>不易修改</h4><p>当打算重构 block 的类型签名时，比方说，要给原来的 completion handler block 再加一个参数，如果没有使用别名的话，那么我们需要将所有使用了该 block 的地方都修改，这样显得过于繁杂。如果使用了别名的话，那么只需修改类型定义语句即可。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当要在多个地方使用同种签名的 block 时，应该给该 block 定义一个别名，然后在需要的地方使用该别名定义 block 。</p>
-<h2 id="第39条：用-handler-块降低代码分散程度"><a href="#第39条：用-handler-块降低代码分散程度" class="headerlink" title="第39条：用 handler 块降低代码分散程度"></a>第39条：用 handler 块降低代码分散程度</h2><p>程序在执行任务时，通常需要 “异步执行” ，这样做的好处在于：处理用户界面的显示及触摸操作所用的线程，不会因为要执行I/O或网络通信这类耗时的任务而阻塞。某些情况下，如果应用程序在一定时间内无响应，那么就会自动终止。“系统监控器”（system watchdog）在发现某个应用程序的主线程已经阻塞了一段时间之后，就会令其终止。  </p>
-<p>通常有两种方式可以处理异步代码  </p>
-<h3 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h3><p>使用 delegate 会使代码变得分散，当一个对象同时接收多个同种类型对象的委托时，还需要在委托方法中判断是哪个对象传来的委托。那么代码会变的更加复杂。delegate 一般用在一个委托对象有多个委托事件的情况下，比如：UITableView，其他情况可以使用 block 来实现。</p>
-<h3 id="block"><a href="#block" class="headerlink" title="block"></a>block</h3><p>用 block 处理起来代码会变的更加清晰。block 可以令这种API变得更紧凑，同时也令开发者调用起来更加方便。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)vch_successWithComplete:(VCHAddNewDeviceComplete)complete failure:(VCHFailure)failure &#123;</div><div class="line">    [<span class="keyword">self</span> vch_startWithComplete:^(<span class="keyword">id</span> object) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        complete();</div><div class="line">    &#125; failure:^(<span class="built_in">NSString</span> *error) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        failure(error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我的处理方式是将成功和失败分开处理，也可以用一个 block 来处理两个两种情况，两种方法均有优劣。具体可多看看官方的做法。</p>
-<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在创建对象时，可以使用内联的handler块将相关业务逻辑一并声明。使代码变得更加紧凑。  </p>
-<h2 id="第40条：用-block-引用其所属对象时不要出现引用循环"><a href="#第40条：用-block-引用其所属对象时不要出现引用循环" class="headerlink" title="第40条：用 block 引用其所属对象时不要出现引用循环"></a>第40条：用 block 引用其所属对象时不要出现引用循环</h2><p>书中的例子比较长，我用项目中的一部分代码来替代，意思是一样的   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[<span class="keyword">self</span> queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
-<p>上面的代码会出现引用循环，self -&gt; mj_header -&gt; block -&gt; self 。这个是初学时很容易犯的错误。这种情况下有两种比较常用的方法可以解决这个问题，一种就是用完 block 后，立即将其释放，另一种就是使用 __weak 关键字修饰某一环节。这里我使用第二种方法，代码如下  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[weakSelf queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
-<p>此时 block 弱引用了 self ，这个循环也就被打破了。</p>
-<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>如果 block 所捕获的对象直接或间接的保留了 block 本身，那么就需要解除引用循环。</p>
+            <h1 id="第六章：块与大中枢派发-2"><a href="#第六章：块与大中枢派发-2" class="headerlink" title="第六章：块与大中枢派发(2)"></a><center>第六章：块与大中枢派发(2)</center></h1><h2 id="第41条：多用派发队列，少用同步锁"><a href="#第41条：多用派发队列，少用同步锁" class="headerlink" title="第41条：多用派发队列，少用同步锁"></a>第41条：多用派发队列，少用同步锁</h2><p>如果有多个线程要执行同一份代码，那么有时可能会出问题。这种情况下，通常要使用锁来实现同步机制。在GCD出现之前，一般有两种方式可以实现同步  </p>
+<h3 id="原始方法：synchronized-amp-NSLock"><a href="#原始方法：synchronized-amp-NSLock" class="headerlink" title="原始方法：synchronized &amp; NSLock"></a>原始方法：synchronized &amp; NSLock</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)synchronizedMethod &#123;</div><div class="line">    <span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123;</div><div class="line">        <span class="comment">// Safe</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">_lock = [[<span class="built_in">NSLock</span> alloc] init];</div><div class="line">- (<span class="keyword">void</span>)synchronizedMethod &#123;</div><div class="line">    [_lock lock];</div><div class="line">    <span class="comment">// Safe</span></div><div class="line">    [_lock unlock];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>滥用 @synchronized(self) 会很危险，因为所有同步块都会彼此抢夺同一个锁。要是有很多个属性都这么写的话，那么每个属性的同步块都要等其他所有同步块执行完毕才能执行。两种方法的使用效率都不高，并且处理不当会造成死锁。</p>
+<h3 id="改进方法：串行同步队列"><a href="#改进方法：串行同步队列" class="headerlink" title="改进方法：串行同步队列"></a>改进方法：串行同步队列</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">_syncQueue = dispatch_queue_create(<span class="string">"com.vhuichen.syncQueue"</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)someString &#123; </div><div class="line">	__block <span class="built_in">NSString</span> *localSomeString; </div><div class="line">	<span class="built_in">dispatch_sync</span>(_syncQueue, ^&#123; </div><div class="line">		localSomeString = _someString; </div><div class="line">	&#125;);</div><div class="line">	<span class="keyword">return</span> localSomeString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)setSomeString:(<span class="built_in">NSString</span> *)someString &#123; </div><div class="line">	<span class="built_in">dispatch_sync</span>(_syncQueue, ^&#123; </div><div class="line">		_someString = someString; </div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里有一种方案就是可以把 setter 方法改成异步执行，提升程序的执行速度。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)setSomeString:(<span class="built_in">NSString</span> *)someString &#123; </div><div class="line">	<span class="built_in">dispatch_async</span>(_syncQueue, ^&#123; </div><div class="line">		_someString = someString; </div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里需要考虑的是：执行异步派发时，需要拷贝块。若拷贝块所需的时间明显超过执行块所花的时间，那么这种做法将比原来的更慢。只有当拷贝块所花的时间远低于执行块所花的时间时，可以考虑这种异步方法。</p>
+<h3 id="最优方案：dispatch-barrier"><a href="#最优方案：dispatch-barrier" class="headerlink" title="最优方案：dispatch_barrier"></a>最优方案：dispatch_barrier</h3><p>事实上，获取值时可以多个同时进行，设置值和获取值不能同时进行。利用这个特点，我们可以对代码再次优化。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">_syncQueue = dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="literal">NULL</span>); </div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)someString &#123;</div><div class="line">	__block <span class="built_in">NSString</span> *localSomeString;</div><div class="line">	<span class="built_in">dispatch_sync</span>(_syncQueue, ^&#123;</div><div class="line">		localSomeString = _someString;</div><div class="line">	&#125;);</div><div class="line">	<span class="keyword">return</span> localSomeString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)setSomeString:(<span class="built_in">NSString</span> *)someString &#123;</div><div class="line">	<span class="comment">// 这是使用 async 还是 sync 取决于 block 的业务逻辑复杂度，上面有解释</span></div><div class="line">	dispatch_barrier_async(_syncQueue, ^&#123;</div><div class="line">		_someString = someString;</div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码，我们创建的是一个并行队列。读取操作可以并行，但写入操作是单独执行的，因为给它加了栅栏，代码的执行逻辑如下图<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-24/62516339.jpg" alt="">  </p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>使用GCD实现同步方式，比使用 synchronized 或 NSLock 更高效。</p>
+<h2 id="第42条：多用-GCD，少用-performSelector-系列方法"><a href="#第42条：多用-GCD，少用-performSelector-系列方法" class="headerlink" title="第42条：多用 GCD，少用 performSelector 系列方法"></a>第42条：多用 GCD，少用 performSelector 系列方法</h2><p>performSelector 有几个缺点。</p>
+<h4 id="可能会引起内存泄漏"><a href="#可能会引起内存泄漏" class="headerlink" title="可能会引起内存泄漏"></a>可能会引起内存泄漏</h4><p>看下面一段代码</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SEL selector;</div><div class="line"><span class="keyword">if</span> (<span class="comment">/* ... */</span>) &#123;</div><div class="line">	selector = <span class="keyword">@selector</span>(newObject);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="comment">/* ... */</span>) &#123;</div><div class="line">	selector = <span class="keyword">@selector</span>(<span class="keyword">copy</span>); </div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	selector = <span class="keyword">@selector</span>(someProperty);</div><div class="line">&#125;</div><div class="line"><span class="keyword">id</span> ret = [object performSelector:selector];</div></pre></td></tr></table></figure>
+<p>编译器会发出如下警示信息  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">warning:PerformSelector may cause a leak because its selector is unknown</div></pre></td></tr></table></figure>
+<p>原因在于，编译器并不知道将要调用的选择子的方法签名及返回值。由于编译器不知道方法名，所以就没办法运用 ARC 的内存管理规则来判定返回值是不是应该释放。鉴于此，ARC采用了比较谨慎的做法，就是不添加释放操作。然而这么做可能导致内存泄漏，因为方法在返回对象时可能已经将其保留了。</p>
+<h4 id="返回值只能是-void-或对象类型"><a href="#返回值只能是-void-或对象类型" class="headerlink" title="返回值只能是 void 或对象类型"></a>返回值只能是 void 或对象类型</h4><p>如果想返回整数或浮点数等类型的值，那么就需要执行一些复杂的转换操作。如果返回的是结构体，则不能使用 performSelector 。</p>
+<h4 id="传入参数有限制"><a href="#传入参数有限制" class="headerlink" title="传入参数有限制"></a>传入参数有限制</h4><p>传入参数必须为对象类型，最多只有两个限制。</p>
+<h3 id="改进（GCD）"><a href="#改进（GCD）" class="headerlink" title="改进（GCD）"></a>改进（GCD）</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> performSelectorOnMainThread:<span class="keyword">@selector</span>(aSelector) withObject:<span class="literal">nil</span> waitUntilDone:<span class="literal">NO</span>];</div></pre></td></tr></table></figure>
+<p>上面的功能可以通过 GCD 来实现 </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</div><div class="line">	[<span class="keyword">self</span> aSelector];</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>其它 performSelector 的方法也一样可以用 GCD 的方法代替。</p>
+<h2 id="第43条：掌握-GCD-及-NSOperationQueue-的使用时机"><a href="#第43条：掌握-GCD-及-NSOperationQueue-的使用时机" class="headerlink" title="第43条：掌握 GCD 及 NSOperationQueue 的使用时机"></a>第43条：掌握 GCD 及 NSOperationQueue 的使用时机</h2><h3 id="使用-NSOperationQueue-优点"><a href="#使用-NSOperationQueue-优点" class="headerlink" title="使用 NSOperationQueue 优点"></a>使用 NSOperationQueue 优点</h3><h4 id="取消某个操作"><a href="#取消某个操作" class="headerlink" title="取消某个操作"></a>取消某个操作</h4><p>使用 NSOperationQueue ，想要取消操作队列是很容易的。运行任务之前，可以在 NSOperation 对象上调用 cancel 方法，该方法会设置对象内的标志位，用以表明此任务不需执行，不过，已经启动的任务无法取消。GCD 则无法直接取消。</p>
+<h4 id="指定操作间的依赖关系"><a href="#指定操作间的依赖关系" class="headerlink" title="指定操作间的依赖关系"></a>指定操作间的依赖关系</h4><p>一个操作可以依赖其他多个操作。开发者能够制定操作之间的依赖体系，使特定的操作必须在另外一个操作顺利执行完毕后方可执行。</p>
+<h4 id="通过键值观测机制监控-NSOperation-对象的属性"><a href="#通过键值观测机制监控-NSOperation-对象的属性" class="headerlink" title="通过键值观测机制监控 NSOperation 对象的属性"></a>通过键值观测机制监控 NSOperation 对象的属性</h4><p>NSOperation 对象有许多属性都适合通过键值观测机制（KVO）来监听。比如可以通过 isCancelled 属性来判断任务是否已取消，又比如可以通过 isFinished 属性来判断任务是否已完成。</p>
+<h4 id="指定操作的优先级"><a href="#指定操作的优先级" class="headerlink" title="指定操作的优先级"></a>指定操作的优先级</h4><p>操作的优先级表示此操作与队列中其他操作之间的优先级关系。优先级高的操作先执行，优先级低的后执行。</p>
+<h4 id="重用-NSOperation-对象"><a href="#重用-NSOperation-对象" class="headerlink" title="重用 NSOperation 对象"></a>重用 NSOperation 对象</h4><p>系统内置了一些 NSOperation 的子类（比如 NSBlockOperation）以供开发者调用，要是不想用这些子类，可以自己创建。这些类就是普通的 Objective-C 对象，能够存放任何信息。对象在执行时可以充分利用存于其中的信息，而且还可以随意调用定义在类中的方法。NSOperation 类符合软件开发中的“不重复”（Don’t Repeat Yourself，DRY）原则。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>GCD 操作简单，NSOperation 则功能更多。熟练掌握两种方式，在各种各样的场景中运用自如。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/15/180515-iOS基础之一个Workspace下有多个Project/" itemprop="url">
+                  iOS基础之一个Workspace下有多个Project
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-16T21:45:32+08:00" content="2018-05-16">
+				2018-05-16
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="新建一个-Workspace"><a href="#新建一个-Workspace" class="headerlink" title="新建一个 Workspace"></a>新建一个 Workspace</h3><p>先创建一个名为 MultiProject 的 .xcworkspace 文件 ，放到 MultiProject 这个文件夹下。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/12606269.jpg?imageView2/2/h/400" alt=""></p>
+<h3 id="将-Project-添加到-Workspace-中"><a href="#将-Project-添加到-Workspace-中" class="headerlink" title="将 Project 添加到 Workspace 中"></a>将 Project 添加到 Workspace 中</h3><h4 id="方法一：添加已创建好的-Project"><a href="#方法一：添加已创建好的-Project" class="headerlink" title="方法一：添加已创建好的 Project"></a>方法一：添加已创建好的 Project</h4><p>先创建一个名为 ProjectA 的 Project。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/42111891.jpg?imageView2/2/h/400" alt=""><br>创建好 Project 后。打开 MultiProject.xcworkspace 文件。  </p>
+<p>点击 File -&gt; Add Files to “Workspace Name”，找到刚创建项目的 ProjectA.xcodeproj 文件，添加。此时 ProjectA 已经加到 MultiProject 这个工作空间下了。</p>
+<h4 id="方法二：创建-Project-时就添加到-Workspace-中"><a href="#方法二：创建-Project-时就添加到-Workspace-中" class="headerlink" title="方法二：创建 Project 时就添加到 Workspace 中"></a>方法二：创建 Project 时就添加到 Workspace 中</h4><p>在创建 Project 整个过程的最后一步，会是这样的界面<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/5982352.jpg?imageView2/2/h/500" alt=""><br>在红色框中选择对应的 Workspace，点击 Create 后，刚创建的 Project 就添加到 Workspace 中了。</p>
+<blockquote>
+<p>注意：一般会将创建好的 Project 放到 Workspace 目录下。</p>
+</blockquote>
+<h3 id="CocoaPods-安装"><a href="#CocoaPods-安装" class="headerlink" title="CocoaPods 安装"></a>CocoaPods 安装</h3><p>在 MultiProject.xcworkspace 文件的目录下创建 Podfile 文件。内容如下  </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">platform :ios, '8.0'</div><div class="line">workspace 'MultiProject.xcworkspace'</div><div class="line"></div><div class="line">target 'ProjectA' do</div><div class="line">project 'ProjectA/ProjectA.xcodeproj'</div><div class="line"></div><div class="line">pod 'SDWebImage'</div><div class="line">pod 'iVersion'</div><div class="line"></div><div class="line">end</div><div class="line"></div><div class="line">target 'ProjectB' do</div><div class="line">project 'ProjectB/ProjectB.xcodeproj'</div><div class="line"></div><div class="line">pod 'SDWebImage'</div><div class="line">pod 'AFNetworking'</div><div class="line">pod 'iVersion'</div><div class="line"></div><div class="line">end</div></pre></td></tr></table></figure>
+<p>最后在命令行中进入该目录，执行 <strong>pod install</strong> 命令，OK 搞定。  </p>
+<p>最终的目录文件如下：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/86708408.jpg" alt=""></p>
+<p>项目内结构如下：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/23970018.jpg?imageView2/2/h/500" alt=""></p>
 
           
         
@@ -568,8 +686,8 @@
             
               
                 
-                <a class="post-title-link" href="/2018/05/15/180515-iOS基础之一个Workspace下有多个Project/" itemprop="url">
-                  iOS基础之一个Workspace下有多个Project
+                <a class="post-title-link" href="/2018/05/15/180515-《Effective Objective-C 2.0》第六章阅读笔记(1)/" itemprop="url">
+                  《Effective Objective-C 2.0》第六章阅读笔记(1)
                 </a>
               
             
@@ -590,8 +708,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-16T21:45:32+08:00" content="2018-05-16">
-				2018-05-16
+			    <time itemprop="dateUpdated" datetime="2018-05-23T23:34:44+08:00" content="2018-05-23">
+				2018-05-23
 			    </time>
 			  </span>
 			
@@ -605,8 +723,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
                   </a>
                 </span>
 
@@ -640,18 +758,51 @@
       
         
           
-            <h3 id="新建一个-Workspace"><a href="#新建一个-Workspace" class="headerlink" title="新建一个 Workspace"></a>新建一个 Workspace</h3><p>先创建一个名为 MultiProject 的 .xcworkspace 文件 ，放到 MultiProject 这个文件夹下。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/12606269.jpg?imageView2/2/h/400" alt=""></p>
-<h3 id="将-Project-添加到-Workspace-中"><a href="#将-Project-添加到-Workspace-中" class="headerlink" title="将 Project 添加到 Workspace 中"></a>将 Project 添加到 Workspace 中</h3><h4 id="方法一：添加已创建好的-Project"><a href="#方法一：添加已创建好的-Project" class="headerlink" title="方法一：添加已创建好的 Project"></a>方法一：添加已创建好的 Project</h4><p>先创建一个名为 ProjectA 的 Project。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/42111891.jpg?imageView2/2/h/400" alt=""><br>创建好 Project 后。打开 MultiProject.xcworkspace 文件。  </p>
-<p>点击 File -&gt; Add Files to “Workspace Name”，找到刚创建项目的 ProjectA.xcodeproj 文件，添加。此时 ProjectA 已经加到 MultiProject 这个工作空间下了。</p>
-<h4 id="方法二：创建-Project-时就添加到-Workspace-中"><a href="#方法二：创建-Project-时就添加到-Workspace-中" class="headerlink" title="方法二：创建 Project 时就添加到 Workspace 中"></a>方法二：创建 Project 时就添加到 Workspace 中</h4><p>在创建 Project 整个过程的最后一步，会是这样的界面<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/5982352.jpg?imageView2/2/h/500" alt=""><br>在红色框中选择对应的 Workspace，点击 Create 后，刚创建的 Project 就添加到 Workspace 中了。</p>
-<blockquote>
-<p>注意：一般会将创建好的 Project 放到 Workspace 目录下。</p>
-</blockquote>
-<h3 id="CocoaPods-安装"><a href="#CocoaPods-安装" class="headerlink" title="CocoaPods 安装"></a>CocoaPods 安装</h3><p>在 MultiProject.xcworkspace 文件的目录下创建 Podfile 文件。内容如下  </p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">platform :ios, '8.0'</div><div class="line">workspace 'MultiProject.xcworkspace'</div><div class="line"></div><div class="line">target 'ProjectA' do</div><div class="line">project 'ProjectA/ProjectA.xcodeproj'</div><div class="line"></div><div class="line">pod 'SDWebImage'</div><div class="line">pod 'iVersion'</div><div class="line"></div><div class="line">end</div><div class="line"></div><div class="line">target 'ProjectB' do</div><div class="line">project 'ProjectB/ProjectB.xcodeproj'</div><div class="line"></div><div class="line">pod 'SDWebImage'</div><div class="line">pod 'AFNetworking'</div><div class="line">pod 'iVersion'</div><div class="line"></div><div class="line">end</div></pre></td></tr></table></figure>
-<p>最后在命令行中进入该目录，执行 <strong>pod install</strong> 命令，OK 搞定。  </p>
-<p>最终的目录文件如下：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/86708408.jpg" alt=""></p>
-<p>项目内结构如下：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/23970018.jpg?imageView2/2/h/500" alt=""></p>
+            <h1 id="第六章：块与大中枢派发-1"><a href="#第六章：块与大中枢派发-1" class="headerlink" title="第六章：块与大中枢派发(1)"></a><center>第六章：块与大中枢派发(1)</center></h1><h2 id="第37条：理解“块”这一概念"><a href="#第37条：理解“块”这一概念" class="headerlink" title="第37条：理解“块”这一概念"></a>第37条：理解“块”这一概念</h2><p>块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。<br>块类型的语法结构如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return_type (^block_name)(parameters)</div></pre></td></tr></table></figure>
+<h4 id="变量捕获"><a href="#变量捕获" class="headerlink" title="变量捕获"></a>变量捕获</h4><p>block 可以捕获外部变量，例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
+<p>block 捕获 additional 变量，仅仅是捕获 additional 那一刻的值，捕获了之后，如果外部 additional 的值改变了，此时并不会影响 block 内部 additional 的值，因为这个值是一个常量，分别存放在两个不同的内存中，是互不干扰的。如果尝试去修改此时 block 内部的additional 变量的值，编译器会报错。<br>事实上，在 ARC 环境下，block 外部的 additional 变量是存放在栈中的，而 block 内部的 additional 变量则是存放在堆中的。<br>那么，如果需要 block 内外共享一份内存呢？这时可以给变量加上 <strong>__block</strong> 关键字。  </p>
+<h4 id="block-关键字修饰变量"><a href="#block-关键字修饰变量" class="headerlink" title="__block 关键字修饰变量"></a>__block 关键字修饰变量</h4><p>下面用 __block 关键字修饰 additional 变量，那么当外部的 additional 变量改变时，里面的 additional 值也会改变。因为这两个是同一个值。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__block <span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    additional = <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
+<p>用 __block 修饰的变量存放在堆中，和 block 中的 additional 共享同一份内存，是同一个数据。</p>
+<h4 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h4><p>如果在 block 中引用了某个对象，比如self，而这个对象正好直接或者间接引用了 block ，那么就会造成引用循环。<br>所以一般在 block 中引用的变量都会使用弱引用。</p>
+<h4 id="块的内部结构"><a href="#块的内部结构" class="headerlink" title="块的内部结构"></a>块的内部结构</h4><p>块本身也是对象，在存放块对象的内存区域中，首个变量是指向Class对象的指针，该指针叫做isa。其余内存里含有块对象正常运转所需的各种信息。下图描述了块对象的内存布局。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg" alt="">  </p>
+<p>在内存布局中，最重要的就是invoke变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个void *型的参数，此参数代表块。</p>
+<p>descriptor 变量是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了 copy 与 dispose 这两个辅助函数所对应的函数指针。辅助函数在拷贝及丢弃块对象时运行，其中会执行一些操作，比方说，前者 copy 要保留捕获的对象，而后者 dispose 则将之释放。</p>
+<p>block 会把它所捕获的所有变量都拷贝一份，拷贝的是指向这些对象的指针变量。invoke函数为何需要把块对象作为参数传进来呢？原因就在于，执行块时，要从内存中把这些捕获到的变量读出来。</p>
+<h4 id="全局块、栈块及堆块"><a href="#全局块、栈块及堆块" class="headerlink" title="全局块、栈块及堆块"></a>全局块、栈块及堆块</h4><p>定义块时，其所占的内存区域是分配在栈中的。这就是说，块只在定义他的那个范围内有效。例如，下面这段代码会有问题：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<p>上面两个 block 都是分配在栈中的，当离开了作用域后，就会将其释放掉，也就是两个 block 只在 if else 内有效。所以离开了 if slse 后在执行 block的话就可能会出问题。若编译器未覆写待执行的 block，则程序照常运行，若覆写，则程序崩溃。</p>
+<p><strong>其实这就是为什么 block 属性要使用 copy 修饰的原因。</strong>给 block 发送 copy 消息将其拷贝。这样就可以把 block 从栈复制到堆了。拷贝后的 block，可以在定义它的范围之外使用。而且，一旦复制到堆上，块就成了带引用计数的对象了。后续的复制操作都不会真的执行复制，只是递增对象的引用计数。 </p>
+<p>给上面的 block 发送 copy 消息就可以保证程序可以正确运行   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<p>此时的 block 是分配到堆的，这样在 if else 外也可以使用。</p>
+<h4 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h4><p>这种块不会捕捉任何状态（比如外围的变量等），运行时也无须有状态来参与。块所使用的整个内存区域，在编译期已经完全确定了，因此，全局块可以声明在全局内存里，而不需要在每次用到的时候于栈中创建。另外，全局块的拷贝操作是个空操作，因为全局块绝不可能为系统所回收。这种块实际上相当于单例。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)() = ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"This is a block"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>此 block 所需的全部信息都能在编译期确定，所以可把它做成全局块。</p>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p>块可以分配在栈、堆或者全局上。分配在栈上的块可以拷贝到堆里，就和标准的 Objective-C 对象一样具备了引用计数。</p>
+<h2 id="第38条：为常用的块类型创建typedef"><a href="#第38条：为常用的块类型创建typedef" class="headerlink" title="第38条：为常用的块类型创建typedef"></a>第38条：为常用的块类型创建typedef</h2><p>一开始我们定义 block 是这样的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> (^variableName)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样做会有两个不友好的问题 </p>
+<h4 id="不易读"><a href="#不易读" class="headerlink" title="不易读"></a>不易读</h4><p>如果我们提供的接口中有好几个 block ，每个 block 中又有好几个参数，这样会感觉比较难读。<br>解决方法是给 block 类型定义一个别名  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> (^EOCSomeBlock)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value);</div><div class="line"></div><div class="line">EOCSomeBlock block = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样使用起来就会简介很多。</p>
+<h4 id="不易修改"><a href="#不易修改" class="headerlink" title="不易修改"></a>不易修改</h4><p>当打算重构 block 的类型签名时，比方说，要给原来的 completion handler block 再加一个参数，如果没有使用别名的话，那么我们需要将所有使用了该 block 的地方都修改，这样显得过于繁杂。如果使用了别名的话，那么只需修改类型定义语句即可。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当要在多个地方使用同种签名的 block 时，应该给该 block 定义一个别名，然后在需要的地方使用该别名定义 block 。</p>
+<h2 id="第39条：用-handler-块降低代码分散程度"><a href="#第39条：用-handler-块降低代码分散程度" class="headerlink" title="第39条：用 handler 块降低代码分散程度"></a>第39条：用 handler 块降低代码分散程度</h2><p>程序在执行任务时，通常需要 “异步执行” ，这样做的好处在于：处理用户界面的显示及触摸操作所用的线程，不会因为要执行I/O或网络通信这类耗时的任务而阻塞。某些情况下，如果应用程序在一定时间内无响应，那么就会自动终止。“系统监控器”（system watchdog）在发现某个应用程序的主线程已经阻塞了一段时间之后，就会令其终止。  </p>
+<p>通常有两种方式可以处理异步代码  </p>
+<h3 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h3><p>使用 delegate 会使代码变得分散，当一个对象同时接收多个同种类型对象的委托时，还需要在委托方法中判断是哪个对象传来的委托。那么代码会变的更加复杂。delegate 一般用在一个委托对象有多个委托事件的情况下，比如：UITableView，其他情况可以使用 block 来实现。</p>
+<h3 id="block"><a href="#block" class="headerlink" title="block"></a>block</h3><p>用 block 处理起来代码会变的更加清晰。block 可以令这种API变得更紧凑，同时也令开发者调用起来更加方便。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)vch_successWithComplete:(VCHAddNewDeviceComplete)complete failure:(VCHFailure)failure &#123;</div><div class="line">    [<span class="keyword">self</span> vch_startWithComplete:^(<span class="keyword">id</span> object) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        complete();</div><div class="line">    &#125; failure:^(<span class="built_in">NSString</span> *error) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        failure(error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我的处理方式是将成功和失败分开处理，也可以用一个 block 来处理两个两种情况，两种方法均有优劣。具体可多看看官方的做法。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在创建对象时，可以使用内联的handler块将相关业务逻辑一并声明。使代码变得更加紧凑。  </p>
+<h2 id="第40条：用-block-引用其所属对象时不要出现引用循环"><a href="#第40条：用-block-引用其所属对象时不要出现引用循环" class="headerlink" title="第40条：用 block 引用其所属对象时不要出现引用循环"></a>第40条：用 block 引用其所属对象时不要出现引用循环</h2><p>书中的例子比较长，我用项目中的一部分代码来替代，意思是一样的   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[<span class="keyword">self</span> queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
+<p>上面的代码会出现引用循环，self -&gt; mj_header -&gt; block -&gt; self 。这个是初学时很容易犯的错误。这种情况下有两种比较常用的方法可以解决这个问题，一种就是用完 block 后，立即将其释放，另一种就是使用 __weak 关键字修饰某一环节。这里我使用第二种方法，代码如下  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[weakSelf queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
+<p>此时 block 弱引用了 self ，这个循环也就被打破了。</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>如果 block 所捕获的对象直接或间接的保留了 block 本身，那么就需要解除引用循环。</p>
 
           
         
@@ -1267,164 +1418,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/02/180502-《Effective Objective-C 2.0》第四章阅读笔记/" itemprop="url">
-                  《Effective Objective-C 2.0》第四章阅读笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-02T00:00:00+08:00" content="2018-05-02">
-              2018-05-02
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-08T00:31:49+08:00" content="2018-05-08">
-				2018-05-08
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第四章：协议与分类"><a href="#第四章：协议与分类" class="headerlink" title="第四章：协议与分类"></a><center>第四章：协议与分类</center></h1><p>Objective-C 语言有一项特性叫 “协议”（protocol），与 Java 的“接口”（interface）类似。</p>
-<blockquote>
-<p>Java接口是一系列方法的声明，是一些方法特征的集合，一个接口只有方法的特征没有方法的实现，因此这些方法可以在不同的地方被不同的类实现，而这些实现可以具有不同的行为（功能）。</p>
-</blockquote>
-<p>protocol 定义了一套公用的接口，和 Java 的接口同样，一个接口只有方法特征没有方法的实现，不同的类可以实现不同的行为。本质上和 Java 的接口是相同的。  </p>
-<p>Objective-C 不支持多重继承，所以我们可以将某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是实现委托模式。</p>
-<p>“分类”也是 Objective-C 的一个重要特性。利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
-<h2 id="第23条：通过委托与数据源协议进行对象间通信"><a href="#第23条：通过委托与数据源协议进行对象间通信" class="headerlink" title="第23条：通过委托与数据源协议进行对象间通信"></a>第23条：通过委托与数据源协议进行对象间通信</h2><p>对象之间的通信使用最广泛的就是“委托模式”。定义一套接口，某对象若想接受另一对象的委托，则需遵循此接口，以便其成为“委托对象”。此模式可将数据与业务逻辑解耦。</p>
-<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>委托属性一定要用 weak 修饰，不然会造成循环引用。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">PersonDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></div><div class="line"><span class="keyword">@required</span></div><div class="line">- (<span class="built_in">NSDate</span> *)whatTimeIsIt;</div><div class="line"></div><div class="line"><span class="keyword">@optional</span></div><div class="line">- (<span class="built_in">BOOL</span>)isNiceDay;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span>&lt;PersonDelegate&gt; personDelegate;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>委托协议的方法一般会定义“可选的”（optional），当我们在调用这些方法之前就需要先判断委托对象是否有实现这个方法。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSDate</span> *date = [<span class="keyword">self</span>.personDelegate whatTimeIsIt];</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"date = %@"</span>,date);</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.personDelegate respondsToSelector:<span class="keyword">@selector</span>(isNiceDay)]) &#123;</div><div class="line">        <span class="built_in">BOOL</span> isNiceDay = [<span class="keyword">self</span>.personDelegate isNiceDay];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"isNiceDay:%zd"</span>,isNiceDay);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>如果需要经常调用某个可选方法，可以用一个状态变量来保存“是否实现这个方法”的状态，如果有多个可选方法也可以用结构体来保存状态。这样做可以大大提高程序效率。</p>
-<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><p>委托对象需要先遵守这个协议。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">Person *person = [[Person alloc] initWithEmail:<span class="string">@"123@163.com"</span>];</div><div class="line">person.personDelegate = <span class="keyword">self</span>;</div><div class="line">[person doWork];</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// log</span></div><div class="line"><span class="comment">// date = Thu May  3 19:43:05 2018</span></div><div class="line"><span class="comment">// isNiceDay:1</span></div></pre></td></tr></table></figure>
-<h2 id="第24条：将类的实现代码分散到便于管理的数个分类中"><a href="#第24条：将类的实现代码分散到便于管理的数个分类中" class="headerlink" title="第24条：将类的实现代码分散到便于管理的数个分类中"></a>第24条：将类的实现代码分散到便于管理的数个分类中</h2><p>可以将类相同功能部分分散到单独的分类中，方便管理。也应该将私有方法放到名为 “private” 的分类中，以“隐藏”实现细节。官方的 NSString 就分成了好几个分类。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>, <span class="title">NSMutableCopying</span>, <span class="title">NSSecureCoding</span>&gt;</span></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringExtensionMethods</span>)</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringEncodingDetection</span>)</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSItemProvider</span>) &lt;<span class="title">NSItemProviderReading</span>, <span class="title">NSItemProviderWriting</span>&gt;</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSExtendedStringPropertyListParsing</span>)</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringDeprecated</span>)</span></div><div class="line"><span class="comment">// 5</span></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<h2 id="第25条：总是为第三方类的分类名称加前缀"><a href="#第25条：总是为第三方类的分类名称加前缀" class="headerlink" title="第25条：总是为第三方类的分类名称加前缀"></a>第25条：总是为第三方类的分类名称加前缀</h2><p>向第三方类中添加分类时，应给分类名称以及方法加上项目专用的名称。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>这样做很大程度上避免了分类方法和原类方法相同的可能。</p>
-<h2 id="第26条：勿在分类中申明属性"><a href="#第26条：勿在分类中申明属性" class="headerlink" title="第26条：勿在分类中申明属性"></a>第26条：勿在分类中申明属性</h2><p>直接在分类中申明属性编译器只会给一个编译警告。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在分类中定义一个属性</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> (<span class="title">Special</span>)</span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="built_in">NSString</span> *name;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// Property 'name' requires method 'name' to be defined - use @dynamic or provide a method implementation in this category</span></div><div class="line"><span class="comment">// Property 'name' requires method 'setName:' to be defined - use @dynamic or provide a method implementation in this category</span></div></pre></td></tr></table></figure>
-<p>提示使用 @dynamic 修饰属性或者提供属性的 getter 和 setter 方法。如果没有实现，那么程序会在运行时检测。</p>
-<h4 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h4><p>通过关联对象可以为分类实现属性的功能。使用时应注意内存管理问题。这种方法应该在必要的情况下才使用。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name &#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="string">"kPersonSpecial_name"</span>, name, OBJC_ASSOCIATION_COPY);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)name &#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="string">"kPersonSpecial_name"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>总之,在必要的情况下可以通过关联对象声明属性，但这种方法应该尽量少用。</p>
-</blockquote>
-<h2 id="第27条：使用-“class-continuation-分类”-隐藏实现细节"><a href="#第27条：使用-“class-continuation-分类”-隐藏实现细节" class="headerlink" title="第27条：使用 “class-continuation 分类” 隐藏实现细节"></a>第27条：使用 “class-continuation 分类” 隐藏实现细节</h2><p>类中经常会包含一些无需对外公布的方法及实例变量。这些内容可以对外公布，并写明其为私有。Objective-C 的动态消息系统方式决定了其不可能实现真正的私有方法和私有实例变量。然而，我们最好还是只把确定需要公布的那部分内容公开。此时我们可以将这部分内容放到“class-continuation 分类”中。<br>“class-continuation 分类” 与其他的分类不同，它必须定义在实现文件中，这是唯一能声明实例变量的分类，而且此分类没有特定的实现文件，其中的方法都应该定义在主实现文件里。<br>若对象遵循的协议只应视为私有，也可在“class-continuation 分类”中声明。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> _count;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) Person *person;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<h2 id="第28条：通过协议提供匿名对象"><a href="#第28条：通过协议提供匿名对象" class="headerlink" title="第28条：通过协议提供匿名对象"></a>第28条：通过协议提供匿名对象</h2><p>协议定义了一系列方法，遵从此协议的对象应该实现它们，如果这些方法不是可选的，那么就必须实现。我们可以用协议把自己所写的API之中的实现细节隐藏起来，将返回的对象设计为遵从此协议的纯id类型。这样的话，想要隐藏的类名就不会出现在API之中了。若是接口背后有多个不同的实现类，而你又不想指明具体使用哪个类，那么可以考虑用这个办法，因为有时候这些类可能会变，有时候它们又无法容纳于标准的类继承体系中，因而不能以某个公共基类来统一表示。此概念称为“匿名对象”。<br>例如在定义“受委托者”这个对象时，可以这样写：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;VCHDelegate&gt; delegate;</div></pre></td></tr></table></figure>
-<p>任何遵循了 VCHDelegate 这个协议的对象都可以充当这个属性。对于具备此属性的类来说，delegate就是”匿名的”。<br>处理数据库连接(database connection)的程序库也用这个思路，以匿名对象来表示从另一个库中所返回的对象。对于处理连接所用的那个类，你也许不想让外人知道其名字，因为不同的数据库可能要用到不同的类来处理。如果没办法令其都继承自同一基类，那么就得返回id类型。不过我们可以把所有数据库连接都具备的那些方法放到协议中，令返回的对象遵从此协议。协议可以这样写:</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)connect;</div><div class="line">- (<span class="keyword">void</span>)disconnect;</div><div class="line">- (<span class="built_in">BOOL</span>)isConnected;</div><div class="line">- (<span class="built_in">NSArray</span> *)performQuery:(<span class="built_in">NSString</span> *)query;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>然后可以用“数据库处理器”单例来提供数据库连接，接口可以这样写：   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span>;  </span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCDatabaseManger</span>:<span class="title">NSObject</span>  </span></div><div class="line"></div><div class="line">+ (<span class="keyword">id</span>)sharedInstance;  </div><div class="line">- (<span class="keyword">id</span>&lt;EOCDatabaseConnection&gt;) connectionWithIdentifier:(<span class="built_in">NSString</span> *)identifier;  </div><div class="line"></div><div class="line"><span class="keyword">@end</span>;</div></pre></td></tr></table></figure>
-<p>这样的话，处理数据库连接所用的类的名称就不会泄漏了，有可能来自不同框架的那些类现在均可以经由同一个方法来返回。使用此API的人仅仅要求所返回的对象能用来连接、断开并查询数据库即可。至于使用的哪种数据库则不需要关心。如果后续需要更改数据库，那么此时也不需要更改接口。我们关心的并不是对象的类型，而是对象有没有实现相关的方法。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1470,7 +1463,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
