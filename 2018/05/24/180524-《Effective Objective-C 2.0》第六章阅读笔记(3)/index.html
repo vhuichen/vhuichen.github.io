@@ -1,0 +1,689 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第六章：块与大中枢派发(3)第44条：通过 Dispatch Group，根据系统资源状况来执行任务dispatch group 是 GCD 的一项特性，能够把任务分组。调用者可以等待这组任务执行完毕，也可以在提供回调函数之后继续往下执行，这组任务完成时，调用者会得到通知。通过这个功能可以把将要并发执行的多个任务合为一组，于是调用者就可以知道这些任务何时才能全部执行完毕。
+创建 dispatch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第六章阅读笔记(3)">
+<meta property="og:url" content="http://yoursite.com/2018/05/24/180524-《Effective Objective-C 2.0》第六章阅读笔记(3)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第六章：块与大中枢派发(3)第44条：通过 Dispatch Group，根据系统资源状况来执行任务dispatch group 是 GCD 的一项特性，能够把任务分组。调用者可以等待这组任务执行完毕，也可以在提供回调函数之后继续往下执行，这组任务完成时，调用者会得到通知。通过这个功能可以把将要并发执行的多个任务合为一组，于是调用者就可以知道这些任务何时才能全部执行完毕。
+创建 dispatch">
+<meta property="og:updated_time" content="2018-05-28T16:29:57.125Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第六章阅读笔记(3)">
+<meta name="twitter:description" content="第六章：块与大中枢派发(3)第44条：通过 Dispatch Group，根据系统资源状况来执行任务dispatch group 是 GCD 的一项特性，能够把任务分组。调用者可以等待这组任务执行完毕，也可以在提供回调函数之后继续往下执行，这组任务完成时，调用者会得到通知。通过这个功能可以把将要并发执行的多个任务合为一组，于是调用者就可以知道这些任务何时才能全部执行完毕。
+创建 dispatch">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/24/180524-《Effective Objective-C 2.0》第六章阅读笔记(3)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第六章阅读笔记(3) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第六章阅读笔记(3)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-24T00:00:00+08:00" content="2018-05-24">
+              2018-05-24
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-29T00:29:57+08:00" content="2018-05-29">
+				2018-05-29
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第六章：块与大中枢派发-3"><a href="#第六章：块与大中枢派发-3" class="headerlink" title="第六章：块与大中枢派发(3)"></a><center>第六章：块与大中枢派发(3)</center></h1><h2 id="第44条：通过-Dispatch-Group，根据系统资源状况来执行任务"><a href="#第44条：通过-Dispatch-Group，根据系统资源状况来执行任务" class="headerlink" title="第44条：通过 Dispatch Group，根据系统资源状况来执行任务"></a>第44条：通过 Dispatch Group，根据系统资源状况来执行任务</h2><p>dispatch group 是 GCD 的一项特性，能够把任务分组。调用者可以等待这组任务执行完毕，也可以在提供回调函数之后继续往下执行，这组任务完成时，调用者会得到通知。通过这个功能可以把将要并发执行的多个任务合为一组，于是调用者就可以知道这些任务何时才能全部执行完毕。</p>
+<h4 id="创建-dispatch-group"><a href="#创建-dispatch-group" class="headerlink" title="创建 dispatch group"></a>创建 dispatch group</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_group_t group = dispatch_group_create();</div></pre></td></tr></table></figure>
+<p>想把任务分组，有两种办法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> dispatch_group_async(dispatch_group_t group, <span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block);</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_group_enter(dispatch_group_t group);</div><div class="line"><span class="comment">// task</span></div><div class="line">dispatch_group_leave(dispatch_group_t group);</div></pre></td></tr></table></figure>
+<p>判断任务完成也有两种方法<br>第一种方法是同步的，等到所有任务完成，才能继续往下执行。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> dispatch_group_wait(dispatch_group_t group, dispatch_time_t timeout);</div></pre></td></tr></table></figure>
+<p>第二种方法是异步的，当所有的任务执行完成，就会触发这个通知。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> dispatch_group_notify(dispatch_group_t group, <span class="built_in">dispatch_queue_t</span> queue, dispatch_block_t block);</div></pre></td></tr></table></figure>
+<p>如果想令数组中的每个对象都执行某项任务，并且想等待所有任务执行完毕，那么就可以使用这个GCD特性来实现。同时还可以给任务加上优先级。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> lowPriorityQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, <span class="number">0</span>); </div><div class="line"><span class="built_in">dispatch_queue_t</span> highPriorityQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, <span class="number">0</span>); </div><div class="line">dispatch_group_t dispatchGroup = dispatch_group_create();</div><div class="line"></div><div class="line"><span class="built_in">NSArray</span> *lowPriorityObject;</div><div class="line"><span class="built_in">NSArray</span> *highPriorityObject;</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">id</span> object <span class="keyword">in</span> lowPriorityObject) &#123; </div><div class="line">	dispatch_group_async(dispatchGroup, lowPriorityQueue, ^&#123; </div><div class="line">		[object task];</div><div class="line">	&#125;); </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">id</span> object <span class="keyword">in</span> highPriorityObject) &#123; </div><div class="line">	dispatch_group_async(dispatchGroup, highPriorityQueue, ^&#123; </div><div class="line">		[object task]; </div><div class="line">	&#125;); </div><div class="line">&#125;</div><div class="line"></div><div class="line">dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^&#123; </div><div class="line">	</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>除了像上面这样把任务提交到并发队列之外，也可以把任务提交至各个串行队列中，并用 dispatch group 跟踪其执行状况。如果所有任务都排在同一个串行队列里面，那么 dispatch group 就用处不大了。因为此时，任务总要逐个执行，所以只需在提交完全部任务之后再提交一个块即可，这样做与通过 notify 函数等待 dispatch group 执行完毕后再回调块是等效的。</p>
+</blockquote>
+<h4 id="dispatch-apply"><a href="#dispatch-apply" class="headerlink" title="dispatch_apply"></a>dispatch_apply</h4><p>dispatch_apply 也是并发，并且是阻塞的，所以有时候我们完全可以使用 dispatch_apply 来代替 dispatch group 来执行任务。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"com.vhuichen.queue"</span>, <span class="literal">NULL</span>); </div><div class="line">dispatch_apply(count, queue, ^(size_t i) &#123; </div><div class="line">	<span class="comment">//Perform task </span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当有一组任务需要执行时，可以将这一组任务加到 dispatch group 中，当所有任务执行完成后会收到一个通知。</p>
+<h2 id="第45条：使用-dispath-once-来执行只需运行一次的线程安全代码"><a href="#第45条：使用-dispath-once-来执行只需运行一次的线程安全代码" class="headerlink" title="第45条：使用 dispath_once 来执行只需运行一次的线程安全代码"></a>第45条：使用 dispath_once 来执行只需运行一次的线程安全代码</h2><p>单例模式（singleton）是我们常用的一种开发模式，常见的一种写法如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">instancetype</span>)sharedInstance &#123; </div><div class="line">	<span class="keyword">static</span> <span class="keyword">id</span> sharedInstance = <span class="literal">nil</span>; </div><div class="line">	<span class="keyword">@synchronized</span> (<span class="keyword">self</span>) &#123; </div><div class="line">		<span class="keyword">if</span> (!sharedInstance) &#123; </div><div class="line">			sharedInstance = [[<span class="keyword">self</span> alloc] init]; </div><div class="line">		&#125; </div><div class="line">	&#125; </div><div class="line">	<span class="keyword">return</span> sharedInstance; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也可以通过 GCD 的 dispath_once 来实现，dispath_once 是线程安全的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">instancetype</span>)sharedInstance &#123; </div><div class="line">	<span class="keyword">static</span> <span class="keyword">id</span> sharedInstance = <span class="literal">nil</span>; </div><div class="line">	<span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken; </div><div class="line">	<span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123; </div><div class="line">		sharedInstance = [[<span class="keyword">self</span> alloc] init]; </div><div class="line">	&#125;);</div><div class="line">	<span class="keyword">return</span> sharedInstance; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>使用 dispath_once 方式比 @synchronized 方式要快很多</p>
+</blockquote>
+<h2 id="第46条：不要使用-dispatch-get-current-queue"><a href="#第46条：不要使用-dispatch-get-current-queue" class="headerlink" title="第46条：不要使用 dispatch_get_current_queue"></a>第46条：不要使用 dispatch_get_current_queue</h2><p>使用 GCD 时，经常需要判断当前代码正在哪个队列上执行，文档提供了这个函数：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> dispatch_get_current_queue();</div></pre></td></tr></table></figure>
+<p>iOS6.0 开始已经正式弃用此函数了。这个函数有个典型的错误用法，就是用它来检测当前队列是不是某个特定的队列，试图以此来避免执行同步派发时可能遇到的死锁问题。<br>下面两个存取方法，用串行队列保证实例变量的访问是线程安全的。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)someString &#123;</div><div class="line">	__block <span class="built_in">NSString</span> *localSomeString;</div><div class="line">	<span class="built_in">dispatch_sync</span>(_syncQueue, ^&#123;</div><div class="line">		localSomeString = _someString;</div><div class="line">	&#125;);</div><div class="line">	<span class="keyword">return</span> localSomeString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)setSomeString:(<span class="built_in">NSString</span> *)someString &#123;  </div><div class="line">	<span class="built_in">dispatch_async</span>(_syncQueue, ^&#123;</div><div class="line">		_someString = someString;</div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种写法的问题在于，getter 方法可能会死锁（当 getter 方法恰好就是 _syncQueue 时）。<br>可以将上面的代码稍作修改，只需先判断当前队列是否为 _syncQueue 队列，如果是就不派发，直接执行。这样做就可以另其变得“可重入”</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)someString &#123;</div><div class="line">	__block <span class="built_in">NSString</span> *localSomeString;</div><div class="line">	dispatch_block_t accessorBlock = ^&#123;</div><div class="line">		localSomeString = _someString;</div><div class="line">	&#125;;</div><div class="line">   </div><div class="line">	<span class="keyword">if</span> (dispatch_get_current_queue() == _syncQueue) &#123;</div><div class="line">		accessorBlock();</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="built_in">dispatch_sync</span>(_syncQueue, accessorBlock);  </div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> localSomeString;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样做好像是可以解决问题，但有些情况下还是会出现死锁问题，例如下面的例子：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> queueA = dispatch_queue_create(<span class="string">"com.vhuichen.queueA"</span>, <span class="literal">NULL</span>);  </div><div class="line"><span class="built_in">dispatch_queue_t</span> queueB = dispatch_queue_create(<span class="string">"com.vhuichen.queueB"</span>, <span class="literal">NULL</span>);  </div><div class="line"></div><div class="line"><span class="built_in">dispatch_sync</span>(queueA, ^&#123;</div><div class="line">	<span class="built_in">dispatch_sync</span>(queueB, ^&#123;</div><div class="line">		dispatch_block_t block = ^&#123; <span class="comment">/* ... */</span> &#125;;</div><div class="line">		<span class="keyword">if</span> (dispatch_get_current_queue() == queueA) &#123;</div><div class="line">			block();</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="built_in">dispatch_sync</span>(queueA, block);</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>上面的代码依然会出现死锁。也就是说想通过 dispatch_get_current_queue 来避免死锁问题是不可能的。  </p>
+<p>有的 API 可令开发者指定运行回调时所用的队列，但实际上却会把回调块安排在内部的串行同步队列上，而内部队列的目标队列又是开发者所提供的那个队列，那么就会出现死锁。使用 API 的开发者认为在回调块里调用 dispatch_get_current_queue 返回的“当前队列”，总是调用 API 时指定的那个，但实际返回的却是 API 内部的那个队列。  </p>
+<p>要解决这个问题，最好的办法是通过 GCD 所提供的功能来设定“队列特有数据”（ queue_specific data ），此功能可以把任意数据以键值对的形式关联到队列里。假如根据指定的键值对获取不到关联数据，那么系统会沿着层级体系一直向上找，直到找到数据或者到达根队列为止。看看下面的例子：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> queueA = dispatch_queue_create(<span class="string">"com.vhuichen.queueA"</span>, <span class="literal">NULL</span>);</div><div class="line"><span class="built_in">dispatch_queue_t</span> queueB = dispatch_queue_create(<span class="string">"com.vhuichen.queueB"</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> kQueueSpecific;</div><div class="line"><span class="built_in">CFStringRef</span> queueSpecificValue = <span class="built_in">CFSTR</span>(<span class="string">"queueA"</span>);</div><div class="line">dispatch_queue_set_specific(queueA, &amp;kQueueSpecific, (<span class="keyword">void</span> *)queueSpecificValue,  (dispatch_function_t)<span class="built_in">CFRelease</span>);</div><div class="line"></div><div class="line"><span class="built_in">dispatch_sync</span>(queueB, ^&#123;</div><div class="line">	dispatch_block_t block = ^&#123; <span class="built_in">NSLog</span>(<span class="string">@"no deadlock"</span>); &#125;;</div><div class="line">	<span class="built_in">CFStringRef</span> retrievedValue = dispatch_get_specific(&amp;kQueueSpecific);</div><div class="line">	<span class="keyword">if</span> (retrievedValue) &#123;</div><div class="line">		block();</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="built_in">dispatch_sync</span>(queueA, block);</div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>使用 “队列特有数据”（ queue_specific data ）则可以避免由不可重入引发的死锁。  </p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>dispatch_get_current_queue 函数无法解决由不可重入引发的死锁问题，但“队列特有数据”（ queue_specific data ）可以解决此问题。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/23/180523-《Effective Objective-C 2.0》第六章阅读笔记(2)/" rel="next" title="《Effective Objective-C 2.0》第六章阅读笔记(2)">
+                <i class="fa fa-chevron-left"></i> 《Effective Objective-C 2.0》第六章阅读笔记(2)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第六章：块与大中枢派发-3"><span class="nav-number">1.</span> <span class="nav-text">第六章：块与大中枢派发(3)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第44条：通过-Dispatch-Group，根据系统资源状况来执行任务"><span class="nav-number">1.1.</span> <span class="nav-text">第44条：通过 Dispatch Group，根据系统资源状况来执行任务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-dispatch-group"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">创建 dispatch group</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-apply"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">dispatch_apply</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第45条：使用-dispath-once-来执行只需运行一次的线程安全代码"><span class="nav-number">1.2.</span> <span class="nav-text">第45条：使用 dispath_once 来执行只需运行一次的线程安全代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第46条：不要使用-dispatch-get-current-queue"><span class="nav-number">1.3.</span> <span class="nav-text">第46条：不要使用 dispatch_get_current_queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
