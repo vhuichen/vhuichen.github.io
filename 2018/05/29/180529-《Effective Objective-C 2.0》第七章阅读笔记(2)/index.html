@@ -1,0 +1,677 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发,Effective Objective-C 2.0," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="第七章：系统框架(2)第50条：构建缓存时选用 NSCache 而非 NSDictionary优点1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。3、NSCache 是线程安全的。4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第七章阅读笔记(2)">
+<meta property="og:url" content="http://yoursite.com/2018/05/29/180529-《Effective Objective-C 2.0》第七章阅读笔记(2)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第七章：系统框架(2)第50条：构建缓存时选用 NSCache 而非 NSDictionary优点1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。3、NSCache 是线程安全的。4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺">
+<meta property="og:updated_time" content="2018-05-30T13:02:33.145Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Objective-C 2.0》第七章阅读笔记(2)">
+<meta name="twitter:description" content="第七章：系统框架(2)第50条：构建缓存时选用 NSCache 而非 NSDictionary优点1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。3、NSCache 是线程安全的。4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/29/180529-《Effective Objective-C 2.0》第七章阅读笔记(2)/"/>
+
+
+  <title> 《Effective Objective-C 2.0》第七章阅读笔记(2) | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《Effective Objective-C 2.0》第七章阅读笔记(2)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-29T00:00:00+08:00" content="2018-05-29">
+              2018-05-29
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-30T21:02:33+08:00" content="2018-05-30">
+				2018-05-30
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第七章：系统框架-2"><a href="#第七章：系统框架-2" class="headerlink" title="第七章：系统框架(2)"></a><center>第七章：系统框架(2)</center></h1><h2 id="第50条：构建缓存时选用-NSCache-而非-NSDictionary"><a href="#第50条：构建缓存时选用-NSCache-而非-NSDictionary" class="headerlink" title="第50条：构建缓存时选用 NSCache 而非 NSDictionary"></a>第50条：构建缓存时选用 NSCache 而非 NSDictionary</h2><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。<br>2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。<br>3、NSCache 是线程安全的。<br>4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺度可供调整，其一是缓存中的对象总数，其二是所有对象的“总开销”（overroll cost）。  </p>
+<p>下面代码演示缓存的用法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="comment">// Network fetcher class</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">void</span>(^EOCNetworkFercherCompletionHandler)(<span class="built_in">NSData</span> *data);</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCNetworkFetcher</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)initWithURL:(<span class="built_in">NSURL</span> *)url;  </div><div class="line">- (<span class="keyword">void</span>)startWithCompletionHandler:(EOCNetworkFercherCompletionHandler)handler;  </div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line">  </div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">EOCClass</span> </span>&#123;  </div><div class="line">    <span class="built_in">NSCache</span> *_cache;  </div><div class="line">&#125;</div><div class="line">  </div><div class="line">- (<span class="keyword">id</span>)init &#123;</div><div class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];  </div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;  </div><div class="line">        _cache = [<span class="built_in">NSCache</span> new];</div><div class="line">        <span class="comment">// 最多缓存 100 条数据</span></div><div class="line">        _cache.countLimit = <span class="number">100</span>;</div><div class="line">        <span class="comment">// 最大缓存空间 5MB</span></div><div class="line">        _cache.totalCostLimit = <span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;  </div><div class="line">&#125;</div><div class="line">  </div><div class="line">- (<span class="keyword">void</span>)downloadDataForURL:(<span class="built_in">NSURL</span> *)url &#123;  </div><div class="line">    <span class="built_in">NSData</span> *cachedData = [_cache objectForKey:url];  </div><div class="line">    <span class="keyword">if</span> (cachedData) &#123;  </div><div class="line">        <span class="comment">// Cache hit</span></div><div class="line">        [<span class="keyword">self</span> useData:cachedData];  </div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// Cache miss</span></div><div class="line">        EOCNetworkFetcher *fetcher = [[EOCNetworkFetcher alloc] initWithURL:url];  </div><div class="line">        [fetcher startWithCompletionHandler:^(<span class="built_in">NSData</span> *data) &#123;  </div><div class="line">            [_cache setObject:data forKey:url cost:data.length];  </div><div class="line">            [<span class="keyword">self</span> useData:cachedData];</div><div class="line">        &#125;];  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h4 id="NSPurgeableData"><a href="#NSPurgeableData" class="headerlink" title="NSPurgeableData"></a>NSPurgeableData</h4><p>NSPurgeableData 和 NSCache 搭配起来用，效果很好。此类是 NSMutableData 的子类，而且实现了 NSDiscardableContent 协议。如果某个对象所占有的内存能够根据需要随时丢弃，那么就可以实现该协议所定义的接口。当系统资源紧张时可以把保存 NSPurgeableData 对象的那块内存释放掉。NSDiscardableContent 协议定义了名为 isContentDiscarded 的方法，用来查询相关内存是否已释放。<br>如果需要访问某个 NSPurgeableData 对象，可以调用 beginContentAccess 方法，告诉它现在还不应该丢弃自己所占据的内存。用完之后，调用 endContentAccess 方法，告诉它在必要时可以丢弃自己所占据的内存了。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)downloadDataForURLTwo:(<span class="built_in">NSURL</span> *)url &#123;</div><div class="line">	<span class="built_in">NSPurgeableData</span> *cachedData = [_cache objectForKey:url];</div><div class="line">	<span class="keyword">if</span> (cachedData) &#123;</div><div class="line">		[cachedData beginContentAccess];</div><div class="line">		[<span class="keyword">self</span> useData:cacheData];</div><div class="line">		[cachedData endContentAccess];</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		EOCNetworkFetcher *fetcher = [[EOCNetworkFetcher alloc] initWithURL:url];</div><div class="line">		[fetcher startWithCompletionHandler:^(<span class="built_in">NSData</span> *data) &#123;</div><div class="line">			<span class="built_in">NSPurgeableData</span> *purgeableData = [<span class="built_in">NSPurgeableData</span> dataWithData:data];</div><div class="line">			[_cache setObject:purgeableData forKey:url cost:purgeableData.length];</div><div class="line">			[<span class="keyword">self</span> useData:purgeableData];</div><div class="line">			[purgeableData endContentAccess];</div><div class="line">		&#125;];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>创建好 NSPurgeableData 后，其 “purge 引用计数”会多1，所以无需再调用 beginContentAccess 了，但使用完后必须调用 endContentAccess 方法，将多出来的 “1” 抵消掉。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>合理的使用 NSCache 可以提高程序的响应速度。</p>
+<h2 id="第51条：精简-initialize-和-load-的实现代码"><a href="#第51条：精简-initialize-和-load-的实现代码" class="headerlink" title="第51条：精简 initialize 和 load 的实现代码"></a>第51条：精简 initialize 和 load 的实现代码</h2><p>有时候，类必须先执行某些初始化操作才能正常使用。在 Objective-C 中，绝大多数的类都继承自 NSObject 这个根类，该类有两个方法，可用来实现这种初始化操作。</p>
+<h3 id="load"><a href="#load" class="headerlink" title="load"></a>load</h3><p>对于加入运行期系统中的每个类（class）及分类（category）来说，必定会调用此方法，而且仅调用一次。如果分类和其所属的类都定义了 load 方法，则先调用类里的，再调用分类的。  </p>
+<p>执行 load 方法时，运行期系统处于“脆弱状态”（fragile state）。在执行子类的 load 方法之前，必定会先执行所有父类的 load 方法，而如果代码还依赖其他程序，那么程序库里相关类的 load 方法也必定会先执行。然而，根据某个给定的程序库，却无法判断出其中各个类的载入顺序。因此，在 load 方法中使用其他类是不安全的。  </p>
+<p>load 方法不像普通方法那样，它不遵从那套继承规则。如果某个类本身没实现 load 方法，那么不管其各级父类是否实现此方法，系统都不会调用。此外，分类的其所属的类里，都可能出现 load 方法。此时两种实现代码都会调用，类的实现要比分类的实现先执行。</p>
+<p>load 方法务必实现得精简一些，也就是要尽量减少其所执行操作，因为整个程序在执行 load 方法的时候都会阻塞。如果 load 方法中包含繁杂的代码，那么应用程序在执行期行就会变得无响应。也不要写等待锁，也不要调用可能会加锁的方法。</p>
+<h3 id="initialize"><a href="#initialize" class="headerlink" title="initialize"></a>initialize</h3><p>只有在第一次给该类发送消息之前会调用 initialize 方法。</p>
+<p>与 load 方法不同，运行系统在执行 initialize 方法时，是处于正常状态的。因此，从运行期系统完整角度上来讲，此时也可以安全使用并调用任意类中的任意方法。而且，运行期系统也能确保 initialize 方法在“线程安全的环境”中执行。这就是说，只有执行 initialize 的那个线程可以操作类或类实例。其他线程都要先阻塞，等着 initialize 执行完。</p>
+<p>跟其他方法一样，如果某个类未实现 initialize 方法，而父类实现了，那么就会运行父类的代码。initialize 遵循通常的继承规则。所以应该在 initialize 方法中判断是否是当前类，代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="keyword">if</span>(<span class="keyword">self</span> == [EOCBaseClass <span class="keyword">class</span>]) &#123;</div><div class="line">		<span class="comment">// doSomething</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后，initialize 和 load 一样，都应该实现的精简一些。可以用来初始化一些全局变量，</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>之前写的文章 <a href="https://vhuichen.github.io/2018/04/10/180410-iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%90%86%E8%A7%A3load%E5%92%8Cinitialize/" target="_blank" rel="external">iOS开发之理解load和initialize</a></p>
+<h2 id="第52条：别忘了-NSTimer-会保留其目标对象"><a href="#第52条：别忘了-NSTimer-会保留其目标对象" class="headerlink" title="第52条：别忘了 NSTimer 会保留其目标对象"></a>第52条：别忘了 NSTimer 会保留其目标对象</h2><p>计时器要和“运行循环”（runloop）相关联，运行循环到时候会触发任务。创建 NSTimer 时，可以将其“预先安排”在当前的运行循环中，也可以先创建好，然后由开发者来调度。无论采用哪种方式，只有把计时器放在运行循环里，它才能正常触发任务。</p>
+<p>使用 NSTimer 很容易会造成引用循环。看看下面的例子  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCClass</span> : <span class="title">NSObject</span></span></div><div class="line">- (<span class="keyword">void</span>)startPolling;</div><div class="line">- (<span class="keyword">void</span>)stopPolling;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// -- </span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"EOCClass.h"</span> </span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">EOCClass</span> </span>&#123; </div><div class="line">	<span class="built_in">NSTimer</span> *_pollTimer; </div><div class="line">&#125; </div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)init &#123; </div><div class="line">	<span class="keyword">return</span> [<span class="keyword">super</span> init]; </div><div class="line">&#125; </div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)dealloc &#123; </div><div class="line">	[_pollTimer invalidate]; </div><div class="line">&#125; </div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)stopPolling &#123; </div><div class="line">	[_pollTimer invalidate]; </div><div class="line">	_pollTimer = <span class="literal">nil</span>;</div><div class="line">&#125; </div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)startPolling &#123; </div><div class="line">	_pollTimer = [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">5.0</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(p_doPoll) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>]; </div><div class="line">&#125; </div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)p_doPoll &#123; </div><div class="line">	<span class="comment">// Poll the resource </span></div><div class="line">&#125; </div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>上面代码中 self 强引用了 _pollTimer ，而 _pollTimer 也强引用了 self 。所以就造成了引用循环。除非手动调用 stopPolling 这个方法，否则就会出现内存泄漏。但我们无法保证开发者一定会调用这个方法。</p>
+<p>解决方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span> </span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSTimer</span> (<span class="title">EOCBlocksSupport</span>) </span></div><div class="line"></div><div class="line">+ (<span class="built_in">NSTimer</span> *)eoc_timerScheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval block:(<span class="keyword">void</span>(^)())block repeats:(<span class="built_in">BOOL</span>)repeats;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// --</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">"NSTimer+EOCBlocksSupport.h"</span> </span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSTimer</span> (<span class="title">EOCBlocksSupport</span>) </span></div><div class="line"></div><div class="line">+ (<span class="built_in">NSTimer</span> *)eoc_timerScheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval block:(<span class="keyword">void</span>(^)())block repeats:(<span class="built_in">BOOL</span>)repeats &#123; </div><div class="line">	<span class="keyword">return</span> [<span class="keyword">self</span> scheduledTimerWithTimeInterval:interval target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(eoc_blockInvoke:) userInfo:[block <span class="keyword">copy</span>] repeats:repeats]; </div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)eoc_blockInvoke:(<span class="built_in">NSTimer</span> *)timer &#123; </div><div class="line">	<span class="keyword">void</span> (^block) () = timer.userInfo; </div><div class="line">	block ? block() : <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)startPolling &#123;</div><div class="line">	__<span class="keyword">weak</span> EOCClass *weakSelf = <span class="keyword">self</span>; </div><div class="line">	_pollTimer = [<span class="built_in">NSTimer</span> eoc_timerScheduledTimerWithTimeInterval:<span class="number">5.0</span> block:^&#123; </div><div class="line">		EOCClass *strongSelf = weakSelf; </div><div class="line">		[strongSelf p_doPoll]; </div><div class="line">	&#125; repeats:<span class="literal">YES</span>]; </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)p_doPoll &#123; </div><div class="line">	<span class="comment">// Poll the resource </span></div><div class="line">&#125; </div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>使用这种方法捕获到 weakSelf ，这样 self 就可以正常释放了，self 释放后， weakSelf 也就变为 nil 。从而打破了引用循环。</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>在项目中我使用另一种方法也可以用来解决这个问题，代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> (^VCHTimerHandler)(<span class="keyword">id</span> userInfo);</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHWeakTimer</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</div><div class="line">                                     target:(<span class="keyword">id</span>)aTarget</div><div class="line">                                   selector:(SEL)aSelector</div><div class="line">                                   userInfo:(<span class="keyword">id</span>)userInfo</div><div class="line">                                    repeats:(<span class="built_in">BOOL</span>)repeats;</div><div class="line"></div><div class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</div><div class="line">                                      block:(VCHTimerHandler)block</div><div class="line">                                   userInfo:(<span class="keyword">id</span>)userInfo</div><div class="line">                                    repeats:(<span class="built_in">BOOL</span>)repeats;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"VCHWeakTimer.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHWeakTimer</span>()</span></div><div class="line"></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">weak</span>) <span class="keyword">id</span> target;</div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">assign</span>) SEL selector;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VCHWeakTimer</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)fire:(<span class="keyword">id</span>)obj &#123;</div><div class="line"><span class="meta">#pragma clang diagnostic push</span></div><div class="line"><span class="meta">#pragma clang diagnostic ignored <span class="meta-string">"-Warc-performSelector-leaks"</span></span></div><div class="line">    [<span class="keyword">self</span>.target performSelector:<span class="keyword">self</span>.selector withObject:obj];</div><div class="line"><span class="meta">#pragma clang diagnostic pop</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</div><div class="line">                                     target:(<span class="keyword">id</span>)aTarget</div><div class="line">                                   selector:(SEL)aSelector</div><div class="line">                                   userInfo:(<span class="keyword">id</span>)userInfo</div><div class="line">                                    repeats:(<span class="built_in">BOOL</span>)repeats &#123;</div><div class="line">    VCHWeakTimer *weakTimer = [[VCHWeakTimer alloc] init];</div><div class="line">    weakTimer.target = aTarget;</div><div class="line">    weakTimer.selector = aSelector;</div><div class="line">    <span class="keyword">return</span> [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:interval</div><div class="line">                                            target:weakTimer</div><div class="line">                                          selector:<span class="keyword">@selector</span>(fire:)</div><div class="line">                                          userInfo:userInfo</div><div class="line">                                           repeats:repeats];</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</div><div class="line">                                      block:(VCHTimerHandler)block</div><div class="line">                                   userInfo:(<span class="keyword">id</span>)userInfo</div><div class="line">                                    repeats:(<span class="built_in">BOOL</span>)repeats &#123;</div><div class="line">    <span class="built_in">NSMutableArray</span> *userInfoArray = [<span class="built_in">NSMutableArray</span> arrayWithObject:[block <span class="keyword">copy</span>]];</div><div class="line">    <span class="keyword">if</span> (userInfo != <span class="literal">nil</span>) &#123;</div><div class="line">        [userInfoArray addObject:userInfo];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> scheduledTimerWithTimeInterval:interval</div><div class="line">                                         target:<span class="keyword">self</span></div><div class="line">                                       selector:<span class="keyword">@selector</span>(_timerBlockInvoke:)</div><div class="line">                                       userInfo:userInfoArray</div><div class="line">                                        repeats:repeats];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)_timerBlockInvoke:(<span class="built_in">NSArray</span> *)userInfo &#123;</div><div class="line">    VCHTimerHandler block = userInfo[<span class="number">0</span>];</div><div class="line">    <span class="keyword">id</span> info = <span class="literal">nil</span>;</div><div class="line">    <span class="keyword">if</span> (userInfo.count == <span class="number">2</span>) &#123;</div><div class="line">        info = userInfo[<span class="number">1</span>];</div><div class="line">    &#125;</div><div class="line">    block ? block(info) : <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>直接使用 NSTimer 可能会发生内存泄漏，一定要想办法处理掉这个问题。</p>
+<h1 id="全书-·-完"><a href="#全书-·-完" class="headerlink" title="全书 · 完"></a><center><font color="red">全书 · 完</font></center></h1>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+            <a href="/tags/Effective-Objective-C-2-0/" rel="tag">#Effective Objective-C 2.0</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/28/180528-《Effective Objective-C 2.0》第七章阅读笔记(1)/" rel="next" title="《Effective Objective-C 2.0》第七章阅读笔记(1)">
+                <i class="fa fa-chevron-left"></i> 《Effective Objective-C 2.0》第七章阅读笔记(1)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第七章：系统框架-2"><span class="nav-number">1.</span> <span class="nav-text">第七章：系统框架(2)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第50条：构建缓存时选用-NSCache-而非-NSDictionary"><span class="nav-number">1.1.</span> <span class="nav-text">第50条：构建缓存时选用 NSCache 而非 NSDictionary</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSPurgeableData"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">NSPurgeableData</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第51条：精简-initialize-和-load-的实现代码"><span class="nav-number">1.2.</span> <span class="nav-text">第51条：精简 initialize 和 load 的实现代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#load"><span class="nav-number">1.2.1.</span> <span class="nav-text">load</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#initialize"><span class="nav-number">1.2.2.</span> <span class="nav-text">initialize</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">1.2.3.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第52条：别忘了-NSTimer-会保留其目标对象"><span class="nav-number">1.3.</span> <span class="nav-text">第52条：别忘了 NSTimer 会保留其目标对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">1.3.1.</span> <span class="nav-text">补充</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结-1"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全书-·-完"><span class="nav-number">2.</span> <span class="nav-text">全书 · 完</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
