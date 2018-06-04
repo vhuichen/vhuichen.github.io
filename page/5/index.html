@@ -246,6 +246,134 @@
             
               
                 
+                <a class="post-title-link" href="/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/" itemprop="url">
+                  iOS开发之判断View是否显示在当前窗口
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-11T21:01:43+08:00" content="2017-07-11">
+              2017-07-11
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-03-22T00:01:18+08:00" content="2018-03-22">
+				2018-03-22
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="判断View是否显示在当前窗口"><a href="#判断View是否显示在当前窗口" class="headerlink" title="判断View是否显示在当前窗口"></a>判断View是否显示在当前窗口</h3><p>写一个分类</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">VCHFrame</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow &#123;</div><div class="line">    <span class="built_in">UIWindow</span> *window = [<span class="built_in">UIApplication</span> sharedApplication].keyWindow;</div><div class="line">    <span class="built_in">CGRect</span> newRect = [window convertRect:<span class="keyword">self</span>.frame fromView:<span class="keyword">self</span>.superview];</div><div class="line">    <span class="built_in">BOOL</span> intersects = <span class="built_in">CGRectIntersectsRect</span>(newRect, window.bounds);</div><div class="line">    <span class="keyword">return</span> intersects &amp;&amp; !<span class="keyword">self</span>.isHidden &amp;&amp; (<span class="keyword">self</span>.alpha &gt; <span class="number">0.01</span>) &amp;&amp; (<span class="keyword">self</span>.window == window);</div><div class="line">&#125;</div><div class="line">~~~   </div><div class="line"></div><div class="line"><span class="meta">### 判断控制器是否显示到当前窗口   </span></div><div class="line">可以用一种简单的方法，判断view是否已经加载，再判断window是否存在。用这两个条件正常情况下都可以判断出来。   </div><div class="line">**这种方法不是绝对的。**</div><div class="line"></div><div class="line">~~~ objc</div><div class="line">- (<span class="built_in">BOOL</span>)isShowing &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">self</span>.isViewLoaded &amp;&amp; <span class="keyword">self</span>.view.window;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="坐标转变方法"><a href="#坐标转变方法" class="headerlink" title="坐标转变方法"></a>坐标转变方法</h3><pre><code class="objc"><span class="built_in">CGRect</span> newRect = [view1 convertRect:view2.frame toView:view3];
+<span class="built_in">CGRect</span> newRect = [view3 convertRect:view2.frame fromView:view1];
+</code></pre>
+<p>view1：view2的父类（view2的frame相对的坐标系的view）<br>view2：需要转换坐标的view<br>view3：转换后坐标所在的view   </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/06/26/170626-iOS开发之上传代码到CocoaPods/" itemprop="url">
                   iOS开发之上传代码到CocoaPods
                 </a>
@@ -1158,151 +1286,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/28/161028-iOS基础之Cocoapods/" itemprop="url">
-                  iOS基础之Cocoapods
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-28T21:14:26+08:00" content="2016-10-28">
-              2016-10-28
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2016-12-05T23:29:37+08:00" content="2016-12-05">
-				2016-12-05
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>被<code>CocoaPods</code>虐好几次了！<strong><del>~~(&gt;_&lt;)</del>~~</strong></p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>其实就那么两条一句</p>
-<blockquote>
-<p><strong>sudo gem install cocoapods</strong><br><strong>pod setup</strong>   </p>
-</blockquote>
-<p>但是两次都花了不止一天的时间才安装好 <strong><del>坑</del></strong></p>
-<h1 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h1><h2 id="gem版本比较旧，需要先升级版本"><a href="#gem版本比较旧，需要先升级版本" class="headerlink" title="gem版本比较旧，需要先升级版本"></a>gem版本比较旧，需要先升级版本</h2><p>查看版本</p>
-<blockquote>
-<p>gem –version</p>
-</blockquote>
-<p>升级版本</p>
-<blockquote>
-<p>sudo gem update –system</p>
-</blockquote>
-<p>到这里这个问题就解决了</p>
-<h2 id="Ruby的默认软件源被墙，需要跟换软件源"><a href="#Ruby的默认软件源被墙，需要跟换软件源" class="headerlink" title="Ruby的默认软件源被墙，需要跟换软件源"></a>Ruby的默认软件源被墙，需要跟换软件源</h2><p>网上给出了很多的答案，可以这样做</p>
-<blockquote>
-<p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="https://ruby.taobao.org/" target="_blank" rel="external">https://ruby.taobao.org/</a>   </p>
-</blockquote>
-<p><strong>就可以了？NO</strong><br><code>https://ruby.taobao.org/</code>这个网站已经不再维护了，如果把软件源更换到淘宝的这个镜像，会无法<code>setup</code>，至少我这里试了好几次都不行。<br>进入这个网站会有相关信息说明，相关的管理工作已经交给<code>https://gems.ruby-china.org/</code>来做了。<br>具体操作是：   </p>
-<blockquote>
-<p>gem sources –add <a href="https://gems.ruby-china.org/" target="_blank" rel="external">https://gems.ruby-china.org/</a><br>gem sources -l   </p>
-</blockquote>
-<p>确保只有<code>https://gems.ruby-china.org/</code>一个源。<br><strong>这样就可以了？不一定</strong><br>可能由于网络问题，我这里失败了好几次后才成功。可以打开一个新的终端进入<code>~/.cocoapods/repos</code>目录使用命令<code>du sh *</code>命令查看，如果一直不变，基本上可以认为是失败了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1348,7 +1331,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1365,7 +1348,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

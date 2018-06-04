@@ -246,6 +246,139 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/10/180510-iOS基础之UINavigationBar属性设置/" itemprop="url">
+                  iOS基础之 UINavigationBar 属性设置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-10T00:00:00+08:00" content="2018-05-10">
+              2018-05-10
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-11T23:27:39+08:00" content="2018-05-11">
+				2018-05-11
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>用最简单、快捷的方法设置 UINavigationBar 的属性。</p>
+<h3 id="去掉返回按钮的文字，只保留返回箭头"><a href="#去掉返回按钮的文字，只保留返回箭头" class="headerlink" title="去掉返回按钮的文字，只保留返回箭头"></a>去掉返回按钮的文字，只保留返回箭头</h3><p>默认情况下的样式是这样的，现在只需要保留返回箭头，不需要文字。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-10/2817090.jpg" alt=""></p>
+<h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>自定义一个 UIBarButtonItem 。比较麻烦，还要给图片。创建 UINavigationController 的子类，重写 pushViewController 方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)pushViewController:(<span class="built_in">UIViewController</span> *)viewController animated:(<span class="built_in">BOOL</span>)animated &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.childViewControllers.count) &#123;</div><div class="line">        viewController.navigationItem.leftBarButtonItem = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"back"</span>] style:<span class="built_in">UIBarButtonItemStylePlain</span> target:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(back)];</div><div class="line">    &#125;</div><div class="line">    [<span class="keyword">super</span> pushViewController:viewController animated:animated];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)back &#123;</div><div class="line">    [<span class="keyword">self</span> popViewControllerAnimated:<span class="literal">YES</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>将文字偏移到看不到的地方，刚好系统有给出相关的接口。经过实践发现，偏移到左边屏幕之外是最好的方法。同样创建 UINavigationController 的子类，在 initialize 中实现以下方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="built_in">UIBarButtonItem</span> *item = [<span class="built_in">UIBarButtonItem</span> appearance];</div><div class="line">	[item setBackButtonTitlePositionAdjustment:<span class="built_in">UIOffsetMake</span>(<span class="built_in">NSIntegerMin</span>, <span class="number">0</span>) forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用这个方法同样可以将箭头往右偏移。</p>
+<h3 id="设置属性和图片颜色"><a href="#设置属性和图片颜色" class="headerlink" title="设置属性和图片颜色"></a>设置属性和图片颜色</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="built_in">UIBarButtonItem</span> *item = [<span class="built_in">UIBarButtonItem</span> appearance];</div><div class="line">	<span class="built_in">NSMutableDictionary</span> *attrs = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">	attrs[<span class="built_in">NSForegroundColorAttributeName</span>] = [<span class="built_in">UIColor</span> whiteColor]; <span class="comment">// 文字颜色</span></div><div class="line">	[item setTitleTextAttributes:attrs forState:<span class="built_in">UIControlStateNormal</span>];</div><div class="line">	item.tintColor = [<span class="built_in">UIColor</span> whiteColor]; <span class="comment">// 图片颜色</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="设置返回按钮图片"><a href="#设置返回按钮图片" class="headerlink" title="设置返回按钮图片"></a>设置返回按钮图片</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">	<span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</div><div class="line">	<span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@"back"</span>];</div><div class="line">	bar.backIndicatorImage = image;</div><div class="line">	bar.backIndicatorTransitionMaskImage = image;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="去掉-UINavigationBar-下边线"><a href="#去掉-UINavigationBar-下边线" class="headerlink" title="去掉 UINavigationBar 下边线"></a>去掉 UINavigationBar 下边线</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</div><div class="line">    [bar setBackgroundImage:[[<span class="built_in">UIImage</span> alloc] init] forBarPosition:<span class="built_in">UIBarPositionAny</span> barMetrics:<span class="built_in">UIBarMetricsDefault</span>];</div><div class="line">    [bar setShadowImage:[[<span class="built_in">UIImage</span> alloc] init]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="给-UINavigationBar-加阴影"><a href="#给-UINavigationBar-加阴影" class="headerlink" title="给 UINavigationBar 加阴影"></a>给 UINavigationBar 加阴影</h3><p>这里我创建一个分类，可以直接调用这个方法来设置。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UINavigationBar</span> (<span class="title">VCHDropShadow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)dropShadowWithOffset:(<span class="built_in">CGSize</span>)offset</div><div class="line">                      radius:(<span class="built_in">CGFloat</span>)radius</div><div class="line">                       color:(<span class="built_in">UIColor</span> *)color</div><div class="line">                     opacity:(<span class="built_in">CGFloat</span>)opacity &#123;</div><div class="line">    <span class="comment">// 也可以不创建 path ，直接使用。</span></div><div class="line">    <span class="built_in">CGMutablePathRef</span> path = <span class="built_in">CGPathCreateMutable</span>();</div><div class="line">    <span class="built_in">CGPathAddRect</span>(path, <span class="literal">NULL</span>, <span class="keyword">self</span>.bounds);</div><div class="line">    <span class="keyword">self</span>.layer.shadowPath = path;</div><div class="line">    <span class="built_in">CGPathCloseSubpath</span>(path);</div><div class="line">    <span class="built_in">CGPathRelease</span>(path);</div><div class="line">    </div><div class="line">    <span class="keyword">self</span>.layer.shadowColor = color.CGColor;</div><div class="line">    <span class="keyword">self</span>.layer.shadowOffset = offset;</div><div class="line">    <span class="keyword">self</span>.layer.shadowRadius = radius;</div><div class="line">    <span class="keyword">self</span>.layer.shadowOpacity = opacity;</div><div class="line"> 	</div><div class="line">    <span class="keyword">self</span>.clipsToBounds = <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(3)/" itemprop="url">
                   《Effective Objective-C 2.0》第五章阅读笔记(3)
                 </a>
@@ -1305,144 +1438,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/21/180421-尾调用优化/" itemprop="url">
-                  尾调用优化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-21T00:00:00+08:00" content="2018-04-21">
-              2018-04-21
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-23T21:04:34+08:00" content="2018-04-23">
-				2018-04-23
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>看《Effective Objective-C 2.0》这本书发现“尾调用”这个词汇，之前没接触过，记录下来。</p>
-<h3 id="什么是尾调用"><a href="#什么是尾调用" class="headerlink" title="什么是尾调用"></a>什么是尾调用</h3><p>“尾调用”是指一个函数的最后一项操作是调用另一个函数，即被调用函数的返回值就是当前函数的返回值。例如：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func1:i];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</div><div class="line">    	<span class="keyword">return</span> [<span class="keyword">self</span> func2:i];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">    	<span class="keyword">return</span> [<span class="keyword">self</span> func1:i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>下面的例子不属于尾调用</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func1:i] + <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">int</span> value = [<span class="keyword">self</span> func1:i]</div><div class="line">    <span class="keyword">return</span> value;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a>尾递归</h3><p>如果函数在尾部调用的是自身，那么就叫做“尾递归”。    </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)func0:(<span class="keyword">int</span>)i &#123;</div><div class="line">    <span class="comment">// do anything</span></div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func0:i];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h3><p>当一个函数是尾调用时，那么当前函数开辟的栈空间就已经不需要再使用了。被调用函数不需要开辟新的栈空间，而是直接使用当前函数的栈空间（更新原有栈），再把被调用函数的返回地址替换成当前函数的返回地址，这就是“尾调用优化”。使用“尾调用优化”技术，可以避免栈溢出。 </p>
-<h3 id="尾递归优化（例子）"><a href="#尾递归优化（例子）" class="headerlink" title="尾递归优化（例子）"></a>尾递归优化（例子）</h3><blockquote>
-<p>求n!</p>
-</blockquote>
-<p>没有使用尾调用时代码是这样写的：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)factorial0:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> n * [<span class="keyword">self</span> factorial0:n - <span class="number">1</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>程序第一次进入 factorial0 函数时需要在栈中分配内存用来保存 n 值。然后在每一次递归调用 factorial0 时都需要再分配新的内存来保存新的变量 n（这里的每一个 n 值都是不一样的，内存也是不一样的），空间复杂度O(n)。这样栈就会一直叠加，最后可能造成栈溢出。  </p>
-<p>使用了尾调用时代码是这样写的：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)factorial1:(<span class="keyword">int</span>)n &#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> factorial1:n total:<span class="number">1</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)factorial1:(<span class="keyword">int</span>)n total:(<span class="keyword">int</span>)total &#123;</div><div class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> total;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> factorial1:n - <span class="number">1</span> total:total * n];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>factorial1 只执行一次，不影响，空间复杂度O(1)。<br>程序第一次进入 factorial1:count 函数时需要在栈中分配内存用来保存 n 值。当第二次调用 factorial1:count 时，由于是尾调用，此时第一次分配的栈空间已经不需要再用了，所以第二次调用的时候直接使用原有栈，不需要分配额外的内存。空间复杂度O(1)。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1488,7 +1483,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1505,7 +1500,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

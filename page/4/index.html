@@ -246,6 +246,130 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/03/180403-iOS开发之Push Notification/" itemprop="url">
+                  iOS开发之Push Notification
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-03T15:12:39+08:00" content="2018-04-03">
+              2018-04-03
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-04-03T23:19:46+08:00" content="2018-04-03">
+				2018-04-03
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>iOS远程推送是怎么实现的？</p>
+<h3 id="远程推送逻辑图"><a href="#远程推送逻辑图" class="headerlink" title="远程推送逻辑图"></a>远程推送逻辑图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg" alt=""></p>
+<p>1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。<br>2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。<br>3、 APP 将 Device Token 发送给自己的服务器。<br>4、 当服务器发生APP感兴趣事件的时候，服务器将该消息以及对应的 Device Token 发送给APNS。<br>5、 APNS 再根据 Device Token 将消息发送给对应的APP（用户）。   </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/31/180331-iOS开发之Designated Initializer/" itemprop="url">
                   iOS开发之Designated Initializer(指定初始化方法)
                 </a>
@@ -1185,134 +1309,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/" itemprop="url">
-                  iOS开发之判断View是否显示在当前窗口
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-11T21:01:43+08:00" content="2017-07-11">
-              2017-07-11
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-03-22T00:01:18+08:00" content="2018-03-22">
-				2018-03-22
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="判断View是否显示在当前窗口"><a href="#判断View是否显示在当前窗口" class="headerlink" title="判断View是否显示在当前窗口"></a>判断View是否显示在当前窗口</h3><p>写一个分类</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">VCHFrame</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow &#123;</div><div class="line">    <span class="built_in">UIWindow</span> *window = [<span class="built_in">UIApplication</span> sharedApplication].keyWindow;</div><div class="line">    <span class="built_in">CGRect</span> newRect = [window convertRect:<span class="keyword">self</span>.frame fromView:<span class="keyword">self</span>.superview];</div><div class="line">    <span class="built_in">BOOL</span> intersects = <span class="built_in">CGRectIntersectsRect</span>(newRect, window.bounds);</div><div class="line">    <span class="keyword">return</span> intersects &amp;&amp; !<span class="keyword">self</span>.isHidden &amp;&amp; (<span class="keyword">self</span>.alpha &gt; <span class="number">0.01</span>) &amp;&amp; (<span class="keyword">self</span>.window == window);</div><div class="line">&#125;</div><div class="line">~~~   </div><div class="line"></div><div class="line"><span class="meta">### 判断控制器是否显示到当前窗口   </span></div><div class="line">可以用一种简单的方法，判断view是否已经加载，再判断window是否存在。用这两个条件正常情况下都可以判断出来。   </div><div class="line">**这种方法不是绝对的。**</div><div class="line"></div><div class="line">~~~ objc</div><div class="line">- (<span class="built_in">BOOL</span>)isShowing &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">self</span>.isViewLoaded &amp;&amp; <span class="keyword">self</span>.view.window;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="坐标转变方法"><a href="#坐标转变方法" class="headerlink" title="坐标转变方法"></a>坐标转变方法</h3><pre><code class="objc"><span class="built_in">CGRect</span> newRect = [view1 convertRect:view2.frame toView:view3];
-<span class="built_in">CGRect</span> newRect = [view3 convertRect:view2.frame fromView:view1];
-</code></pre>
-<p>view1：view2的父类（view2的frame相对的坐标系的view）<br>view2：需要转换坐标的view<br>view3：转换后坐标所在的view   </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1358,7 +1354,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1375,7 +1371,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
