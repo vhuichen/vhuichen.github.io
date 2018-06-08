@@ -246,6 +246,141 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/05/180605-iOS开发之加密解密/" itemprop="url">
+                  iOS开发之加密解密
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-05T00:00:00+08:00" content="2018-06-05">
+              2018-06-05
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-06-08T23:38:26+08:00" content="2018-06-08">
+				2018-06-08
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><h2 id="Base64-编码"><a href="#Base64-编码" class="headerlink" title="Base64 编码"></a>Base64 编码</h2><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>Base64 编码会把 3 字节的二进制数据编码为 4 字节的数据，长度增加 33% 。如果要编码的二进制数据不是 3 的倍数，Base64 会用 <strong>\x00</strong> 字节在末尾补齐，然后在末尾加上1、2个 = 号，表示补的字节数。例如：   </p>
+<hr>
+<p>需要加密的数据：s 1 3<br>对应的 ascii：115 49 51<br>2进制： 01110011 00110001 00110011<br>转换：每三个字节转换成四个字节<br>转换后： 011100.11 0011.0001 00.110011  (标点处分割)<br>转换后： 011100 110011 000100 110011<br>高两位自动补0<br>最终数据： 00011100 00110011 00000100 00110011<br>得到 28 51 4 51<br>查对下照表 c z E z  </p>
+<hr>
+<p>iOS下有两种比较常见的 Base64 编码方式<br>第一种：<strong>iOS自带的编码方式</strong><br>这里我写了一个分类，可以直接对字符串编码、解码。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHBase64.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHBase64</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_base64Encode &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [<span class="keyword">self</span> dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    <span class="keyword">return</span> [data base64EncodedStringWithOptions:<span class="built_in">NSDataBase64Encoding64CharacterLineLength</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_base64Decode &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [[<span class="built_in">NSData</span> alloc] initWithBase64EncodedString:<span class="keyword">self</span> options:<span class="built_in">NSDataBase64DecodingIgnoreUnknownCharacters</span>];</div><div class="line">    <span class="keyword">return</span> [[<span class="built_in">NSString</span> alloc] initWithData:data encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>第二种：<strong>用 Google 的 GTMBase64</strong><br>可以直接在GitHub上搜索。下面的 <strong>Demo</strong> 里面也有。</p>
+<h2 id="MD5-加密"><a href="#MD5-加密" class="headerlink" title="MD5 加密"></a>MD5 加密</h2><h4 id="加密代码"><a href="#加密代码" class="headerlink" title="加密代码"></a>加密代码</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;CommonCrypto/CommonDigest.h&gt;</span></span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_md5 &#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *cStr = [<span class="keyword">self</span> UTF8String];</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> digest[CC_MD5_DIGEST_LENGTH];</div><div class="line">    CC_MD5(cStr, (uint32_t)strlen(cStr), digest);</div><div class="line">    <span class="built_in">NSMutableString</span> *output = [<span class="built_in">NSMutableString</span> stringWithCapacity:CC_MD5_DIGEST_LENGTH * <span class="number">2</span>];</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; CC_MD5_DIGEST_LENGTH; i++) &#123;</div><div class="line">        [output appendFormat:<span class="string">@"%02x"</span>, digest[i]];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> output;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>MD5 加密一般是不可解密的，但可以通过穷举法解密（就是一个一个去匹配）。我们可以给 MD5 加个数字，然后再加密一次，那么这样加密后就基本无法再解密出来了。</p>
+<h2 id="AES-加密"><a href="#AES-加密" class="headerlink" title="AES 加密"></a>AES 加密</h2><p>AES 加密、解密需要同一个密钥，这种加密方法称为单密钥加密，也称对称加密。<br>AES 有多种加密方式（ECB、CBC、CFB、OFB），如果使用 CBC 方式加密，那么还需要提供密钥偏移量 IV 这个值。<br>AES 可以采用128位 或者 256位的加密方式。  </p>
+<p>下面代码采用了 AES256 CBC 模式。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHAES.h"</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;CommonCrypto/CommonCryptor.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHAES</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_AESEncryptWithKey:(<span class="built_in">NSString</span> *)key iv:(<span class="built_in">NSString</span> *)iv &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [<span class="keyword">self</span> dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    <span class="built_in">NSData</span> *encryptData = [<span class="keyword">self</span> AES256operation:kCCEncrypt data:data key:key iv:iv];</div><div class="line">    <span class="built_in">NSString</span> *encryptString = [encryptData base64EncodedStringWithOptions:<span class="built_in">NSDataBase64Encoding64CharacterLineLength</span>];</div><div class="line">    <span class="keyword">return</span> encryptString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_AESDecryptWithKey:(<span class="built_in">NSString</span> *)key iv:(<span class="built_in">NSString</span> *)iv &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [[<span class="built_in">NSData</span> alloc] initWithBase64EncodedString:<span class="keyword">self</span> options:<span class="built_in">NSDataBase64DecodingIgnoreUnknownCharacters</span>];</div><div class="line">    <span class="built_in">NSData</span> *decryptData = [<span class="keyword">self</span> AES256operation:kCCDecrypt data:data key:key iv:iv];</div><div class="line">    <span class="built_in">NSString</span> *decryptString = [[<span class="built_in">NSString</span> alloc] initWithData:decryptData encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    <span class="keyword">return</span> decryptString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSData</span> *)AES256operation:(CCOperation)operation data:(<span class="built_in">NSData</span> *)data key:(<span class="built_in">NSString</span> *)key iv:(<span class="built_in">NSString</span> *)iv &#123;</div><div class="line">    <span class="keyword">char</span> keyPtr[kCCKeySizeAES256 + <span class="number">1</span>];</div><div class="line">    bzero(keyPtr, <span class="keyword">sizeof</span>(keyPtr));</div><div class="line">    [key getCString:keyPtr maxLength:<span class="keyword">sizeof</span>(keyPtr) encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    </div><div class="line">    <span class="keyword">char</span> ivPtr[kCCKeySizeAES256 + <span class="number">1</span>];</div><div class="line">    bzero(ivPtr, <span class="keyword">sizeof</span>(ivPtr));</div><div class="line">    [iv getCString:ivPtr maxLength:<span class="keyword">sizeof</span>(ivPtr) encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    size_t bufferSize = [data length] + kCCKeySizeAES256;</div><div class="line">    <span class="keyword">void</span> *buffer = malloc(bufferSize);</div><div class="line">    size_t numBytesEncrypted = <span class="number">0</span>;</div><div class="line">    </div><div class="line">    CCCryptorStatus cryptorStatus = CCCrypt(operation, kCCAlgorithmAES, kCCOptionPKCS7Padding,</div><div class="line">                                            keyPtr, kCCKeySizeAES256, ivPtr, [data bytes], [data length],</div><div class="line">                                            buffer, bufferSize, &amp;numBytesEncrypted);</div><div class="line">    <span class="keyword">if</span>(cryptorStatus == kCCSuccess) &#123;</div><div class="line">        <span class="keyword">return</span> [<span class="built_in">NSData</span> dataWithBytesNoCopy:buffer length:numBytesEncrypted];</div><div class="line">    &#125;</div><div class="line">    free(buffer);</div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>这里的 key 和 iv ，是由加密者提供的。</p>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/VCHEncrypt.git" target="_blank" rel="external">Github Demo</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/29/180529-《Effective Objective-C 2.0》第七章阅读笔记(2)/" itemprop="url">
                   《Effective Objective-C 2.0》第七章阅读笔记(2)
                 </a>
@@ -1292,168 +1427,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/14/180514-iOS开发之第三方登录（微信、QQ）/" itemprop="url">
-                  iOS开发之第三方登录（微信、QQ）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-14T00:00:00+08:00" content="2018-05-14">
-              2018-05-14
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-06-04T21:30:48+08:00" content="2018-06-04">
-				2018-06-04
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="微信登录"><a href="#微信登录" class="headerlink" title="微信登录"></a>微信登录</h2><h3 id="注册-微信开放平台-账号"><a href="#注册-微信开放平台-账号" class="headerlink" title="注册 微信开放平台 账号"></a>注册 微信开放平台 账号</h3><p>地址：<a href="https://open.weixin.qq.com/" target="_blank" rel="external">微信开放平台</a><br>随后创建一个应用，提交给微信审核（微信审核比较慢，目前已经几天还在审核中）。</p>
-<h3 id="开发者资质认证"><a href="#开发者资质认证" class="headerlink" title="开发者资质认证"></a>开发者资质认证</h3><p>微信的原话是这样的</p>
-<blockquote>
-<p>微信开放平台帐号的开发者资质认证提供更安全、更严格的真实性认证、也能够更好的保护企业及用户的合法权益<br>开发者资质认证通过后，微信开放平台帐号下的应用，将获得微信登录、智能接口、第三方平台开发等高级能力<br>认证有效期：一年，有效期最后三个月可申请年审即可续期<br>审核费用：中国大陆地区：300元，非中国大陆地区：99美元  </p>
-</blockquote>
-<p>这里要注意的是，文档里面却写着不需要收费  </p>
-<blockquote>
-<p>3.开放平台移动应用微信登陆目前是否收费？<br>答：“微信登录”和第三方网站共享微信庞大的用户价值，同时为微信用户提供更便捷服务和更优质内容，实现双向共赢，目前不收取任何费用。</p>
-</blockquote>
-<p>总之，需要先交钱认证。认证的时候还要提供 N 多资料。审核有点繁琐，写错了就要重填，有3次免费修改的机会。</p>
-<h3 id="集成SDK"><a href="#集成SDK" class="headerlink" title="集成SDK"></a>集成SDK</h3><p>直接通过 CocoaPods 集成   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod <span class="string">"WechatOpenSDK"</span></div></pre></td></tr></table></figure>
-<h3 id="配置工程文件"><a href="#配置工程文件" class="headerlink" title="配置工程文件"></a>配置工程文件</h3><p>这里要设置白名单以及 URL Scheme 。微信 的 URL Scheme 就是 APPID<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-21/39395880.jpg" alt=""></p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>这里我自定义了一个 WXLoginHelper 类，将所有的处理逻辑都放在里面。<br>我们需要先重写 application 的两个委托，具体如下：    </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;WXApi.h&gt;</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">"WXLoginHelper.h"</span></span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions &#123;</div><div class="line">    <span class="comment">// Override point for customization after application launch.</span></div><div class="line">    [WXLoginHelper registerApp:kWXAppID appSecret:kWXAppSecret];</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ios9</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)app openURL:(<span class="built_in">NSURL</span> *)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">UIApplicationOpenURLOptionsKey</span>,<span class="keyword">id</span>&gt; *)options &#123;</div><div class="line">     <span class="keyword">return</span> [WXLoginHelper handleOpenURL:url];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ios8</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application openURL:(<span class="built_in">NSURL</span> *)url sourceApplication:(<span class="built_in">NSString</span> *)sourceApplication annotation:(<span class="keyword">id</span>)annotation &#123;</div><div class="line">    <span class="keyword">return</span> [WXLoginHelper handleOpenURL:url];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后在 WXLoginHelper 中实现 WXApiDelegate 委托，有两个方法，目前只需要关注 onResp 方法即可  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"WXLoginHelper.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">WXLoginHelper</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)onResp:(BaseResp *)resp &#123;</div><div class="line">    SendAuthResp *sendAuthResq = (SendAuthResp *)resp;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"resp.code = %@"</span>, sendAuthResq.code);</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!sendAuthResq.errCode) &#123;</div><div class="line">        <span class="built_in">NSString</span> *urlString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&amp;secret=%@&amp;code=%@&amp;grant_type=authorization_code"</span>, <span class="keyword">self</span>.appId, <span class="keyword">self</span>.appSecret, sendAuthResq.code];</div><div class="line">        <span class="keyword">id</span> json = [<span class="keyword">self</span> getDataWithURLString:urlString];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"json : %@"</span>, json);</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (json) &#123;</div><div class="line">            <span class="built_in">NSString</span> *access_token = json[<span class="string">@"access_token"</span>];</div><div class="line">            <span class="built_in">NSString</span> *openid = json[<span class="string">@"openid"</span>];</div><div class="line">            </div><div class="line">            <span class="built_in">NSString</span> *urlString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&amp;openid=%@"</span>, access_token, openid];</div><div class="line">            <span class="keyword">id</span> json1 = [<span class="keyword">self</span> getDataWithURLString:urlString];</div><div class="line">            </div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"json1 : %@"</span>, json1);</div><div class="line">            <span class="keyword">if</span> (json1) &#123;</div><div class="line">                <span class="built_in">NSString</span> *icon = json1[<span class="string">@"headimgurl"</span>];</div><div class="line">                <span class="built_in">NSString</span> *name = json1[<span class="string">@"nickname"</span>];</div><div class="line">                <span class="keyword">self</span>.callback ? <span class="keyword">self</span>.callback(openid, icon, name) : <span class="literal">nil</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">self</span>.callback = <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>这里的 callback block 会将 openid，icon，name，返回给调用者。  </p>
-<blockquote>
-<p>需要注意的是不要直接将从微信拿到的图片链接传给服务器，因为这个链接可能会失效。我的处理方式是，从这个链接拿到图片，然后将图片传给服务器。</p>
-</blockquote>
-<p>最后在点击了微信登录按钮后给微信发送消息   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)sendRepWithCallback:(<span class="keyword">void</span> (^)(<span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *))callback &#123;</div><div class="line">    [WXLoginHelper sharedInstance].callback = callback;</div><div class="line">    </div><div class="line">    SendAuthReq *req = [[SendAuthReq alloc] init];</div><div class="line">    req.scope = <span class="string">@"snsapi_userinfo"</span>;</div><div class="line">    req.state = <span class="string">@"text"</span>;</div><div class="line">    [WXApi sendReq:req];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>用户点击授权或者取消都会通过 onResp 方法告诉调用者授权状态。</p>
-<h2 id="QQ登录"><a href="#QQ登录" class="headerlink" title="QQ登录"></a>QQ登录</h2><h3 id="注册-腾讯开发者平台-账号"><a href="#注册-腾讯开发者平台-账号" class="headerlink" title="注册 腾讯开发者平台 账号"></a>注册 腾讯开发者平台 账号</h3><p>地址：<a href="http://open.qq.com/" target="_blank" rel="external">腾讯开发者平台</a>  </p>
-<p>创建一个应用并提交审核（QQ审核很快，当天就通过了）。  </p>
-<blockquote>
-<p>和微信不一样，QQ登录目前不需要付费</p>
-</blockquote>
-<h3 id="集成SDK-1"><a href="#集成SDK-1" class="headerlink" title="集成SDK"></a>集成SDK</h3><h4 id="下载-SDK"><a href="#下载-SDK" class="headerlink" title="下载 SDK"></a>下载 SDK</h4><p>找了好久都没发现可以通过 CocoaPods 集成，所以只能手动。<a href="http://wiki.connect.qq.com/sdk%e4%b8%8b%e8%bd%bd" target="_blank" rel="external">下载地址</a><br>下载好的SDK里面包含：环境搭建、API说明、Demo、framework 四个文件。  </p>
-<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-21/16746928.jpg" alt=""></p>
-<h4 id="集成"><a href="#集成" class="headerlink" title="集成"></a>集成</h4><p>将 TencentOpenAPI.framework 加到项目，然后添加依赖库 “SystemConfiguration.framework”。</p>
-<h3 id="配置工程文件-1"><a href="#配置工程文件-1" class="headerlink" title="配置工程文件"></a>配置工程文件</h3><p>工程配置和微信一样，可以看上图。这里稍微有点区别的就是 QQ 的 URL Scheme = tencent + appid 。  </p>
-<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p>代码逻辑跟微信差不多。这里我创建了 QQLoginHelper 类用来处理相关的逻辑，遵守 TencentSessionDelegate 这个协议，主要看协议里面的这个两个方法  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)tencentDidLogin &#123;</div><div class="line">    <span class="keyword">if</span> (_tencentOAuth.accessToken) &#123;</div><div class="line">        <span class="comment">// 回调方法：- (void)getUserInfoResponse:(APIResponse *) response</span></div><div class="line">        [_tencentOAuth getUserInfo];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"accessToken 获取失败"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)getUserInfoResponse:(APIResponse *)response &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"response ：%@"</span>,response.jsonResponse);</div><div class="line">    <span class="keyword">if</span> (response.jsonResponse &amp;&amp; <span class="keyword">self</span>.callback) &#123;</div><div class="line">        <span class="keyword">self</span>.callback(_tencentOAuth.openId, response.jsonResponse[<span class="string">@"figureurl_qq_2"</span>], response.jsonResponse[<span class="string">@"nickname"</span>]);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">self</span>.callback = <span class="literal">nil</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>登录成功会调用 tencentDidLogin 方法，然后在方法中调用 getUserInfo 方法获取用户信息。最后会通过 block 将获取到的信息返回。  </p>
-<p>点击QQ登录，通过下面的代码给QQ发送消息，调用方式如下   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)sendRepWithCallback:(<span class="keyword">void</span> (^)(<span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *))callback &#123;</div><div class="line">    QQLoginHelper *helper = [QQLoginHelper sharedInstance];</div><div class="line">    helper.callback = callback;</div><div class="line">    </div><div class="line">    helper-&gt;_tencentOAuth = [[TencentOAuth alloc] initWithAppId:helper.appId andDelegate:helper];</div><div class="line">    helper-&gt;_permissionArray = [<span class="built_in">NSMutableArray</span> arrayWithObjects: kOPEN_PERMISSION_GET_SIMPLE_USER_INFO,kOPEN_PERMISSION_GET_INFO,kOPEN_PERMISSION_GET_USER_INFO,<span class="literal">nil</span>];</div><div class="line">    [helper-&gt;_tencentOAuth authorize:helper-&gt;_permissionArray inSafari:<span class="literal">NO</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Demo 中我用 block 回调获取到的信息，而我是使用单例处理的，所以 block 中的对象不能被强引用，虽然我调用完 block 后将其释放掉，但有时候回调函数可能并没有执行，那么这时就可能会出现内存泄漏。所以最好的方法是对 block 中的对象使用弱引用。代码如下：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">IBAction</span>)wechatClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([WXLoginHelper isWXAppInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到微信后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [WXLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">1</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装微信客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">IBAction</span>)qqClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([QQLoginHelper isQQInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到QQ后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [QQLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">2</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装QQ客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/WechatQQLogin" target="_blank" rel="external">Demo</a> 有在不断的优化，部分代码可能会和上面的不一样。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1499,7 +1472,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1516,7 +1489,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

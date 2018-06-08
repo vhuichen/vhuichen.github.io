@@ -246,6 +246,168 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/14/180514-iOS开发之第三方登录（微信、QQ）/" itemprop="url">
+                  iOS开发之第三方登录（微信、QQ）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-14T00:00:00+08:00" content="2018-05-14">
+              2018-05-14
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-06-04T21:30:48+08:00" content="2018-06-04">
+				2018-06-04
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="微信登录"><a href="#微信登录" class="headerlink" title="微信登录"></a>微信登录</h2><h3 id="注册-微信开放平台-账号"><a href="#注册-微信开放平台-账号" class="headerlink" title="注册 微信开放平台 账号"></a>注册 微信开放平台 账号</h3><p>地址：<a href="https://open.weixin.qq.com/" target="_blank" rel="external">微信开放平台</a><br>随后创建一个应用，提交给微信审核（微信审核比较慢，目前已经几天还在审核中）。</p>
+<h3 id="开发者资质认证"><a href="#开发者资质认证" class="headerlink" title="开发者资质认证"></a>开发者资质认证</h3><p>微信的原话是这样的</p>
+<blockquote>
+<p>微信开放平台帐号的开发者资质认证提供更安全、更严格的真实性认证、也能够更好的保护企业及用户的合法权益<br>开发者资质认证通过后，微信开放平台帐号下的应用，将获得微信登录、智能接口、第三方平台开发等高级能力<br>认证有效期：一年，有效期最后三个月可申请年审即可续期<br>审核费用：中国大陆地区：300元，非中国大陆地区：99美元  </p>
+</blockquote>
+<p>这里要注意的是，文档里面却写着不需要收费  </p>
+<blockquote>
+<p>3.开放平台移动应用微信登陆目前是否收费？<br>答：“微信登录”和第三方网站共享微信庞大的用户价值，同时为微信用户提供更便捷服务和更优质内容，实现双向共赢，目前不收取任何费用。</p>
+</blockquote>
+<p>总之，需要先交钱认证。认证的时候还要提供 N 多资料。审核有点繁琐，写错了就要重填，有3次免费修改的机会。</p>
+<h3 id="集成SDK"><a href="#集成SDK" class="headerlink" title="集成SDK"></a>集成SDK</h3><p>直接通过 CocoaPods 集成   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod <span class="string">"WechatOpenSDK"</span></div></pre></td></tr></table></figure>
+<h3 id="配置工程文件"><a href="#配置工程文件" class="headerlink" title="配置工程文件"></a>配置工程文件</h3><p>这里要设置白名单以及 URL Scheme 。微信 的 URL Scheme 就是 APPID<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-21/39395880.jpg" alt=""></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>这里我自定义了一个 WXLoginHelper 类，将所有的处理逻辑都放在里面。<br>我们需要先重写 application 的两个委托，具体如下：    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;WXApi.h&gt;</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">"WXLoginHelper.h"</span></span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions &#123;</div><div class="line">    <span class="comment">// Override point for customization after application launch.</span></div><div class="line">    [WXLoginHelper registerApp:kWXAppID appSecret:kWXAppSecret];</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ios9</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)app openURL:(<span class="built_in">NSURL</span> *)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">UIApplicationOpenURLOptionsKey</span>,<span class="keyword">id</span>&gt; *)options &#123;</div><div class="line">     <span class="keyword">return</span> [WXLoginHelper handleOpenURL:url];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ios8</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application openURL:(<span class="built_in">NSURL</span> *)url sourceApplication:(<span class="built_in">NSString</span> *)sourceApplication annotation:(<span class="keyword">id</span>)annotation &#123;</div><div class="line">    <span class="keyword">return</span> [WXLoginHelper handleOpenURL:url];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后在 WXLoginHelper 中实现 WXApiDelegate 委托，有两个方法，目前只需要关注 onResp 方法即可  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"WXLoginHelper.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">WXLoginHelper</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)onResp:(BaseResp *)resp &#123;</div><div class="line">    SendAuthResp *sendAuthResq = (SendAuthResp *)resp;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"resp.code = %@"</span>, sendAuthResq.code);</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!sendAuthResq.errCode) &#123;</div><div class="line">        <span class="built_in">NSString</span> *urlString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&amp;secret=%@&amp;code=%@&amp;grant_type=authorization_code"</span>, <span class="keyword">self</span>.appId, <span class="keyword">self</span>.appSecret, sendAuthResq.code];</div><div class="line">        <span class="keyword">id</span> json = [<span class="keyword">self</span> getDataWithURLString:urlString];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"json : %@"</span>, json);</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (json) &#123;</div><div class="line">            <span class="built_in">NSString</span> *access_token = json[<span class="string">@"access_token"</span>];</div><div class="line">            <span class="built_in">NSString</span> *openid = json[<span class="string">@"openid"</span>];</div><div class="line">            </div><div class="line">            <span class="built_in">NSString</span> *urlString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&amp;openid=%@"</span>, access_token, openid];</div><div class="line">            <span class="keyword">id</span> json1 = [<span class="keyword">self</span> getDataWithURLString:urlString];</div><div class="line">            </div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"json1 : %@"</span>, json1);</div><div class="line">            <span class="keyword">if</span> (json1) &#123;</div><div class="line">                <span class="built_in">NSString</span> *icon = json1[<span class="string">@"headimgurl"</span>];</div><div class="line">                <span class="built_in">NSString</span> *name = json1[<span class="string">@"nickname"</span>];</div><div class="line">                <span class="keyword">self</span>.callback ? <span class="keyword">self</span>.callback(openid, icon, name) : <span class="literal">nil</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">self</span>.callback = <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>这里的 callback block 会将 openid，icon，name，返回给调用者。  </p>
+<blockquote>
+<p>需要注意的是不要直接将从微信拿到的图片链接传给服务器，因为这个链接可能会失效。我的处理方式是，从这个链接拿到图片，然后将图片传给服务器。</p>
+</blockquote>
+<p>最后在点击了微信登录按钮后给微信发送消息   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)sendRepWithCallback:(<span class="keyword">void</span> (^)(<span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *))callback &#123;</div><div class="line">    [WXLoginHelper sharedInstance].callback = callback;</div><div class="line">    </div><div class="line">    SendAuthReq *req = [[SendAuthReq alloc] init];</div><div class="line">    req.scope = <span class="string">@"snsapi_userinfo"</span>;</div><div class="line">    req.state = <span class="string">@"text"</span>;</div><div class="line">    [WXApi sendReq:req];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用户点击授权或者取消都会通过 onResp 方法告诉调用者授权状态。</p>
+<h2 id="QQ登录"><a href="#QQ登录" class="headerlink" title="QQ登录"></a>QQ登录</h2><h3 id="注册-腾讯开发者平台-账号"><a href="#注册-腾讯开发者平台-账号" class="headerlink" title="注册 腾讯开发者平台 账号"></a>注册 腾讯开发者平台 账号</h3><p>地址：<a href="http://open.qq.com/" target="_blank" rel="external">腾讯开发者平台</a>  </p>
+<p>创建一个应用并提交审核（QQ审核很快，当天就通过了）。  </p>
+<blockquote>
+<p>和微信不一样，QQ登录目前不需要付费</p>
+</blockquote>
+<h3 id="集成SDK-1"><a href="#集成SDK-1" class="headerlink" title="集成SDK"></a>集成SDK</h3><h4 id="下载-SDK"><a href="#下载-SDK" class="headerlink" title="下载 SDK"></a>下载 SDK</h4><p>找了好久都没发现可以通过 CocoaPods 集成，所以只能手动。<a href="http://wiki.connect.qq.com/sdk%e4%b8%8b%e8%bd%bd" target="_blank" rel="external">下载地址</a><br>下载好的SDK里面包含：环境搭建、API说明、Demo、framework 四个文件。  </p>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-21/16746928.jpg" alt=""></p>
+<h4 id="集成"><a href="#集成" class="headerlink" title="集成"></a>集成</h4><p>将 TencentOpenAPI.framework 加到项目，然后添加依赖库 “SystemConfiguration.framework”。</p>
+<h3 id="配置工程文件-1"><a href="#配置工程文件-1" class="headerlink" title="配置工程文件"></a>配置工程文件</h3><p>工程配置和微信一样，可以看上图。这里稍微有点区别的就是 QQ 的 URL Scheme = tencent + appid 。  </p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p>代码逻辑跟微信差不多。这里我创建了 QQLoginHelper 类用来处理相关的逻辑，遵守 TencentSessionDelegate 这个协议，主要看协议里面的这个两个方法  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)tencentDidLogin &#123;</div><div class="line">    <span class="keyword">if</span> (_tencentOAuth.accessToken) &#123;</div><div class="line">        <span class="comment">// 回调方法：- (void)getUserInfoResponse:(APIResponse *) response</span></div><div class="line">        [_tencentOAuth getUserInfo];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"accessToken 获取失败"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)getUserInfoResponse:(APIResponse *)response &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"response ：%@"</span>,response.jsonResponse);</div><div class="line">    <span class="keyword">if</span> (response.jsonResponse &amp;&amp; <span class="keyword">self</span>.callback) &#123;</div><div class="line">        <span class="keyword">self</span>.callback(_tencentOAuth.openId, response.jsonResponse[<span class="string">@"figureurl_qq_2"</span>], response.jsonResponse[<span class="string">@"nickname"</span>]);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">self</span>.callback = <span class="literal">nil</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>登录成功会调用 tencentDidLogin 方法，然后在方法中调用 getUserInfo 方法获取用户信息。最后会通过 block 将获取到的信息返回。  </p>
+<p>点击QQ登录，通过下面的代码给QQ发送消息，调用方式如下   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)sendRepWithCallback:(<span class="keyword">void</span> (^)(<span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *))callback &#123;</div><div class="line">    QQLoginHelper *helper = [QQLoginHelper sharedInstance];</div><div class="line">    helper.callback = callback;</div><div class="line">    </div><div class="line">    helper-&gt;_tencentOAuth = [[TencentOAuth alloc] initWithAppId:helper.appId andDelegate:helper];</div><div class="line">    helper-&gt;_permissionArray = [<span class="built_in">NSMutableArray</span> arrayWithObjects: kOPEN_PERMISSION_GET_SIMPLE_USER_INFO,kOPEN_PERMISSION_GET_INFO,kOPEN_PERMISSION_GET_USER_INFO,<span class="literal">nil</span>];</div><div class="line">    [helper-&gt;_tencentOAuth authorize:helper-&gt;_permissionArray inSafari:<span class="literal">NO</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Demo 中我用 block 回调获取到的信息，而我是使用单例处理的，所以 block 中的对象不能被强引用，虽然我调用完 block 后将其释放掉，但有时候回调函数可能并没有执行，那么这时就可能会出现内存泄漏。所以最好的方法是对 block 中的对象使用弱引用。代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">IBAction</span>)wechatClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([WXLoginHelper isWXAppInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到微信后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [WXLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">1</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装微信客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">IBAction</span>)qqClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([QQLoginHelper isQQInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到QQ后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [QQLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">2</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装QQ客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/WechatQQLogin" target="_blank" rel="external">Demo</a> 有在不断的优化，部分代码可能会和上面的不一样。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/10/180510-iOS基础之UINavigationBar属性设置/" itemprop="url">
                   iOS基础之 UINavigationBar 属性设置
                 </a>
@@ -330,144 +492,6 @@
 <h3 id="去掉-UINavigationBar-下边线"><a href="#去掉-UINavigationBar-下边线" class="headerlink" title="去掉 UINavigationBar 下边线"></a>去掉 UINavigationBar 下边线</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize &#123;</div><div class="line">    <span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</div><div class="line">    [bar setBackgroundImage:[[<span class="built_in">UIImage</span> alloc] init] forBarPosition:<span class="built_in">UIBarPositionAny</span> barMetrics:<span class="built_in">UIBarMetricsDefault</span>];</div><div class="line">    [bar setShadowImage:[[<span class="built_in">UIImage</span> alloc] init]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="给-UINavigationBar-加阴影"><a href="#给-UINavigationBar-加阴影" class="headerlink" title="给 UINavigationBar 加阴影"></a>给 UINavigationBar 加阴影</h3><p>这里我创建一个分类，可以直接调用这个方法来设置。</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UINavigationBar</span> (<span class="title">VCHDropShadow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)dropShadowWithOffset:(<span class="built_in">CGSize</span>)offset</div><div class="line">                      radius:(<span class="built_in">CGFloat</span>)radius</div><div class="line">                       color:(<span class="built_in">UIColor</span> *)color</div><div class="line">                     opacity:(<span class="built_in">CGFloat</span>)opacity &#123;</div><div class="line">    <span class="comment">// 也可以不创建 path ，直接使用。</span></div><div class="line">    <span class="built_in">CGMutablePathRef</span> path = <span class="built_in">CGPathCreateMutable</span>();</div><div class="line">    <span class="built_in">CGPathAddRect</span>(path, <span class="literal">NULL</span>, <span class="keyword">self</span>.bounds);</div><div class="line">    <span class="keyword">self</span>.layer.shadowPath = path;</div><div class="line">    <span class="built_in">CGPathCloseSubpath</span>(path);</div><div class="line">    <span class="built_in">CGPathRelease</span>(path);</div><div class="line">    </div><div class="line">    <span class="keyword">self</span>.layer.shadowColor = color.CGColor;</div><div class="line">    <span class="keyword">self</span>.layer.shadowOffset = offset;</div><div class="line">    <span class="keyword">self</span>.layer.shadowRadius = radius;</div><div class="line">    <span class="keyword">self</span>.layer.shadowOpacity = opacity;</div><div class="line"> 	</div><div class="line">    <span class="keyword">self</span>.clipsToBounds = <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(3)/" itemprop="url">
-                  《Effective Objective-C 2.0》第五章阅读笔记(3)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-09T00:00:00+08:00" content="2018-05-09">
-              2018-05-09
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-17T21:40:56+08:00" content="2018-05-17">
-				2018-05-17
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第五章：内存管理-3"><a href="#第五章：内存管理-3" class="headerlink" title="第五章：内存管理(3)"></a><center>第五章：内存管理(3)</center></h1><h2 id="第34条：以“自动释放池块”降低内存"><a href="#第34条：以“自动释放池块”降低内存" class="headerlink" title="第34条：以“自动释放池块”降低内存"></a>第34条：以“自动释放池块”降低内存</h2><p>Objective-C 对象的生命期取决于其引用计数。在 Objective-C 的引用计数架构中，有一项特性叫做“自动释放池”（autorelease pool）。释放对象有两种方式：一种是调用 release 方法，使其引用计数立即递减；另一种是调用 autorelease 方法，将其加入“自动释放池”中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空自动释放池时，系统会向其中的对象发送 release 消息。<br><strong>每一次运行循环开始后，系统都会创建一个自动释放池，当一个对象出了作用域之后就会加入到最近的自动释放池中，运行循环结束前会释放自动释放池（池子满了也会释放）。自动释放池工作的原理就是，给每一个池子的每一个对象发送 release 消息。</strong><br>那么问题来了，在一个运行循环中创建了大量的临时变量，这时就会导致内存峰值很高。例如：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	[<span class="keyword">self</span> doSomethingWithInt:i]; <span class="comment">// 方法内创建了大量的临时变量</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>当循环结束时，大量的对象放到自动释放池中，占用了大量的内存。增加一个自动释放池可以解决这样的问题。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	<span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">		[<span class="keyword">self</span> doSomethingWithInt:i];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在循环中加入自动释放池，每次循环结束前都会回收当前池子中的对象。这样程序在执行循环时的峰值就会降低。<br>自动释放池机制就像“栈”（stack）一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。  </p>
-<blockquote>
-<p>创建自动释放池会增加额外的开销，是否需要创建还需要根据实际情况来。</p>
-</blockquote>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>自动释放池排布在栈中，对象收到 autorelease 消息后，系统将其放入到最顶端的池里。<br>合理运用自动释放池，可降低应用程序的内存峰值。</p>
-<h2 id="第35条：用“僵尸对象”调试内存管理问题"><a href="#第35条：用“僵尸对象”调试内存管理问题" class="headerlink" title="第35条：用“僵尸对象”调试内存管理问题"></a>第35条：用“僵尸对象”调试内存管理问题</h2><p>向已回收的对象发送消息是不安全的。这么做有时可以，有时不行。具体可行与否，完全取决于对象所占内存有没有被其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔崩溃。在没有崩溃的情况下，那块内存可能只复用了其中一部分，所以部分对象中的某些二进制数据依然有效。还有一种可能，就是那块内存恰好为另外一个有效且存货的对象所占据。在这种情况下，运行期系统会把消息转发到新对象那里，而此对象也许能应答，也许不能。如果能，那程序就不崩溃，可你会觉得奇怪：为什么收到消息的对象不是预想的那个呢？若新对象无法响应选择子，则程序依然会崩溃。  </p>
-<p>Cocoa提供了“僵尸对象”（Zombie Object）这个非常方便的功能。启用这项调试功能之后，运行期系统会把所有已经回收的实例转化为特殊的“僵尸对象”，而不是真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象收到消息之后，会抛出异常，其中准确说明了发送过来的消息，并描述了回收之前的那个对象。僵尸对象是调试内存管理问题的最佳方式。  </p>
-<p>点击 Scheme -&gt; Edit Scheme -&gt; Run -&gt; Diagnostics 里面可以设置僵尸模式。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-14/65940260.jpg" alt=""></p>
-<h4 id="Zombie-Object-工作原理"><a href="#Zombie-Object-工作原理" class="headerlink" title="Zombie Object 工作原理"></a>Zombie Object 工作原理</h4><p>Zombie Object 的实现代码深植于 Objective - C 的运行期程序库、Foundation 框架以及 CoreFoundation 框架中。系统在即将回收对象时，如果发现通过环境变量启用了僵尸对象功能，那么还将执行一个附加步骤。这一步就是把对象转化为僵尸对象，而不彻底回收。</p>
-<h4 id="僵尸类如何将把待回收的对象转换成僵尸对象"><a href="#僵尸类如何将把待回收的对象转换成僵尸对象" class="headerlink" title="僵尸类如何将把待回收的对象转换成僵尸对象"></a>僵尸类如何将把待回收的对象转换成僵尸对象</h4><p>这个过程其实就是 NSObject 的 dealloc 方法所做的事。运行期系统如果发现 NSZombieEnabled 环境变量已设置，那么就把 dealloc 方法的“调配“（swizzle）成一个会执行特定代码的方法。执行到程序末尾时，对象所属的类已经变为_NSZombie_OriginalClass了，其中 OriginalClass 指的是原类名。</p>
-<p>代码中的关键之处在于：对象所占内存没有通过调用 free() 方法释放，因此，这块内存不可复用。虽说内存泄漏了，但这只是个调试手段，发布正式应用程序时不会把这项功能打开，所以这种泄漏问题无关紧要。</p>
-<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>打开 “Zombie Object” 这个功能，系统在回收对象时，可以不将其真正的回收，而是将它转为僵尸对象。<br>系统会修改对象的isa指针，令其指向特殊的僵尸类，从而使改对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接收者的消息，然后终止应用程序。</p>
-<h2 id="第36条：不要使用-retainCount"><a href="#第36条：不要使用-retainCount" class="headerlink" title="第36条：不要使用 retainCount"></a>第36条：不要使用 retainCount</h2><p>MRC 环境下，retainCount 所返回的引用计数只是某个给定时间点上的值。该方法并未考虑到系统会稍后把自动释放池清空，因而不会将后续的释放操作从返回值里减去，这样的话，此值就未必能真实反映实际的引用计数了。<br>ARC 环境下已经废弃此接口。</p>
 
           
         
@@ -636,6 +660,144 @@
 <h4 id="weak"><a href="#weak" class="headerlink" title="weak"></a>weak</h4><p>weak 和 unsafe_unretained 同样用于修饰对象，唯一不同的是，当 weak 修饰的属性所指的对象被系统回收时，weak会自动置nil。</p>
 <p>下图可以看出两者之间的区别。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-11/50645693.jpg" alt=""><br>当对象释放时，unsafe_unretained 属性仍然指向那个已经回收的实例，而weak属性则指向nil。所以 使用 weak 比 unsafe_unretained 安全。</p>
 <h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>如果某对象不归你所拥有，而只是需要使用这个对象，那么就应该用“弱引用”。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(3)/" itemprop="url">
+                  《Effective Objective-C 2.0》第五章阅读笔记(3)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-09T00:00:00+08:00" content="2018-05-09">
+              2018-05-09
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-17T21:40:56+08:00" content="2018-05-17">
+				2018-05-17
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第五章：内存管理-3"><a href="#第五章：内存管理-3" class="headerlink" title="第五章：内存管理(3)"></a><center>第五章：内存管理(3)</center></h1><h2 id="第34条：以“自动释放池块”降低内存"><a href="#第34条：以“自动释放池块”降低内存" class="headerlink" title="第34条：以“自动释放池块”降低内存"></a>第34条：以“自动释放池块”降低内存</h2><p>Objective-C 对象的生命期取决于其引用计数。在 Objective-C 的引用计数架构中，有一项特性叫做“自动释放池”（autorelease pool）。释放对象有两种方式：一种是调用 release 方法，使其引用计数立即递减；另一种是调用 autorelease 方法，将其加入“自动释放池”中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空自动释放池时，系统会向其中的对象发送 release 消息。<br><strong>每一次运行循环开始后，系统都会创建一个自动释放池，当一个对象出了作用域之后就会加入到最近的自动释放池中，运行循环结束前会释放自动释放池（池子满了也会释放）。自动释放池工作的原理就是，给每一个池子的每一个对象发送 release 消息。</strong><br>那么问题来了，在一个运行循环中创建了大量的临时变量，这时就会导致内存峰值很高。例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	[<span class="keyword">self</span> doSomethingWithInt:i]; <span class="comment">// 方法内创建了大量的临时变量</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当循环结束时，大量的对象放到自动释放池中，占用了大量的内存。增加一个自动释放池可以解决这样的问题。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	<span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">		[<span class="keyword">self</span> doSomethingWithInt:i];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在循环中加入自动释放池，每次循环结束前都会回收当前池子中的对象。这样程序在执行循环时的峰值就会降低。<br>自动释放池机制就像“栈”（stack）一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。  </p>
+<blockquote>
+<p>创建自动释放池会增加额外的开销，是否需要创建还需要根据实际情况来。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>自动释放池排布在栈中，对象收到 autorelease 消息后，系统将其放入到最顶端的池里。<br>合理运用自动释放池，可降低应用程序的内存峰值。</p>
+<h2 id="第35条：用“僵尸对象”调试内存管理问题"><a href="#第35条：用“僵尸对象”调试内存管理问题" class="headerlink" title="第35条：用“僵尸对象”调试内存管理问题"></a>第35条：用“僵尸对象”调试内存管理问题</h2><p>向已回收的对象发送消息是不安全的。这么做有时可以，有时不行。具体可行与否，完全取决于对象所占内存有没有被其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔崩溃。在没有崩溃的情况下，那块内存可能只复用了其中一部分，所以部分对象中的某些二进制数据依然有效。还有一种可能，就是那块内存恰好为另外一个有效且存货的对象所占据。在这种情况下，运行期系统会把消息转发到新对象那里，而此对象也许能应答，也许不能。如果能，那程序就不崩溃，可你会觉得奇怪：为什么收到消息的对象不是预想的那个呢？若新对象无法响应选择子，则程序依然会崩溃。  </p>
+<p>Cocoa提供了“僵尸对象”（Zombie Object）这个非常方便的功能。启用这项调试功能之后，运行期系统会把所有已经回收的实例转化为特殊的“僵尸对象”，而不是真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象收到消息之后，会抛出异常，其中准确说明了发送过来的消息，并描述了回收之前的那个对象。僵尸对象是调试内存管理问题的最佳方式。  </p>
+<p>点击 Scheme -&gt; Edit Scheme -&gt; Run -&gt; Diagnostics 里面可以设置僵尸模式。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-14/65940260.jpg" alt=""></p>
+<h4 id="Zombie-Object-工作原理"><a href="#Zombie-Object-工作原理" class="headerlink" title="Zombie Object 工作原理"></a>Zombie Object 工作原理</h4><p>Zombie Object 的实现代码深植于 Objective - C 的运行期程序库、Foundation 框架以及 CoreFoundation 框架中。系统在即将回收对象时，如果发现通过环境变量启用了僵尸对象功能，那么还将执行一个附加步骤。这一步就是把对象转化为僵尸对象，而不彻底回收。</p>
+<h4 id="僵尸类如何将把待回收的对象转换成僵尸对象"><a href="#僵尸类如何将把待回收的对象转换成僵尸对象" class="headerlink" title="僵尸类如何将把待回收的对象转换成僵尸对象"></a>僵尸类如何将把待回收的对象转换成僵尸对象</h4><p>这个过程其实就是 NSObject 的 dealloc 方法所做的事。运行期系统如果发现 NSZombieEnabled 环境变量已设置，那么就把 dealloc 方法的“调配“（swizzle）成一个会执行特定代码的方法。执行到程序末尾时，对象所属的类已经变为_NSZombie_OriginalClass了，其中 OriginalClass 指的是原类名。</p>
+<p>代码中的关键之处在于：对象所占内存没有通过调用 free() 方法释放，因此，这块内存不可复用。虽说内存泄漏了，但这只是个调试手段，发布正式应用程序时不会把这项功能打开，所以这种泄漏问题无关紧要。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>打开 “Zombie Object” 这个功能，系统在回收对象时，可以不将其真正的回收，而是将它转为僵尸对象。<br>系统会修改对象的isa指针，令其指向特殊的僵尸类，从而使改对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接收者的消息，然后终止应用程序。</p>
+<h2 id="第36条：不要使用-retainCount"><a href="#第36条：不要使用-retainCount" class="headerlink" title="第36条：不要使用 retainCount"></a>第36条：不要使用 retainCount</h2><p>MRC 环境下，retainCount 所返回的引用计数只是某个给定时间点上的值。该方法并未考虑到系统会稍后把自动释放池清空，因而不会将后续的释放操作从返回值里减去，这样的话，此值就未必能真实反映实际的引用计数了。<br>ARC 环境下已经废弃此接口。</p>
 
           
         
@@ -1269,175 +1431,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/23/180423-《Effective Objective-C 2.0》第二章阅读笔记(3)/" itemprop="url">
-                  《Effective Objective-C 2.0》第二章阅读笔记(3)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-23T00:00:00+08:00" content="2018-04-23">
-              2018-04-23
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-04-26T23:49:10+08:00" content="2018-04-26">
-				2018-04-26
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第二章：对象、消息、运行期-3"><a href="#第二章：对象、消息、运行期-3" class="headerlink" title="第二章：对象、消息、运行期(3)"></a><center>第二章：对象、消息、运行期(3)</center></h1><h2 id="第12条：理解消息转发机制"><a href="#第12条：理解消息转发机制" class="headerlink" title="第12条：理解消息转发机制"></a>第12条：理解消息转发机制</h2><p>当一个对象接收到无法解读的消息后，就会开启“消息转发”机制。如果消息转发也无法解读消息，程序就会抛出异常：</p>
-<blockquote>
-<p>unrecognized selector sent to instance xxxx</p>
-</blockquote>
-<p>消息转发分为两大阶段：</p>
-<h3 id="第一阶段：动态方法解析"><a href="#第一阶段：动态方法解析" class="headerlink" title="第一阶段：动态方法解析"></a>第一阶段：动态方法解析</h3><p>征询接受者能否动态添加方法来处理这个消息。此时会调用以下两个方法之一：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 以类方法调用时触发</span></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel</div><div class="line"><span class="comment">// 以实例方法调用时触发</span></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel</div></pre></td></tr></table></figure>
-<p>如果需要在动态解析时处理消息，那么实现代码如下：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> run(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"missRun -- run"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)sel &#123;</div><div class="line">    <span class="keyword">if</span> (sel == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"sel == %@"</span>,<span class="built_in">NSStringFromSelector</span>(sel));</div><div class="line">        class_addMethod([<span class="keyword">self</span> <span class="keyword">class</span>], sel, (IMP)run, <span class="string">"v@:"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:sel];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 注意这里 class_addMethod 的第一个参数是 [self superclass]</span></div><div class="line">+ (<span class="built_in">BOOL</span>)resolveClassMethod:(SEL)sel &#123;</div><div class="line">    <span class="keyword">if</span> (sel == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"sel == %@"</span>,<span class="built_in">NSStringFromSelector</span>(sel));</div><div class="line">        class_addMethod([<span class="keyword">self</span> superclass], sel, (IMP)run, <span class="string">"v@:"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:sel];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>外部调用  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//Person *person = [[Person alloc] init];</span></div><div class="line"><span class="comment">//[person performSelector:NSSelectorFromString(@"missRun") withObject:nil];</span></div><div class="line"></div><div class="line">[Person performSelector:<span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>) withObject:<span class="literal">nil</span>];</div></pre></td></tr></table></figure>
-<p>此时在外部调用 missRun 方法，最终将会访问 <strong>void run(id self, SEL _cmd)</strong> 方法。</p>
-<blockquote>
-<p>IMP 指向的函数必须要有 <strong>id self, SEL _cmd</strong> 这两个参数。  </p>
-</blockquote>
-<p>class_addMethod 的最后一个参数 <strong>“v@:”</strong> 中，v 表示返回值 void ， @ 表示第一个参数类型为 id ，: 表示 SEL 。具体可看文档 <a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html" target="_blank" rel="external">Type Encodings</a></p>
-<h3 id="第二阶段：完整的消息转发机制"><a href="#第二阶段：完整的消息转发机制" class="headerlink" title="第二阶段：完整的消息转发机制"></a>第二阶段：完整的消息转发机制</h3><p>接受者尝试能否将这条消息转发给其他接受者接收，如果不行就启用“完整的消息转发”。</p>
-<h4 id="备用接受者"><a href="#备用接受者" class="headerlink" title="备用接受者"></a>备用接受者</h4><p>此时会调用下面的方法  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">id</span>)forwardingTargetForSelector:(SEL)aSelector &#123;</div><div class="line">    Sutdent *student = [[Sutdent alloc] init];</div><div class="line">    <span class="keyword">if</span> ([student respondsToSelector:aSelector]) &#123;</div><div class="line">        <span class="keyword">return</span> student;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> forwardingTargetForSelector:aSelector];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="完整的消息转发"><a href="#完整的消息转发" class="headerlink" title="完整的消息转发"></a>完整的消息转发</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)aSelector &#123;</div><div class="line">    <span class="keyword">if</span> (aSelector == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        <span class="keyword">return</span> [<span class="built_in">NSMethodSignature</span> signatureWithObjCTypes:<span class="string">"v@:"</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> methodSignatureForSelector:aSelector];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)anInvocation &#123;</div><div class="line">    <span class="keyword">if</span> ([anInvocation selector] == <span class="built_in">NSSelectorFromString</span>(<span class="string">@"missRun"</span>)) &#123;</div><div class="line">        Sutdent *student = [[Sutdent alloc] init];</div><div class="line">        [anInvocation invokeWithTarget:student];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>“备用接受者”和“完整的消息转发”区别在于，“完整的消息转发”中可以改变消息的内容。</p>
-<h3 id="消息转发流程图"><a href="#消息转发流程图" class="headerlink" title="消息转发流程图"></a>消息转发流程图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/55820526.jpg" alt=""><br>接受者在每一步均有机会处理消息，越到最后，处理的代价会越高。</p>
-<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p><a href="https://github.com/vhuichen/MessageForwarding.git" target="_blank" rel="external">GitHub: MessageForwarding</a></p>
-<h2 id="第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）"><a href="#第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）" class="headerlink" title="第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）"></a>第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）</h2><p>类对象的方法列表会将“方法名”映射带相应的方法实现上，“动态消息派发系统”会根据这个表找到相应的方法。这些方法均以函数指针的方式表示。这种指针就是 IMP 。下图是 NSString 的部分方法映射表。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/29661179.jpg" alt=""><br>Objective-C 运行时系统提供了几个方法可以用来操作这张表。开发者可以在运行时新增方法，改变方法对应的实现，也可以交换两个方法的具体实现。例如我们可以让方法映射表变成下图这样<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/58460381.jpg" alt=""><br>实现起来也是很简单的，创建一个 NSString 的分类，在 +load 方法中实现  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(lowercaseString));</div><div class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(uppercaseString));</div><div class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>调用</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = <span class="string">@"This is a String"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"lowercaseString = %@"</span>,string.lowercaseString);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"uppercaseString = %@"</span>,string.uppercaseString);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// lowercaseString = THIS IS A STRING</span></div><div class="line"><span class="comment">// uppercaseString = this is a string</span></div></pre></td></tr></table></figure>
-<p>此时 lowercaseString 和 uppercaseString 的方法实现已经替换过来了。<br>lowercaseString 方法对应的是 uppercaseString 的方法实现。<br>uppercaseString 方法对应的是 lowercaseString 的方法实现。<br>所以打印出来的log是反过来的。当然这个没有什么意义。  </p>
-<p>下面实现一个功能：每次调用 lowercaseString 都打印出相应的log出来  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(lowercaseString));</div><div class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(vch_lowercaseString));</div><div class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_lowercaseString &#123;</div><div class="line">    <span class="built_in">NSString</span> *string = [<span class="keyword">self</span> vch_lowercaseString];</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"----%@"</span>,string);</div><div class="line">    <span class="keyword">return</span> string;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>调用</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = <span class="string">@"This is a String"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"lowercaseString = %@"</span>,string.lowercaseString);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// ----this is a string</span></div><div class="line"><span class="comment">// lowercaseString = this is a string</span></div></pre></td></tr></table></figure>
-<p>由于 lowercaseString 和 vch_lowercaseString 交换了方法实现，所以当我们调用 lowercaseString 方法的时候，执行的是 vch_lowercaseString 里面的方法。所以才会打印出 log 出来。  </p>
-<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p><strong>使用 method swizzling “黑魔法”，开发者可以在原有实现中添加新的功能。</strong></p>
-<h2 id="第14条：理解-“类对象”-的本质"><a href="#第14条：理解-“类对象”-的本质" class="headerlink" title="第14条：理解 “类对象” 的本质"></a>第14条：理解 “类对象” 的本质</h2><p>看看下面的两个语句  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string0 = <span class="string">@"this is a string"</span>;</div><div class="line"><span class="keyword">id</span> string1 = <span class="string">@"this is a string"</span>;</div></pre></td></tr></table></figure>
-<p>两个语句都创建了一个 NSSring 类型的对象，在编译时，编译器会将 string0 按照 NSString 类型来检测，string1 按照 id 类型来检测。string0 直接调用 NSString 的方法编译器不会报错，string1 直接调用 NSString 的方法则编译器报错。 而在运行时两个对象表示的意思是一样的。</p>
-<p>在 objc.h 中是这样定义 id 类型的</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// objc.h</span></div><div class="line"></div><div class="line"><span class="comment">/// An opaque type that represents an Objective-C class.</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</div><div class="line"></div><div class="line"><span class="comment">/// Represents an instance of a class.</span></div><div class="line"><span class="keyword">struct</span> objc_object &#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/// A pointer to an instance of a class.</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_object *<span class="keyword">id</span>;</div></pre></td></tr></table></figure>
-<p>可以看出 id 是 objc_object 结构体类型的指针，objc_object 包含了一个 Class 类型的变量 isa ，Class 是 objc_class 类型的指针。<br>再看看 NSObject.h 中的定义</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSObject.h</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt; </span>&#123;</div><div class="line"><span class="meta">#pragma clang diagnostic push</span></div><div class="line"><span class="meta">#pragma clang diagnostic ignored <span class="meta-string">"-Wobjc-interface-ivars"</span></span></div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line"><span class="meta">#pragma clang diagnostic pop</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里面包含了一个 Class 类型的变量 isa 。这个 Class 也就是 objc_class 类型的指针。<br>事实上每个实例变量都会包含一个 objc_object 结构体，该结构体的第一个成员变量就是 isa 指针。既然是指针，那么 objc_class 也是一个对象，我们称之为“类对象”，这个类对象是一个单例，程序运行中只存在一份。   </p>
-<p>再看看 runtime.h 是怎么定义 objc_class 结构体的。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// runtime.h</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> objc_class &#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line"></div><div class="line"><span class="meta">#if !__OBJC2__</span></div><div class="line">    Class _Nullable super_class                              OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * _Nonnull name                               OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> version                                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> info                                                OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;</div><div class="line"><span class="meta">#endif</span></div><div class="line"></div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
-<p>objc_class 的第一个成员变量也是 isa 指针。它指向的是类的元类（metaclass）。objc_class 负责保存类的实例变量、方法列表、缓存方法列表、协议列表等。元类（metaclass）则负责保存类方法列表。</p>
-<h3 id="继承体系图"><a href="#继承体系图" class="headerlink" title="继承体系图"></a>继承体系图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-25/33685437.jpg" alt=""><br>每一个实例对象都有一个 isa 指针指向其类对象，用来表明其类型，类对象也有一个 isa 指针，指向其元类，元类同样存在一个 isa 指针，指向其根元类，根元类的 isa 指针则指向自身。这些类对象则构成了类的继承体系。</p>
-<h3 id="在继承体系中查询类型信息"><a href="#在继承体系中查询类型信息" class="headerlink" title="在继承体系中查询类型信息"></a>在继承体系中查询类型信息</h3><p><strong>isMemberOfClass</strong>  不包含父类，用来判断是否是某个特定类的实例。（需要考虑“类族”）<br><strong>isKindOfClass</strong>    包含父类，用来判断是否是某个特定类或者派生类的实例。  </p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>1、类本质也是一个对象（类对象）。<br>2、类对象会在程序第一次使用时创建一次，是个单例。<br>3、类对象是一种数据结构。存储了类的版本、描述信息、大小、变量列表、方法列表、方法缓存、协议列表等。<br>4、元类中保存了类方法列表。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1483,7 +1476,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1500,7 +1493,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

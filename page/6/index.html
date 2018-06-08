@@ -246,6 +246,151 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/01/161101-iOS基础之开机启动SVN服务/" itemprop="url">
+                  iOS基础之开机启动SVN服务
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-01T21:30:23+08:00" content="2016-11-01">
+              2016-11-01
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2016-11-13T17:48:17+08:00" content="2016-11-13">
+				2016-11-13
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>早前，上班时发现刚刚搭建好的本地SVN服务器无法连接 <strong>O(∩_∩)O~一脸懵逼</strong>，打开<code>活动监视器</code>发现SVN服务并没有自动开启，手动开启后发现还是不能连接，查看IP地址后才明白，IP是自动获取的啊，亲！so，先将IP改为手动分配，<strong>so easy</strong>。然后。。。。</p>
+<h1 id="在命令行新建-sh文件"><a href="#在命令行新建-sh文件" class="headerlink" title="在命令行新建.sh文件"></a>在命令行新建.sh文件</h1><p>需要路径可以自己加上去</p>
+<blockquote>
+<p>vi SVNServe.sh  </p>
+</blockquote>
+<p>或者   </p>
+<blockquote>
+<p>touch SVNServe.sh</p>
+</blockquote>
+<h1 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h1><p>具体怎么改比较合适不清楚，反正直接<code>777</code>肯定没问题   </p>
+<blockquote>
+<p>chmod 777 SVNServe.sh</p>
+</blockquote>
+<h1 id="编辑-sh文件"><a href="#编辑-sh文件" class="headerlink" title="编辑.sh文件"></a>编辑.sh文件</h1><p>加入以下内容   </p>
+<blockquote>
+<p><strong>#!/bin/bash<br>svnserve -d -r ~/svn</strong>   </p>
+</blockquote>
+<p><strong><code>#!/bin/bash</code></strong> 表示用根目录bin文件夹下的bash来解析这个脚本（bash是shell的一种）<strong><code>#!</code></strong>是特殊的表示符，据说一定要放在文件的第一行才起作用。<strong>不管，没试</strong>。<br><strong><code>svnserve -d -r ~/svn</code></strong> 就是开启SVN服务器的命令，表示要执行这条指令。<br><code>~/svn</code>表示在用户根目录下<code>svn</code>这个文件夹下开启SVN服务</p>
+<h1 id="添加自启动项"><a href="#添加自启动项" class="headerlink" title="添加自启动项"></a>添加自启动项</h1><blockquote>
+<p>进入<code>系统偏好设置</code>-&gt;<code>用户与群组</code>-&gt;<code>登录项</code>，点击<code>+</code>号,添加上面编辑好的<code>.sh</code>文件。    </p>
+</blockquote>
+<p><strong><code>注意：不要在隐藏栏中打钩</code></strong><br><img src="https://github.com/vhuichen/image/blob/master/image/SVNAutoStart.png?raw=true" alt="Alt text">   </p>
+<h1 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h1><p>搞定。。。。。。</p>
+<p>#备注<br>将Mac的ID地址改为手动获取，防止下次开机IP地址改变</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/28/161028-iOS基础之Cocoapods/" itemprop="url">
                   iOS基础之Cocoapods
                 </a>
@@ -1183,7 +1328,7 @@ Hi,I&apos;m *MarkDown斜体*
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1200,7 +1345,7 @@ Hi,I&apos;m *MarkDown斜体*
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
