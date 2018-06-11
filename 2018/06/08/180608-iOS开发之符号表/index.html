@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="iOS开发," />
+  <meta name="keywords" content="iOS开发,符号表,Bugly," />
 
 
 
@@ -84,23 +84,33 @@
 
 
 
-<meta name="description" content="SVN相关概念主干(trunk)、分支(branch)、标记(tag)trunk：有两种说法：1、主方向开发，版本迭代，一个新的需求，一般都是放在trunk里面开发的。2、也有一种做法是把所有开发的工作都拉到branch上去完成，也就是trunk和tag只负责版本记录，brank负责所有的开发工作。当brank完成某一部分功能的时候合并到trunk，其他人便可从trunk拉最新的代码。  
-bra">
+<meta name="description" content="序言项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。
+什么是符号表符号表是内存地址与函数名、文件名、行号的映射表。格式如下：  
+
+&amp;lt;起始地址&amp;gt; &amp;lt;结束地址&amp;gt; &amp;lt;函数&amp;gt; [&amp;lt;文件名:行号&amp;gt;]  
+
+符号表的作用应用发生 crash 时的堆栈信息，一般都是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS开发之使用SVN管理代码(Cornerstone)">
-<meta property="og:url" content="http://yoursite.com/2017/11/05/171105-iOS开发之使用SVN管理代码(Cornerstone)/index.html">
+<meta property="og:title" content="iOS开发之符号表">
+<meta property="og:url" content="http://yoursite.com/2018/06/08/180608-iOS开发之符号表/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="SVN相关概念主干(trunk)、分支(branch)、标记(tag)trunk：有两种说法：1、主方向开发，版本迭代，一个新的需求，一般都是放在trunk里面开发的。2、也有一种做法是把所有开发的工作都拉到branch上去完成，也就是trunk和tag只负责版本记录，brank负责所有的开发工作。当brank完成某一部分功能的时候合并到trunk，其他人便可从trunk拉最新的代码。  
-bra">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-21/33390938.jpg">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-21/74190763.jpg">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-25/45698966.jpg">
-<meta property="og:updated_time" content="2018-03-19T14:38:57.194Z">
+<meta property="og:description" content="序言项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。
+什么是符号表符号表是内存地址与函数名、文件名、行号的映射表。格式如下：  
+
+&amp;lt;起始地址&amp;gt; &amp;lt;结束地址&amp;gt; &amp;lt;函数&amp;gt; [&amp;lt;文件名:行号&amp;gt;]  
+
+符号表的作用应用发生 crash 时的堆栈信息，一般都是">
+<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-6-11/12282547.jpg">
+<meta property="og:updated_time" content="2018-06-11T14:01:51.492Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS开发之使用SVN管理代码(Cornerstone)">
-<meta name="twitter:description" content="SVN相关概念主干(trunk)、分支(branch)、标记(tag)trunk：有两种说法：1、主方向开发，版本迭代，一个新的需求，一般都是放在trunk里面开发的。2、也有一种做法是把所有开发的工作都拉到branch上去完成，也就是trunk和tag只负责版本记录，brank负责所有的开发工作。当brank完成某一部分功能的时候合并到trunk，其他人便可从trunk拉最新的代码。  
-bra">
-<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-21/33390938.jpg">
+<meta name="twitter:title" content="iOS开发之符号表">
+<meta name="twitter:description" content="序言项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。
+什么是符号表符号表是内存地址与函数名、文件名、行号的映射表。格式如下：  
+
+&amp;lt;起始地址&amp;gt; &amp;lt;结束地址&amp;gt; &amp;lt;函数&amp;gt; [&amp;lt;文件名:行号&amp;gt;]  
+
+符号表的作用应用发生 crash 时的堆栈信息，一般都是">
+<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/18-6-11/12282547.jpg">
 
 
 
@@ -121,10 +131,10 @@ bra">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/05/171105-iOS开发之使用SVN管理代码(Cornerstone)/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/08/180608-iOS开发之符号表/"/>
 
 
-  <title> iOS开发之使用SVN管理代码(Cornerstone) | vhuichen </title>
+  <title> iOS开发之符号表 | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -254,7 +264,7 @@ bra">
             
             
               
-                iOS开发之使用SVN管理代码(Cornerstone)
+                iOS开发之符号表
               
             
           </h1>
@@ -266,16 +276,16 @@ bra">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-11-05T22:31:14+08:00" content="2017-11-05">
-              2017-11-05
+            <time itemprop="dateCreated" datetime="2018-06-08T00:00:00+08:00" content="2018-06-08">
+              2018-06-08
             </time>
           </span>
           
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-03-19T22:38:57+08:00" content="2018-03-19">
-				2018-03-19
+			    <time itemprop="dateUpdated" datetime="2018-06-11T22:01:51+08:00" content="2018-06-11">
+				2018-06-11
 			    </time>
 			  </span>
 			
@@ -327,14 +337,26 @@ bra">
       
 
       
-        <h2 id="SVN相关概念"><a href="#SVN相关概念" class="headerlink" title="SVN相关概念"></a>SVN相关概念</h2><h3 id="主干-trunk-、分支-branch-、标记-tag"><a href="#主干-trunk-、分支-branch-、标记-tag" class="headerlink" title="主干(trunk)、分支(branch)、标记(tag)"></a>主干(trunk)、分支(branch)、标记(tag)</h3><p><strong>trunk：</strong>有两种说法：<br>1、主方向开发，版本迭代，一个新的需求，一般都是放在trunk里面开发的。<br>2、也有一种做法是把所有开发的工作都拉到branch上去完成，也就是trunk和tag只负责版本记录，brank负责所有的开发工作。当brank完成某一部分功能的时候合并到trunk，其他人便可从trunk拉最新的代码。  </p>
-<p><strong>branch：</strong>和trunk并行开发。有几种情况下需要创建branch：<br>1、当某个功能不确定能否实现或者想先看看效果的时候，可以拉一个branch,在这个branch上开发，开发完成，再考虑是否合并到trunk。<br>2、当trunk正在开发某个最新版本的时候，线上版本出现一个急需修复的bug，由于时间紧，不能等到新版本开发完成的时候才修复这个bug，这时候就应该在线上版本对应的tag下拉一个branch，在这个branch下修复bug，测试，然后上线。</p>
-<p><strong>tag：</strong>记录每一个milestone（里程碑），一般每一个线上版本都会打一个tag，一旦出现急需修复的bug，可以在对应的tag下拉一个branch进行修复。</p>
-<p><strong>branch是动态的，一直往前走。tag是静态的，只做版本记录，相当于只读。</strong><br><strong>至于trunk我理解的是功能的集合，多人协同开发时，每个人每当完成一个功能都将合并到trunk中，也可以将trunk中最新的代码合并到自己的branch中</strong></p>
-<h2 id="Cornerstonr操作"><a href="#Cornerstonr操作" class="headerlink" title="Cornerstonr操作"></a>Cornerstonr操作</h2><h3 id="SVN搭建、配置"><a href="#SVN搭建、配置" class="headerlink" title="SVN搭建、配置"></a>SVN搭建、配置</h3><p>参考另一篇文章：<br><a href="https://vhuichen.github.io/2016/10/18/161018-iOS%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%90%AD%E5%BB%BASVN%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_blank" rel="external">iOS基础之搭建SVN服务器</a></p>
-<h3 id="Check-Out-working-copy"><a href="#Check-Out-working-copy" class="headerlink" title="Check Out (working copy)"></a>Check Out (working copy)</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-21/33390938.jpg" alt=""><br>选中对应的项目，点击左上角的Check Out,将项目copy到本地<br><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-21/74190763.jpg" alt="">   </p>
-<h3 id="Merge"><a href="#Merge" class="headerlink" title="Merge"></a>Merge</h3><p>选中需要Merge的项目（也就是合并后的项目），点击Merge，出现如下图所示的界面：<br><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-25/45698966.jpg" alt=""><br>在Merge from里选择被合并的项目。点击 Merge Changes ，完成。   </p>
-<h3 id="Commit"><a href="#Commit" class="headerlink" title="Commit"></a>Commit</h3><p>将本地代码提交带远程仓库。</p>
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。</p>
+<h2 id="什么是符号表"><a href="#什么是符号表" class="headerlink" title="什么是符号表"></a>什么是符号表</h2><p>符号表是内存地址与函数名、文件名、行号的映射表。格式如下：  </p>
+<blockquote>
+<p><strong>&lt;起始地址&gt; &lt;结束地址&gt; &lt;函数&gt; [&lt;文件名:行号&gt;]</strong>  </p>
+</blockquote>
+<h2 id="符号表的作用"><a href="#符号表的作用" class="headerlink" title="符号表的作用"></a>符号表的作用</h2><p>应用发生 crash 时的堆栈信息，一般都是二进制的地址信息。直接使用二进制信息很难定位问题，我们需要将这些二进制信息还原成代码所在的具体位置（哪个文件下，哪个方法，行号是多少）。有了这些信息，定位问题发生的位置就简单多了。这时候就需要符号表了。<br>符号表的作用就是：它能对 crash 的堆栈进行解析和还原，准确定位 APP 发生 crash 的地方。</p>
+<h2 id="符号表-UUID"><a href="#符号表-UUID" class="headerlink" title="符号表 UUID"></a>符号表 UUID</h2><p>每打一个包，都会生成一个新的 UUID ，也就是说 <code>.app</code> <code>符号表</code> <code>dSYM</code> 文件拥有一个相同的 UUID 。当程序出现问题时，就是通过这个 UUID 找到对应的符号表的。</p>
+<h2 id="dSYM-文件"><a href="#dSYM-文件" class="headerlink" title="dSYM 文件"></a>dSYM 文件</h2><p>dSYM 文件是指具有调试信息的目标文件，通过工具可以生成符号表文件。目前 Bugly 已经支持直接上传 dSYM 文件了。  </p>
+<h4 id="问题：已经-release-的版本怎样找回-dSYM-文件？"><a href="#问题：已经-release-的版本怎样找回-dSYM-文件？" class="headerlink" title="问题：已经 release 的版本怎样找回 dSYM 文件？"></a>问题：已经 release 的版本怎样找回 dSYM 文件？</h4><h5 id="方法1："><a href="#方法1：" class="headerlink" title="方法1："></a>方法1：</h5><p>在 <code>Xcode -&gt; Window -&gt; Organizer</code>中找到相应的 <strong>.app</strong> 的位置，每一个 <strong>.app</strong> 都包含了相应的 dSYM 文件。在这个包里面找到dSYM 文件。</p>
+<h5 id="方法2："><a href="#方法2：" class="headerlink" title="方法2："></a>方法2：</h5><p><code>在 iTunes Connect 的 &quot;所有构建版本&quot; 中可以找到。</code>   </p>
+<h5 id="方法3："><a href="#方法3：" class="headerlink" title="方法3："></a>方法3：</h5><p>通过 mdfind 命令查找文件 </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mdfind <span class="string">"com_apple_xcode_dsym_uuids == &lt;UUID&gt;"</span></div></pre></td></tr></table></figure>
+<p>这里的 UUID 格式为 <code>|12345678-1234-1234-1234-xxxxxxxxxxxx|</code></p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>Debug 环境下默认没有生成 dSYM 文件，如果需要可以在项目中设置 <code>Target -&gt; Build Settings -&gt; Debug Information Format</code>，此外<code>Generate Debug Symbols</code>的值为<code>YES</code> 。</p>
+<h2 id="Bugly-脚本自动上传-dSYM-文件"><a href="#Bugly-脚本自动上传-dSYM-文件" class="headerlink" title="Bugly 脚本自动上传 dSYM 文件"></a>Bugly 脚本自动上传 dSYM 文件</h2><p>下面是 Bugly 自动上传的脚本的一部分，主要修改这四个参数即可  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">## Bugly 的 APP ID </span></div><div class="line">BUGLY_APP_ID=<span class="string">"xxxxx"</span></div><div class="line"></div><div class="line"><span class="meta">## Bugly 的 APP KEY </span></div><div class="line">BUGLY_APP_KEY=<span class="string">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"</span></div><div class="line"></div><div class="line"><span class="meta">## 应用的 bundle ID</span></div><div class="line">BUNDLE_IDENTIFIER=<span class="string">"xxxx"</span></div><div class="line"></div><div class="line"><span class="meta"># Debug模式编译是否上传，1＝上传 0＝不上传，默认不上传</span></div><div class="line">UPLOAD_DEBUG_SYMBOLS=<span class="number">0</span></div></pre></td></tr></table></figure>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-6-11/12282547.jpg" alt="">  </p>
+<p>这种方法是所有方法中效率最高的。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>1、在还没有使用自动上传 dSYM 文件之前，当在 Bugly 上发现崩溃问题时，我从 iTunes Connect 的构建版本中下载相应的 dSYM 文件，然后发现 UUID 是不相同的，这种情况是大都数都不相同，偶尔有几次却是可以的，无解。</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><a href="https://bugly.qq.com/docs/user-guide/symbol-configuration-ios/?v=20180521124306" target="_blank" rel="external">Bugly iOS 符号表配置</a></p>
 
       
     </div>
@@ -359,6 +381,10 @@ bra">
           
             <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
           
+            <a href="/tags/符号表/" rel="tag">#符号表</a>
+          
+            <a href="/tags/Bugly/" rel="tag">#Bugly</a>
+          
         </div>
       
 
@@ -366,17 +392,13 @@ bra">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/" rel="next" title="iOS开发之判断View是否显示在当前窗口">
-                <i class="fa fa-chevron-left"></i> iOS开发之判断View是否显示在当前窗口
+              <a href="/2018/06/05/180605-iOS开发之加密解密/" rel="next" title="iOS开发之加密解密">
+                <i class="fa fa-chevron-left"></i> iOS开发之加密解密
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/05/171105-iOS开发之APP默认语言/" rel="prev" title="iOS开发之APP默认语言">
-                iOS开发之APP默认语言 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -490,7 +512,7 @@ bra">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SVN相关概念"><span class="nav-number">1.</span> <span class="nav-text">SVN相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主干-trunk-、分支-branch-、标记-tag"><span class="nav-number">1.1.</span> <span class="nav-text">主干(trunk)、分支(branch)、标记(tag)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cornerstonr操作"><span class="nav-number">2.</span> <span class="nav-text">Cornerstonr操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SVN搭建、配置"><span class="nav-number">2.1.</span> <span class="nav-text">SVN搭建、配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Check-Out-working-copy"><span class="nav-number">2.2.</span> <span class="nav-text">Check Out (working copy)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Merge"><span class="nav-number">2.3.</span> <span class="nav-text">Merge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Commit"><span class="nav-number">2.4.</span> <span class="nav-text">Commit</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序言"><span class="nav-number">1.</span> <span class="nav-text">序言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是符号表"><span class="nav-number">1.1.</span> <span class="nav-text">什么是符号表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#符号表的作用"><span class="nav-number">1.2.</span> <span class="nav-text">符号表的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#符号表-UUID"><span class="nav-number">1.3.</span> <span class="nav-text">符号表 UUID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dSYM-文件"><span class="nav-number">1.4.</span> <span class="nav-text">dSYM 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题：已经-release-的版本怎样找回-dSYM-文件？"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">问题：已经 release 的版本怎样找回 dSYM 文件？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法1："><span class="nav-number">1.4.0.1.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法2："><span class="nav-number">1.4.0.1.2.</span> <span class="nav-text">方法2：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法3："><span class="nav-number">1.4.0.1.3.</span> <span class="nav-text">方法3：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">1.4.1.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bugly-脚本自动上传-dSYM-文件"><span class="nav-number">1.5.</span> <span class="nav-text">Bugly 脚本自动上传 dSYM 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#疑问"><span class="nav-number">1.6.</span> <span class="nav-text">疑问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">1.7.</span> <span class="nav-text">附录</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

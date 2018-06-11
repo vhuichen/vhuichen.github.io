@@ -246,6 +246,139 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/15/180515-iOS基础之一个Workspace下有多个Project/" itemprop="url">
+                  iOS基础之一个Workspace下有多个Project
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-05-16T21:45:32+08:00" content="2018-05-16">
+				2018-05-16
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="新建一个-Workspace"><a href="#新建一个-Workspace" class="headerlink" title="新建一个 Workspace"></a>新建一个 Workspace</h3><p>先创建一个名为 MultiProject 的 .xcworkspace 文件 ，放到 MultiProject 这个文件夹下。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/12606269.jpg?imageView2/2/h/400" alt=""></p>
+<h3 id="将-Project-添加到-Workspace-中"><a href="#将-Project-添加到-Workspace-中" class="headerlink" title="将 Project 添加到 Workspace 中"></a>将 Project 添加到 Workspace 中</h3><h4 id="方法一：添加已创建好的-Project"><a href="#方法一：添加已创建好的-Project" class="headerlink" title="方法一：添加已创建好的 Project"></a>方法一：添加已创建好的 Project</h4><p>先创建一个名为 ProjectA 的 Project。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/42111891.jpg?imageView2/2/h/400" alt=""><br>创建好 Project 后。打开 MultiProject.xcworkspace 文件。  </p>
+<p>点击 File -&gt; Add Files to “Workspace Name”，找到刚创建项目的 ProjectA.xcodeproj 文件，添加。此时 ProjectA 已经加到 MultiProject 这个工作空间下了。</p>
+<h4 id="方法二：创建-Project-时就添加到-Workspace-中"><a href="#方法二：创建-Project-时就添加到-Workspace-中" class="headerlink" title="方法二：创建 Project 时就添加到 Workspace 中"></a>方法二：创建 Project 时就添加到 Workspace 中</h4><p>在创建 Project 整个过程的最后一步，会是这样的界面<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/5982352.jpg?imageView2/2/h/500" alt=""><br>在红色框中选择对应的 Workspace，点击 Create 后，刚创建的 Project 就添加到 Workspace 中了。</p>
+<blockquote>
+<p>注意：一般会将创建好的 Project 放到 Workspace 目录下。</p>
+</blockquote>
+<h3 id="CocoaPods-安装"><a href="#CocoaPods-安装" class="headerlink" title="CocoaPods 安装"></a>CocoaPods 安装</h3><p>在 MultiProject.xcworkspace 文件的目录下创建 Podfile 文件。内容如下  </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">platform :ios, '8.0'</div><div class="line">workspace 'MultiProject.xcworkspace'</div><div class="line"></div><div class="line">target 'ProjectA' do</div><div class="line">project 'ProjectA/ProjectA.xcodeproj'</div><div class="line"></div><div class="line">pod 'SDWebImage'</div><div class="line">pod 'iVersion'</div><div class="line"></div><div class="line">end</div><div class="line"></div><div class="line">target 'ProjectB' do</div><div class="line">project 'ProjectB/ProjectB.xcodeproj'</div><div class="line"></div><div class="line">pod 'SDWebImage'</div><div class="line">pod 'AFNetworking'</div><div class="line">pod 'iVersion'</div><div class="line"></div><div class="line">end</div></pre></td></tr></table></figure>
+<p>最后在命令行中进入该目录，执行 <strong>pod install</strong> 命令，OK 搞定。  </p>
+<p>最终的目录文件如下：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/86708408.jpg" alt=""></p>
+<p>项目内结构如下：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/23970018.jpg?imageView2/2/h/500" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/14/180514-iOS开发之第三方登录（微信、QQ）/" itemprop="url">
                   iOS开发之第三方登录（微信、QQ）
                 </a>
@@ -1265,172 +1398,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/26/180426-《Effective Objective-C 2.0》第三章阅读笔记/" itemprop="url">
-                  《Effective Objective-C 2.0》第三章阅读笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-26T00:00:00+08:00" content="2018-04-26">
-              2018-04-26
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-02T23:29:37+08:00" content="2018-05-02">
-				2018-05-02
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第三章：接口与-API-设计"><a href="#第三章：接口与-API-设计" class="headerlink" title="第三章：接口与 API 设计"></a><center>第三章：接口与 API 设计</center></h1><h2 id="第15条：用前缀避免命名冲突"><a href="#第15条：用前缀避免命名冲突" class="headerlink" title="第15条：用前缀避免命名冲突"></a>第15条：用前缀避免命名冲突</h2><p>选择与公司、应用程序或二者皆有关联的名称作为类名的前缀，并在所有的代码中使用这一前缀。也不仅仅是类名，应用程序中所有名称都应该加前缀。  </p>
-<blockquote>
-<p>苹果宣称保留使用所有“两个字母前缀”的权利，所以我们的前缀必须多于两个字母。  </p>
-</blockquote>
-<h3 id="顶级符号"><a href="#顶级符号" class="headerlink" title="顶级符号"></a>顶级符号</h3><p>在编译好的目标文件中，类实现文件所用的纯 C 函数和全局变量的名称要算作“顶级符号”。比如在类中创建了名为 “completion” 的纯 C 函数，会编译成 “_completion” 存在符号表中。此时如果在别的文件中也创建一个名为 “completion” 的函数，就会发出一个 “duplicate symbol” 的错误。</p>
-<h3 id="避免第三方库冲突"><a href="#避免第三方库冲突" class="headerlink" title="避免第三方库冲突"></a>避免第三方库冲突</h3><p>如果两个第三方库同时引入了相同的第三方库，那么就可能会出现 “duplicate symbol” 的错误。<br><strong>当自己的第三方库引入了别的第三方库的时候，应该给那份第三方库的代码加上自己的前缀。（😆。。。没看懂）</strong></p>
-<h2 id="第16条：提供-“指定初始化方法”"><a href="#第16条：提供-“指定初始化方法”" class="headerlink" title="第16条：提供 “指定初始化方法”"></a>第16条：提供 “指定初始化方法”</h2><p>那些可以为对象提供必要信息以便其能完成工作的初始化方法就叫“指定初始化方法”，这类初始化方法一般在后面会有 NS_DESIGNATED_INITIALIZER 这个宏定义。  </p>
-<h4 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h4><p>之前已经写过一篇相关的文章，可以去这篇文章看看 <a href="https://vhuichen.github.io/2018/03/31/180331-iOS%E5%BC%80%E5%8F%91%E4%B9%8BDesignated%20Initializer/" target="_blank" rel="external">iOS开发之Designated Initializer(指定初始化方法)</a></p>
-<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>如果子类的指定初始化方法和父类的指定初始化方法不一样，那么需要在子类中重写父类的初始化方法。</p>
-<h2 id="第17条：实现-description-方法"><a href="#第17条：实现-description-方法" class="headerlink" title="第17条：实现 description 方法"></a>第17条：实现 description 方法</h2><p>description 方法定义在 NSObject 的协议里面。当想打印某个对象的时候，通常我们会这样做</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Person *p = [[Person alloc] initWithEmail:<span class="string">@"123@163.com"</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,p);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// &lt;Person: 0x109ea6170&gt;</span></div></pre></td></tr></table></figure>
-<p>直接打印对象实际上就是调用了 description 方法。所以我们只需要重写这个方法就可以打印出感兴趣的信息出来。  </p>
-<h4 id="description"><a href="#description" class="headerlink" title="description"></a>description</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)description &#123;</div><div class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"&lt;%@: %p, email = %@&gt;"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, _email];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// &lt;Person: 0x12bd4f090, email = 123@163.com&gt;</span></div></pre></td></tr></table></figure>
-<p>如上，只要我们重写了 description 方法，就可以打印出特定的信息出来。</p>
-<h4 id="debugDescription"><a href="#debugDescription" class="headerlink" title="debugDescription"></a>debugDescription</h4><p>在合适的地方加入断点，然后在调试控制台输入lldb的 “po” 命令，就可以打印出 debugDescription 里面的信息出来</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)debugDescription &#123;</div><div class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"&lt;%@: %p, email = %@&gt;"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, _email];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// &lt;Person: 0x113dbff50, email = 123@163.com&gt;</span></div><div class="line"><span class="comment">// (lldb) po p</span></div><div class="line"><span class="comment">// &lt;Person: 0x113dbff50, email = 123@163.com&gt;</span></div><div class="line"><span class="comment">// (lldb)</span></div></pre></td></tr></table></figure>
-<p>一般我们可以在 description 里面打印主要的信息，而在 debugDescription 里面打印更详细的信息。</p>
-<h2 id="第18条：尽量使用不可变对象"><a href="#第18条：尽量使用不可变对象" class="headerlink" title="第18条：尽量使用不可变对象"></a>第18条：尽量使用不可变对象</h2><p>如果属性是不可变的，那么就应该将它设置成 readonly 。<br>如果把可变对象放到 collection 中，然后又修改其内容，那么很容易破坏 collection 的内部结构，比如：NSSet  </p>
-<blockquote>
-<p>看使用场景，把代码设计成最合逻辑的。</p>
-</blockquote>
-<h2 id="第19条：使用清晰而协调的命名方式"><a href="#第19条：使用清晰而协调的命名方式" class="headerlink" title="第19条：使用清晰而协调的命名方式"></a>第19条：使用清晰而协调的命名方式</h2><p>1、命名要清晰、易懂。<br>2、命名不要太啰嗦。<br>3、驼峰命名（类名首字母要大些，并且要加上前缀）。<br>4、是否要简写要看具体情况。<br>5、加前缀，尽量避免命名冲突。  </p>
-<h2 id="第20条：为私有方法名加前缀"><a href="#第20条：为私有方法名加前缀" class="headerlink" title="第20条：为私有方法名加前缀"></a>第20条：为私有方法名加前缀</h2><p>由于 Objective-C 没有 private 关键字。如果父类的私有方法和子类的方法重名了，那么父类的私有方法将无法执行。<br>苹果自己是通过在私有方法前加下划线（_）来标识的，因此我们就不能再这样做了。  </p>
-<h3 id="怎样有效避免这个问题"><a href="#怎样有效避免这个问题" class="headerlink" title="怎样有效避免这个问题"></a>怎样有效避免这个问题</h3><p>文章给出两个方法。</p>
-<h4 id="加前缀-“p-”"><a href="#加前缀-“p-”" class="headerlink" title="加前缀 “p_”"></a>加前缀 “p_”</h4><p>即 private 的首字母加下划线作为前缀。</p>
-<h4 id="项目前缀加下划线"><a href="#项目前缀加下划线" class="headerlink" title="项目前缀加下划线"></a>项目前缀加下划线</h4><p>比如我的项目前缀是 “VCH”，那么就可以加 “vch_” 作为前缀。不过其实分类的方法很多也是使用前缀加下划线来区别原类的。</p>
-<h2 id="第21条：理解-Objective-C-错误模型"><a href="#第21条：理解-Objective-C-错误模型" class="headerlink" title="第21条：理解 Objective-C 错误模型"></a>第21条：理解 Objective-C 错误模型</h2><h3 id="致命性错误-使用-throw"><a href="#致命性错误-使用-throw" class="headerlink" title="致命性错误 使用 @throw"></a>致命性错误 使用 @throw</h3><p>只有在极端情况下，才使用 @throw 抛出异常，同时也就意味着程序结束，崩溃。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"errorName"</span> reason:<span class="string">@"errorReason"</span> userInfo:@&#123;<span class="string">@"key"</span>:<span class="string">@"value"</span>&#125;];</div></pre></td></tr></table></figure>
-<h3 id="非致命性错误-返回-nil-或-0"><a href="#非致命性错误-返回-nil-或-0" class="headerlink" title="非致命性错误 返回 nil 或 0"></a>非致命性错误 返回 nil 或 0</h3><p>一般对于一些非致命性错误，可以返回 nil 或 0 来提示。</p>
-<h3 id="NSError"><a href="#NSError" class="headerlink" title="NSError"></a>NSError</h3><p>当我们进行一些网络请求时，会返回一些错误，此时可以通过 NSError 把错误信息封装起来，再交给接受者处理。</p>
-<h4 id="Error-domain"><a href="#Error-domain" class="headerlink" title="Error domain"></a>Error domain</h4><p>错误的范围，一般会定义一个全局变量来指示。</p>
-<h4 id="Error-code"><a href="#Error-code" class="headerlink" title="Error code"></a>Error code</h4><p>错误码，一般用一个枚举表示。</p>
-<h4 id="Error-info"><a href="#Error-info" class="headerlink" title="Error info"></a>Error info</h4><p>包含错误的额外信息，字典类型。</p>
-<h4 id="Error-常见处理方法"><a href="#Error-常见处理方法" class="headerlink" title="Error 常见处理方法"></a>Error 常见处理方法</h4><h5 id="交给委托处理"><a href="#交给委托处理" class="headerlink" title="交给委托处理"></a>交给委托处理</h5><p>可以把错误传递给委托对象处理，至于怎么去处理这个错误由委托对象决定。</p>
-<h5 id="返回给调用者"><a href="#返回给调用者" class="headerlink" title="返回给调用者"></a>返回给调用者</h5><p>也可以通过返回值、block等将错误返回给调用者，交由调用者处理错误。</p>
-<h2 id="第22条：理解-NSCopying-协议"><a href="#第22条：理解-NSCopying-协议" class="headerlink" title="第22条：理解 NSCopying 协议"></a>第22条：理解 NSCopying 协议</h2><p>当我们自己的类需要支持拷贝操作时，就需要实现 NSCopying 协议，协议就一个方法。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSCopying</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>具体实现如下</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .h</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span>&lt;<span class="title">NSCopying</span>&gt;</span></div><div class="line"></div><div class="line">- (<span class="keyword">instancetype</span>)initWithEmail:(<span class="built_in">NSString</span> *)email;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// .m</span></div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone &#123;</div><div class="line">    Person *person = [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] initWithEmail:_email];</div><div class="line">    person.name = [_name <span class="keyword">copy</span>];</div><div class="line">    <span class="keyword">return</span> person;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用 NSCopying 协议复制出来的对象是不可变的。</p>
-<h3 id="NSMutableCopying-协议"><a href="#NSMutableCopying-协议" class="headerlink" title="NSMutableCopying 协议"></a>NSMutableCopying 协议</h3><p>当我们需要复制的是可变对象时，就需要实现 NSMutableCopying 这个协议。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSMutableCopying</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)mutableCopyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>如果自定义对象分可变版本和不可变版本，那么就要同时实现 NSCopying 和 NSMutableCopying 协议。</p>
-<h3 id="深拷贝-amp-浅拷贝"><a href="#深拷贝-amp-浅拷贝" class="headerlink" title="深拷贝 &amp; 浅拷贝"></a>深拷贝 &amp; 浅拷贝</h3><p>浅拷贝只会复制指针，拷贝后的对象和原始对象为同一对象。深拷贝则是将对象也拷贝了一份。Foundation 框架下所有的 collection 类在默认情况下都执行浅拷贝。实现 collection 深拷贝的方法类似如下</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">instancetype</span>)initWithSet:(<span class="built_in">NSSet</span>&lt;ObjectType&gt; *)set copyItems:(<span class="built_in">BOOL</span>)flag;</div><div class="line">- (<span class="keyword">instancetype</span>)initWithArray:(<span class="built_in">NSArray</span>&lt;ObjectType&gt; *)array copyItems:(<span class="built_in">BOOL</span>)flag;</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1476,7 +1443,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-count">48</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1493,7 +1460,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
