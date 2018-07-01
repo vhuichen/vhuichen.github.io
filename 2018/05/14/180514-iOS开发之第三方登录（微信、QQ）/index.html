@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="iOS开发,第三方登录," />
+  <meta name="keywords" content="第三方登录," />
 
 
 
@@ -98,7 +98,7 @@
 微信开放平台帐号的开发者资质认证提供更安全、更严格的真实性认证、也能够更好的保护企业及用户的合法权益开发者资质认证通过后，微信开放平台帐号下的应用，将获得微信登录、智能接口、第三方平台开发等高级能力认证有效期：一年，有效期最后三个月可申">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-21/39395880.jpg">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-5-21/16746928.jpg">
-<meta property="og:updated_time" content="2018-06-04T13:30:48.295Z">
+<meta property="og:updated_time" content="2018-07-01T08:35:44.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS开发之第三方登录（微信、QQ）">
 <meta name="twitter:description" content="微信登录注册 微信开放平台 账号地址：微信开放平台随后创建一个应用，提交给微信审核（微信审核比较慢，目前已经几天还在审核中）。
@@ -279,8 +279,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-06-04T21:30:48+08:00" content="2018-06-04">
-				2018-06-04
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:35:44+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -372,6 +372,7 @@
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)sendRepWithCallback:(<span class="keyword">void</span> (^)(<span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *))callback &#123;</div><div class="line">    QQLoginHelper *helper = [QQLoginHelper sharedInstance];</div><div class="line">    helper.callback = callback;</div><div class="line">    </div><div class="line">    helper-&gt;_tencentOAuth = [[TencentOAuth alloc] initWithAppId:helper.appId andDelegate:helper];</div><div class="line">    helper-&gt;_permissionArray = [<span class="built_in">NSMutableArray</span> arrayWithObjects: kOPEN_PERMISSION_GET_SIMPLE_USER_INFO,kOPEN_PERMISSION_GET_INFO,kOPEN_PERMISSION_GET_USER_INFO,<span class="literal">nil</span>];</div><div class="line">    [helper-&gt;_tencentOAuth authorize:helper-&gt;_permissionArray inSafari:<span class="literal">NO</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Demo 中我用 block 回调获取到的信息，而我是使用单例处理的，所以 block 中的对象不能被强引用，虽然我调用完 block 后将其释放掉，但有时候回调函数可能并没有执行，那么这时就可能会出现内存泄漏。所以最好的方法是对 block 中的对象使用弱引用。代码如下：  </p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">IBAction</span>)wechatClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([WXLoginHelper isWXAppInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到微信后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [WXLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">1</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装微信客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">IBAction</span>)qqClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([QQLoginHelper isQQInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到QQ后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [QQLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">2</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装QQ客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p><strong>1、同一个QQ账号，iOS、Android 手机登录获取到的 OpenID 不相同。</strong><br>原因：创建的应用必须拥有相同的 APPID。</p>
 <h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/WechatQQLogin" target="_blank" rel="external">Demo</a> 有在不断的优化，部分代码可能会和上面的不一样。</p>
 
       
@@ -394,8 +395,6 @@
     <footer class="post-footer">
       
         <div class="post-tags">
-          
-            <a href="/tags/iOS开发/" rel="tag">#iOS开发</a>
           
             <a href="/tags/第三方登录/" rel="tag">#第三方登录</a>
           
@@ -484,7 +483,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -501,7 +500,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -530,7 +529,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信登录"><span class="nav-number">1.</span> <span class="nav-text">微信登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册-微信开放平台-账号"><span class="nav-number">1.1.</span> <span class="nav-text">注册 微信开放平台 账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发者资质认证"><span class="nav-number">1.2.</span> <span class="nav-text">开发者资质认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成SDK"><span class="nav-number">1.3.</span> <span class="nav-text">集成SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置工程文件"><span class="nav-number">1.4.</span> <span class="nav-text">配置工程文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">1.5.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#QQ登录"><span class="nav-number">2.</span> <span class="nav-text">QQ登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册-腾讯开发者平台-账号"><span class="nav-number">2.1.</span> <span class="nav-text">注册 腾讯开发者平台 账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成SDK-1"><span class="nav-number">2.2.</span> <span class="nav-text">集成SDK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载-SDK"><span class="nav-number">2.2.1.</span> <span class="nav-text">下载 SDK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集成"><span class="nav-number">2.2.2.</span> <span class="nav-text">集成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置工程文件-1"><span class="nav-number">2.3.</span> <span class="nav-text">配置工程文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码-1"><span class="nav-number">2.4.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">3.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo"><span class="nav-number">4.</span> <span class="nav-text">Demo</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信登录"><span class="nav-number">1.</span> <span class="nav-text">微信登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册-微信开放平台-账号"><span class="nav-number">1.1.</span> <span class="nav-text">注册 微信开放平台 账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发者资质认证"><span class="nav-number">1.2.</span> <span class="nav-text">开发者资质认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成SDK"><span class="nav-number">1.3.</span> <span class="nav-text">集成SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置工程文件"><span class="nav-number">1.4.</span> <span class="nav-text">配置工程文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">1.5.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#QQ登录"><span class="nav-number">2.</span> <span class="nav-text">QQ登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册-腾讯开发者平台-账号"><span class="nav-number">2.1.</span> <span class="nav-text">注册 腾讯开发者平台 账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成SDK-1"><span class="nav-number">2.2.</span> <span class="nav-text">集成SDK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载-SDK"><span class="nav-number">2.2.1.</span> <span class="nav-text">下载 SDK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集成"><span class="nav-number">2.2.2.</span> <span class="nav-text">集成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置工程文件-1"><span class="nav-number">2.3.</span> <span class="nav-text">配置工程文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码-1"><span class="nav-number">2.4.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">3.</span> <span class="nav-text">注意</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题"><span class="nav-number">3.0.1.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo"><span class="nav-number">4.</span> <span class="nav-text">Demo</span></a></li></ol></div>
             
           </div>
         </section>

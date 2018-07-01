@@ -246,6 +246,162 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/15/180515-iOS开发之 URL Schemes/" itemprop="url">
+                  iOS开发之 URL Schemes
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:20:28+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="什么是-URL-Schemes"><a href="#什么是-URL-Schemes" class="headerlink" title="什么是 URL Schemes"></a>什么是 URL Schemes</h3><p>URL（Uniform Resoure Locator：统一资源定位器）一般就是我们所说的网址，通过 URL 可以访问我们想要访问的服务和资源。</p>
+<p>URL的地址格式排列为：<strong>scheme://host:port/path</strong>,比如 URL 地址： <strong><a href="https://vhuichen.github.io/tags/" target="_blank" rel="external">https://vhuichen.github.io/tags/</a></strong> ，这里的 https 就是 Schemes 。又比如支付宝的 URL Schemes 是<strong>alipay://</strong> ，我们在 Safari 的地址栏输入就可以打开支付宝了。</p>
+<p>在iOS系统中，我们可以通过 URL Schemes 开定位APP的位置，通过 URL Schemes 实现APP跳转。一般情况下每个 APP 的 URL Schemes 都是不一样的，如果出现相同的 URL Schemes ，那么最后安装的 APP 的 URL Schemes 有效。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>创建两个Project，ProjectA 和 ProjectB ，设置两个项目的 URL Schemes 和项目名相同（这里只做测试用）。具体怎么设置如下图（白名单后面会讲到），这里只放了一张截图。    </p>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-15/37536164.jpg" alt=""></p>
+<p>两个 Project 的实现代码实现如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ProjectA</span></div><div class="line">- (<span class="keyword">IBAction</span>)projectButtonClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"ProjectB://"</span>];</div><div class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIApplication</span> sharedApplication] canOpenURL:url]) &#123;</div><div class="line">        [[<span class="built_in">UIApplication</span> sharedApplication] openURL:url];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ProjectB</span></div><div class="line">- (<span class="keyword">IBAction</span>)buttonClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"ProjectA://"</span>];</div><div class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIApplication</span> sharedApplication] canOpenURL:url]) &#123;</div><div class="line">        [[<span class="built_in">UIApplication</span> sharedApplication] openURL:url];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现点击 ProjectA 的按钮跳转到 ProjectB ，点击 ProjectB 的按钮跳转到 ProjectA。就这样简单几句代码实现了应用之间的跳转。</p>
+<h4 id="iOS10-新接口"><a href="#iOS10-新接口" class="headerlink" title="iOS10 新接口"></a>iOS10 新接口</h4><p>在iOS10中，废弃了 <strong>openURL</strong> 这个接口改用下面这个接口  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)openURL:(<span class="built_in">NSURL</span>*)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *, <span class="keyword">id</span>&gt; *)options completionHandler:(<span class="keyword">void</span> (^ __<span class="keyword">nullable</span>)(<span class="built_in">BOOL</span> success))completion <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">10</span>_0) <span class="built_in">NS_EXTENSION_UNAVAILABLE_IOS</span>(<span class="string">""</span>);</div></pre></td></tr></table></figure>
+<p>字典参数 options 目前有一个关键字 <strong>UIApplicationOpenURLOptionUniversalLinksOnly</strong> 对应的值为 BOOL 类型。默认情况下 值为 NO。如果设置成 YES，那么只能通过 URL 对应的APP才能打开这个链接，如果没有安装对应的APP，那么 completionHandler 中就会返回 NO。默认情况下是通过 Safari 来打开这个 URL 的。</p>
+<h3 id="白名单"><a href="#白名单" class="headerlink" title="白名单"></a>白名单</h3><p>iOS9 开始新增了白名单，当没有添加白名单时 调用 <strong>canOpenURL:</strong> 会返回 NO 。并打印出log信息  </p>
+<blockquote>
+<p>-canOpenURL: failed for URL: “ProjectB://“ - error: “This app is not allowed to query for scheme projectb”</p>
+</blockquote>
+<p>添加白名单只需要在 Info.plist 添加 <strong>LSApplicationQueriesSchemes</strong> 关键字，选择数组类型并设置 URL Schemes 的值。具体可以看上图。</p>
+<h3 id="传参"><a href="#传参" class="headerlink" title="传参"></a>传参</h3><p>和我们平时用的 URL 一样，也可以在 URL Schemes 后面加参数，例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ProjectA</span></div><div class="line">- (<span class="keyword">IBAction</span>)projectButtonClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"ProjectB://title=mytitle&amp;content=mycontent"</span>];</div><div class="line">    <span class="keyword">if</span> ([[<span class="built_in">UIApplication</span> sharedApplication] canOpenURL:url]) &#123;</div><div class="line">        [[<span class="built_in">UIApplication</span> sharedApplication] openURL:url];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：参数之间不能有空格</p>
+</blockquote>
+<p>URL Schemes 对应的APP可以在回调函数中处理传过来的参数。</p>
+<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>当应用是通过 URL Schemes 启动时，会调用相应的回调函数，系统提供了三个回调函数。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// iOS9及以上</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)app openURL:(<span class="built_in">NSURL</span> *)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">UIApplicationOpenURLOptionsKey</span>,<span class="keyword">id</span>&gt; *)options &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"B0:%@"</span>,url);</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// iOS8</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application openURL:(<span class="built_in">NSURL</span> *)url sourceApplication:(<span class="built_in">NSString</span> *)sourceApplication annotation:(<span class="keyword">id</span>)annotation &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"B1:%@"</span>,url);</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// iOS8</span></div><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application handleOpenURL:(<span class="built_in">NSURL</span> *)url &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"B2:%@"</span>,url);</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>iOS9及以上会优先调用第一个方法，iOS9以下会优先调用第二个方法。<br>这里我们接收到的 url 中就包含了参数信息。</p>
+<h4 id="UIApplicationOpenURLOptionsKey"><a href="#UIApplicationOpenURLOptionsKey" class="headerlink" title="UIApplicationOpenURLOptionsKey"></a>UIApplicationOpenURLOptionsKey</h4><p>最新的回调接口提供了字典参数，这个字典有三个 key  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIKIT_EXTERN</span> <span class="built_in">UIApplicationOpenURLOptionsKey</span> <span class="keyword">const</span> <span class="built_in">UIApplicationOpenURLOptionsSourceApplicationKey</span> <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);   <span class="comment">// value is an NSString containing the bundle ID of the originating application</span></div><div class="line"><span class="built_in">UIKIT_EXTERN</span> <span class="built_in">UIApplicationOpenURLOptionsKey</span> <span class="keyword">const</span> <span class="built_in">UIApplicationOpenURLOptionsAnnotationKey</span> <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);   <span class="comment">// value is a property-list typed object corresponding to what the originating application passed in UIDocumentInteractionController's annotation property</span></div><div class="line"><span class="built_in">UIKIT_EXTERN</span> <span class="built_in">UIApplicationOpenURLOptionsKey</span> <span class="keyword">const</span> <span class="built_in">UIApplicationOpenURLOptionsOpenInPlaceKey</span> <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);   <span class="comment">// value is a bool NSNumber, set to YES if the file needs to be copied before use</span></div></pre></td></tr></table></figure>
+<p>默认情况下，会传入两个参数</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="built_in">UIApplicationOpenURLOptionsOpenInPlaceKey</span> = <span class="number">0</span>;</div><div class="line">    <span class="built_in">UIApplicationOpenURLOptionsSourceApplicationKey</span> = <span class="string">"com.xxxx.ProjectB"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>UIApplicationOpenURLOptionsSourceApplicationKey</strong> 传入的是原应用的Bundle ID<br>我们可以通过判断这个 Bundle ID 来决定执行哪项操作以及返回值。例如我们可以这样写  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)app openURL:(<span class="built_in">NSURL</span> *)url options:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">UIApplicationOpenURLOptionsKey</span>,<span class="keyword">id</span>&gt; *)options &#123;</div><div class="line">    <span class="keyword">if</span>([options[<span class="built_in">UIApplicationOpenURLOptionsSourceApplicationKey</span>] isEqualToString:<span class="string">@"com.xxxx.ProjectB"</span>]) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>疑问：这里我测试发现，不管返回值是否为真，结果都一样。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/15/180515-iOS基础之一个Workspace下有多个Project/" itemprop="url">
                   iOS基础之一个Workspace下有多个Project
                 </a>
@@ -268,8 +424,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-16T21:45:32+08:00" content="2018-05-16">
-				2018-05-16
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:20:16+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -401,8 +557,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-06-04T21:30:48+08:00" content="2018-06-04">
-				2018-06-04
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:35:44+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -491,6 +647,7 @@
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)sendRepWithCallback:(<span class="keyword">void</span> (^)(<span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *, <span class="built_in">NSString</span> *))callback &#123;</div><div class="line">    QQLoginHelper *helper = [QQLoginHelper sharedInstance];</div><div class="line">    helper.callback = callback;</div><div class="line">    </div><div class="line">    helper-&gt;_tencentOAuth = [[TencentOAuth alloc] initWithAppId:helper.appId andDelegate:helper];</div><div class="line">    helper-&gt;_permissionArray = [<span class="built_in">NSMutableArray</span> arrayWithObjects: kOPEN_PERMISSION_GET_SIMPLE_USER_INFO,kOPEN_PERMISSION_GET_INFO,kOPEN_PERMISSION_GET_USER_INFO,<span class="literal">nil</span>];</div><div class="line">    [helper-&gt;_tencentOAuth authorize:helper-&gt;_permissionArray inSafari:<span class="literal">NO</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Demo 中我用 block 回调获取到的信息，而我是使用单例处理的，所以 block 中的对象不能被强引用，虽然我调用完 block 后将其释放掉，但有时候回调函数可能并没有执行，那么这时就可能会出现内存泄漏。所以最好的方法是对 block 中的对象使用弱引用。代码如下：  </p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">IBAction</span>)wechatClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([WXLoginHelper isWXAppInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到微信后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [WXLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">1</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装微信客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">IBAction</span>)qqClick:(<span class="keyword">id</span>)sender &#123;</div><div class="line">    <span class="keyword">if</span> ([QQLoginHelper isQQInstalled]) &#123;</div><div class="line">        <span class="comment">// 使用 __weak 可以处理特殊情况下内存泄漏的问题，比如跳转到QQ后没有再跳转回来</span></div><div class="line">        __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line">        [QQLoginHelper sendRepWithCallback:^(<span class="built_in">NSString</span> *openid, <span class="built_in">NSString</span> *icon, <span class="built_in">NSString</span> *name) &#123;</div><div class="line">            __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) strongSelf = weakSelf;</div><div class="line">            [strongSelf thirdPartLoginOpenId:openid userIcon:icon userName:name type:<span class="number">2</span>];</div><div class="line">        &#125;];</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"没有安装QQ客户端"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p><strong>1、同一个QQ账号，iOS、Android 手机登录获取到的 OpenID 不相同。</strong><br>原因：创建的应用必须拥有相同的 APPID。</p>
 <h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/WechatQQLogin" target="_blank" rel="external">Demo</a> 有在不断的优化，部分代码可能会和上面的不一样。</p>
 
           
@@ -563,8 +720,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-11T23:27:39+08:00" content="2018-05-11">
-				2018-05-11
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:19:05+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -696,8 +853,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-11T23:29:50+08:00" content="2018-05-11">
-				2018-05-11
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:18:28+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -864,8 +1021,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-17T21:40:56+08:00" content="2018-05-17">
-				2018-05-17
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:18:41+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -1002,8 +1159,8 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-10T00:27:04+08:00" content="2018-05-10">
-				2018-05-10
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:18:12+08:00" content="2018-07-01">
+				2018-07-01
 			    </time>
 			  </span>
 			
@@ -1265,144 +1422,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/29/180429-iOS基础之动画切换根控制器/" itemprop="url">
-                  iOS基础之动画切换根控制器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-29T00:00:00+08:00" content="2018-04-29">
-              2018-04-29
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-02T23:25:09+08:00" content="2018-05-02">
-				2018-05-02
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>在我的所有项目里面，“登录成功”以及“退出登录”都是需要却换根控制器的，方法很简单，直接设置一个新的控制器就行了。这样做两个界面之间就是直接一闪就跳换过去了，给人体验不太友好。所以在这里可以加个动画优化体验。</p>
-<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>由于 rootViewController 是放到 keyWindow 上的，所以可以在设置 rootViewController 时给 keyWindow 加上动画。</p>
-<p>.h 头文件</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>.m 实现文件</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"UIWindow+VCHAnimalWindow.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype &#123;</div><div class="line">    [<span class="keyword">self</span> vch_setRootViewController:rootViewController animalType:<span class="string">@"oglFlip"</span> subtype:subtype duration:<span class="number">.5</span>f];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration &#123;</div><div class="line">    <span class="built_in">CATransition</span> *animation = [<span class="built_in">CATransition</span> animation];</div><div class="line">    [animation setDuration:duration];</div><div class="line">    [animation setType:type];</div><div class="line">    [animation setSubtype:subtype];</div><div class="line">    [<span class="keyword">self</span>.layer addAnimation:animation forKey:<span class="string">@"VCHAnimalUIWindow"</span>];</div><div class="line">    [<span class="keyword">self</span> setRootViewController:rootViewController];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<blockquote>
-<p>CATransition 的父类 CAAnimation 中有一个属性 removedOnCompletion ，默认值为 YES 。<br>也就是说当动画结束后，会自动移除动画对象，不需要再手动管理内存。</p>
-</blockquote>
-<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// [[UIApplication sharedApplication].keyWindow setRootViewController:ctrl];</span></div><div class="line">[[<span class="built_in">UIApplication</span> sharedApplication].keyWindow vch_setRootViewController:ctrl withOglFlipSubtype:kCATransitionFromRight];</div></pre></td></tr></table></figure>
-<h1 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h1><p>一开始想到的是通过 runtime 来实现，这样做优点就是不需要修改调用语句，缺点就是无法传参。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">UIWindow</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(setRootViewController:));</div><div class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">UIWindow</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(vch_setRootViewController:));</div><div class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController &#123;</div><div class="line">    <span class="built_in">CATransition</span> *animation = [<span class="built_in">CATransition</span> animation];</div><div class="line">    [animation setDuration:<span class="number">.5</span>f];</div><div class="line">    [animation setType:<span class="string">@"oglFlip"</span>];</div><div class="line">    [animation setSubtype:kCATransitionFromRight];</div><div class="line">    [<span class="keyword">self</span>.layer addAnimation:animation forKey:<span class="string">@"VCHAnimalUIWindow"</span>];</div><div class="line">    [<span class="keyword">self</span> vch_setRootViewController:rootViewController];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1443,7 +1467,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1460,7 +1484,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
