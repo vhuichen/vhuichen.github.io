@@ -246,6 +246,134 @@
             
               
                 
+                <a class="post-title-link" href="/2018/01/05/180105-iOS基础之约束/" itemprop="url">
+                  iOS基础之约束
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-05T21:32:30+08:00" content="2018-01-05">
+              2018-01-05
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:09:37+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###前言<br>记录下来，有好几次在这里花时间了</p>
+<p>####一、相对约束<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-5/95466782.jpg" alt=""><br>上图表示的意思是    </p>
+<blockquote>
+<p><strong>Superview.Trailing = Button.Trailing * (5 / 4) - 50</strong>   </p>
+</blockquote>
+<p>Superview.Trailing 表示Superview右边相对左边的距离。</p>
+<p>####二、固有约束<br>Content Hugging Priority: 抗拉伸优先级，优先级越高，越难拉伸。<br>Content Compression Resistance Priority: 抗拉压缩先级，优先级越高，越难压缩。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/01/05/180105-iOS开发之单元测试/" itemprop="url">
                   iOS开发之单元测试
                 </a>
@@ -1171,134 +1299,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/27/170127-iOS基础之navigationItem.title设置但不显示/" itemprop="url">
-                  iOS基础之navigationItem.title设置但不显示
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-27T00:00:00+08:00" content="2017-01-27">
-              2017-01-27
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:06:22+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="控制器结构图"><a href="#控制器结构图" class="headerlink" title="控制器结构图"></a>控制器结构图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-27/84440891.jpg" alt=""><br>设置</p>
-<blockquote>
-<p>self.navigationItem.title = “123”   </p>
-</blockquote>
-<p>运行，但设置的navigationItem.title并没有显示出来。    </p>
-<h3 id="查找问题"><a href="#查找问题" class="headerlink" title="查找问题"></a>查找问题</h3><p>打开Debug View Hierarchy（视图层次结构调试），可以看到下面的结构图<br>左边：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-29/71287113.jpg" alt=""><br>右边：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-29/62998207.jpg" alt=""><br>可以看到总共有两个UINavgationBar,我们自己设置title并没有显示到顶层（被遮住了），所以会看不到设置的title。</p>
-<h3 id="解决方法1"><a href="#解决方法1" class="headerlink" title="解决方法1"></a>解决方法1</h3><p>将第一个Navigation Controller删掉，Tab Bar Controller 直接作为根控制器，如下图：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-1-29/99794372.jpg" alt=""><br>还有其他的方法一样也是可以解决的。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1344,7 +1344,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">50</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1361,7 +1361,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

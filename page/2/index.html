@@ -535,6 +535,172 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/15/180515-《Effective Objective-C 2.0》第六章阅读笔记(1)/" itemprop="url">
+                  《Effective Objective-C 2.0》第六章阅读笔记(1)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:19:43+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第六章：块与大中枢派发-1"><a href="#第六章：块与大中枢派发-1" class="headerlink" title="第六章：块与大中枢派发(1)"></a><center>第六章：块与大中枢派发(1)</center></h1><h2 id="第37条：理解“块”这一概念"><a href="#第37条：理解“块”这一概念" class="headerlink" title="第37条：理解“块”这一概念"></a>第37条：理解“块”这一概念</h2><p>块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。<br>块类型的语法结构如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return_type (^block_name)(parameters)</div></pre></td></tr></table></figure>
+<h4 id="变量捕获"><a href="#变量捕获" class="headerlink" title="变量捕获"></a>变量捕获</h4><p>block 可以捕获外部变量，例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
+<p>block 捕获 additional 变量，仅仅是捕获 additional 那一刻的值，捕获了之后，如果外部 additional 的值改变了，此时并不会影响 block 内部 additional 的值，因为这个值是一个常量，分别存放在两个不同的内存中，是互不干扰的。如果尝试去修改此时 block 内部的additional 变量的值，编译器会报错。<br>事实上，在 ARC 环境下，block 外部的 additional 变量是存放在栈中的，而 block 内部的 additional 变量则是存放在堆中的。<br>那么，如果需要 block 内外共享一份内存呢？这时可以给变量加上 <strong>__block</strong> 关键字。  </p>
+<h4 id="block-关键字修饰变量"><a href="#block-关键字修饰变量" class="headerlink" title="__block 关键字修饰变量"></a>__block 关键字修饰变量</h4><p>下面用 __block 关键字修饰 additional 变量，那么当外部的 additional 变量改变时，里面的 additional 值也会改变。因为这两个是同一个值。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__block <span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    additional = <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
+<p>用 __block 修饰的变量存放在堆中，和 block 中的 additional 共享同一份内存，是同一个数据。</p>
+<h4 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h4><p>如果在 block 中引用了某个对象，比如self，而这个对象正好直接或者间接引用了 block ，那么就会造成引用循环。<br>所以一般在 block 中引用的变量都会使用弱引用。</p>
+<h4 id="块的内部结构"><a href="#块的内部结构" class="headerlink" title="块的内部结构"></a>块的内部结构</h4><p>块本身也是对象，在存放块对象的内存区域中，首个变量是指向Class对象的指针，该指针叫做isa。其余内存里含有块对象正常运转所需的各种信息。下图描述了块对象的内存布局。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg" alt="">  </p>
+<p>在内存布局中，最重要的就是invoke变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个void *型的参数，此参数代表块。</p>
+<p>descriptor 变量是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了 copy 与 dispose 这两个辅助函数所对应的函数指针。辅助函数在拷贝及丢弃块对象时运行，其中会执行一些操作，比方说，前者 copy 要保留捕获的对象，而后者 dispose 则将之释放。</p>
+<p>block 会把它所捕获的所有变量都拷贝一份，拷贝的是指向这些对象的指针变量。invoke函数为何需要把块对象作为参数传进来呢？原因就在于，执行块时，要从内存中把这些捕获到的变量读出来。</p>
+<h4 id="全局块、栈块及堆块"><a href="#全局块、栈块及堆块" class="headerlink" title="全局块、栈块及堆块"></a>全局块、栈块及堆块</h4><p>定义块时，其所占的内存区域是分配在栈中的。这就是说，块只在定义他的那个范围内有效。例如，下面这段代码会有问题：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<p>上面两个 block 都是分配在栈中的，当离开了作用域后，就会将其释放掉，也就是两个 block 只在 if else 内有效。所以离开了 if slse 后在执行 block的话就可能会出问题。若编译器未覆写待执行的 block，则程序照常运行，若覆写，则程序崩溃。</p>
+<p><strong>其实这就是为什么 block 属性要使用 copy 修饰的原因。</strong>给 block 发送 copy 消息将其拷贝。这样就可以把 block 从栈复制到堆了。拷贝后的 block，可以在定义它的范围之外使用。而且，一旦复制到堆上，块就成了带引用计数的对象了。后续的复制操作都不会真的执行复制，只是递增对象的引用计数。 </p>
+<p>给上面的 block 发送 copy 消息就可以保证程序可以正确运行   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
+<p>此时的 block 是分配到堆的，这样在 if else 外也可以使用。</p>
+<h4 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h4><p>这种块不会捕捉任何状态（比如外围的变量等），运行时也无须有状态来参与。块所使用的整个内存区域，在编译期已经完全确定了，因此，全局块可以声明在全局内存里，而不需要在每次用到的时候于栈中创建。另外，全局块的拷贝操作是个空操作，因为全局块绝不可能为系统所回收。这种块实际上相当于单例。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)() = ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"This is a block"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>此 block 所需的全部信息都能在编译期确定，所以可把它做成全局块。</p>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p>块可以分配在栈、堆或者全局上。分配在栈上的块可以拷贝到堆里，就和标准的 Objective-C 对象一样具备了引用计数。</p>
+<h2 id="第38条：为常用的块类型创建typedef"><a href="#第38条：为常用的块类型创建typedef" class="headerlink" title="第38条：为常用的块类型创建typedef"></a>第38条：为常用的块类型创建typedef</h2><p>一开始我们定义 block 是这样的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> (^variableName)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样做会有两个不友好的问题 </p>
+<h4 id="不易读"><a href="#不易读" class="headerlink" title="不易读"></a>不易读</h4><p>如果我们提供的接口中有好几个 block ，每个 block 中又有好几个参数，这样会感觉比较难读。<br>解决方法是给 block 类型定义一个别名  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> (^EOCSomeBlock)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value);</div><div class="line"></div><div class="line">EOCSomeBlock block = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样使用起来就会简介很多。</p>
+<h4 id="不易修改"><a href="#不易修改" class="headerlink" title="不易修改"></a>不易修改</h4><p>当打算重构 block 的类型签名时，比方说，要给原来的 completion handler block 再加一个参数，如果没有使用别名的话，那么我们需要将所有使用了该 block 的地方都修改，这样显得过于繁杂。如果使用了别名的话，那么只需修改类型定义语句即可。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当要在多个地方使用同种签名的 block 时，应该给该 block 定义一个别名，然后在需要的地方使用该别名定义 block 。</p>
+<h2 id="第39条：用-handler-块降低代码分散程度"><a href="#第39条：用-handler-块降低代码分散程度" class="headerlink" title="第39条：用 handler 块降低代码分散程度"></a>第39条：用 handler 块降低代码分散程度</h2><p>程序在执行任务时，通常需要 “异步执行” ，这样做的好处在于：处理用户界面的显示及触摸操作所用的线程，不会因为要执行I/O或网络通信这类耗时的任务而阻塞。某些情况下，如果应用程序在一定时间内无响应，那么就会自动终止。“系统监控器”（system watchdog）在发现某个应用程序的主线程已经阻塞了一段时间之后，就会令其终止。  </p>
+<p>通常有两种方式可以处理异步代码  </p>
+<h3 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h3><p>使用 delegate 会使代码变得分散，当一个对象同时接收多个同种类型对象的委托时，还需要在委托方法中判断是哪个对象传来的委托。那么代码会变的更加复杂。delegate 一般用在一个委托对象有多个委托事件的情况下，比如：UITableView，其他情况可以使用 block 来实现。</p>
+<h3 id="block"><a href="#block" class="headerlink" title="block"></a>block</h3><p>用 block 处理起来代码会变的更加清晰。block 可以令这种API变得更紧凑，同时也令开发者调用起来更加方便。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)vch_successWithComplete:(VCHAddNewDeviceComplete)complete failure:(VCHFailure)failure &#123;</div><div class="line">    [<span class="keyword">self</span> vch_startWithComplete:^(<span class="keyword">id</span> object) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        complete();</div><div class="line">    &#125; failure:^(<span class="built_in">NSString</span> *error) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        failure(error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我的处理方式是将成功和失败分开处理，也可以用一个 block 来处理两个两种情况，两种方法均有优劣。具体可多看看官方的做法。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在创建对象时，可以使用内联的handler块将相关业务逻辑一并声明。使代码变得更加紧凑。  </p>
+<h2 id="第40条：用-block-引用其所属对象时不要出现引用循环"><a href="#第40条：用-block-引用其所属对象时不要出现引用循环" class="headerlink" title="第40条：用 block 引用其所属对象时不要出现引用循环"></a>第40条：用 block 引用其所属对象时不要出现引用循环</h2><p>书中的例子比较长，我用项目中的一部分代码来替代，意思是一样的   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[<span class="keyword">self</span> queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
+<p>上面的代码会出现引用循环，self -&gt; mj_header -&gt; block -&gt; self 。这个是初学时很容易犯的错误。这种情况下有两种比较常用的方法可以解决这个问题，一种就是用完 block 后，立即将其释放，另一种就是使用 __weak 关键字修饰某一环节。这里我使用第二种方法，代码如下  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[weakSelf queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
+<p>此时 block 弱引用了 self ，这个循环也就被打破了。</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>如果 block 所捕获的对象直接或间接的保留了 block 本身，那么就需要解除引用循环。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/14/180514-iOS开发之第三方登录（微信、QQ）/" itemprop="url">
                   iOS开发之第三方登录（微信、QQ）
                 </a>
@@ -831,6 +997,144 @@
             
               
                 
+                <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(3)/" itemprop="url">
+                  《Effective Objective-C 2.0》第五章阅读笔记(3)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-09T00:00:00+08:00" content="2018-05-09">
+              2018-05-09
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:18:41+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第五章：内存管理-3"><a href="#第五章：内存管理-3" class="headerlink" title="第五章：内存管理(3)"></a><center>第五章：内存管理(3)</center></h1><h2 id="第34条：以“自动释放池块”降低内存"><a href="#第34条：以“自动释放池块”降低内存" class="headerlink" title="第34条：以“自动释放池块”降低内存"></a>第34条：以“自动释放池块”降低内存</h2><p>Objective-C 对象的生命期取决于其引用计数。在 Objective-C 的引用计数架构中，有一项特性叫做“自动释放池”（autorelease pool）。释放对象有两种方式：一种是调用 release 方法，使其引用计数立即递减；另一种是调用 autorelease 方法，将其加入“自动释放池”中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空自动释放池时，系统会向其中的对象发送 release 消息。<br><strong>每一次运行循环开始后，系统都会创建一个自动释放池，当一个对象出了作用域之后就会加入到最近的自动释放池中，运行循环结束前会释放自动释放池（池子满了也会释放）。自动释放池工作的原理就是，给每一个池子的每一个对象发送 release 消息。</strong><br>那么问题来了，在一个运行循环中创建了大量的临时变量，这时就会导致内存峰值很高。例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	[<span class="keyword">self</span> doSomethingWithInt:i]; <span class="comment">// 方法内创建了大量的临时变量</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当循环结束时，大量的对象放到自动释放池中，占用了大量的内存。增加一个自动释放池可以解决这样的问题。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	<span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">		[<span class="keyword">self</span> doSomethingWithInt:i];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在循环中加入自动释放池，每次循环结束前都会回收当前池子中的对象。这样程序在执行循环时的峰值就会降低。<br>自动释放池机制就像“栈”（stack）一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。  </p>
+<blockquote>
+<p>创建自动释放池会增加额外的开销，是否需要创建还需要根据实际情况来。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>自动释放池排布在栈中，对象收到 autorelease 消息后，系统将其放入到最顶端的池里。<br>合理运用自动释放池，可降低应用程序的内存峰值。</p>
+<h2 id="第35条：用“僵尸对象”调试内存管理问题"><a href="#第35条：用“僵尸对象”调试内存管理问题" class="headerlink" title="第35条：用“僵尸对象”调试内存管理问题"></a>第35条：用“僵尸对象”调试内存管理问题</h2><p>向已回收的对象发送消息是不安全的。这么做有时可以，有时不行。具体可行与否，完全取决于对象所占内存有没有被其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔崩溃。在没有崩溃的情况下，那块内存可能只复用了其中一部分，所以部分对象中的某些二进制数据依然有效。还有一种可能，就是那块内存恰好为另外一个有效且存货的对象所占据。在这种情况下，运行期系统会把消息转发到新对象那里，而此对象也许能应答，也许不能。如果能，那程序就不崩溃，可你会觉得奇怪：为什么收到消息的对象不是预想的那个呢？若新对象无法响应选择子，则程序依然会崩溃。  </p>
+<p>Cocoa提供了“僵尸对象”（Zombie Object）这个非常方便的功能。启用这项调试功能之后，运行期系统会把所有已经回收的实例转化为特殊的“僵尸对象”，而不是真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象收到消息之后，会抛出异常，其中准确说明了发送过来的消息，并描述了回收之前的那个对象。僵尸对象是调试内存管理问题的最佳方式。  </p>
+<p>点击 Scheme -&gt; Edit Scheme -&gt; Run -&gt; Diagnostics 里面可以设置僵尸模式。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-14/65940260.jpg" alt=""></p>
+<h4 id="Zombie-Object-工作原理"><a href="#Zombie-Object-工作原理" class="headerlink" title="Zombie Object 工作原理"></a>Zombie Object 工作原理</h4><p>Zombie Object 的实现代码深植于 Objective - C 的运行期程序库、Foundation 框架以及 CoreFoundation 框架中。系统在即将回收对象时，如果发现通过环境变量启用了僵尸对象功能，那么还将执行一个附加步骤。这一步就是把对象转化为僵尸对象，而不彻底回收。</p>
+<h4 id="僵尸类如何将把待回收的对象转换成僵尸对象"><a href="#僵尸类如何将把待回收的对象转换成僵尸对象" class="headerlink" title="僵尸类如何将把待回收的对象转换成僵尸对象"></a>僵尸类如何将把待回收的对象转换成僵尸对象</h4><p>这个过程其实就是 NSObject 的 dealloc 方法所做的事。运行期系统如果发现 NSZombieEnabled 环境变量已设置，那么就把 dealloc 方法的“调配“（swizzle）成一个会执行特定代码的方法。执行到程序末尾时，对象所属的类已经变为_NSZombie_OriginalClass了，其中 OriginalClass 指的是原类名。</p>
+<p>代码中的关键之处在于：对象所占内存没有通过调用 free() 方法释放，因此，这块内存不可复用。虽说内存泄漏了，但这只是个调试手段，发布正式应用程序时不会把这项功能打开，所以这种泄漏问题无关紧要。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>打开 “Zombie Object” 这个功能，系统在回收对象时，可以不将其真正的回收，而是将它转为僵尸对象。<br>系统会修改对象的isa指针，令其指向特殊的僵尸类，从而使改对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接收者的消息，然后终止应用程序。</p>
+<h2 id="第36条：不要使用-retainCount"><a href="#第36条：不要使用-retainCount" class="headerlink" title="第36条：不要使用 retainCount"></a>第36条：不要使用 retainCount</h2><p>MRC 环境下，retainCount 所返回的引用计数只是某个给定时间点上的值。该方法并未考虑到系统会稍后把自动释放池清空，因而不会将后续的释放操作从返回值里减去，这样的话，此值就未必能真实反映实际的引用计数了。<br>ARC 环境下已经废弃此接口。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(2)/" itemprop="url">
                   《Effective Objective-C 2.0》第五章阅读笔记(2)
                 </a>
@@ -950,144 +1254,6 @@
 <h4 id="weak"><a href="#weak" class="headerlink" title="weak"></a>weak</h4><p>weak 和 unsafe_unretained 同样用于修饰对象，唯一不同的是，当 weak 修饰的属性所指的对象被系统回收时，weak会自动置nil。</p>
 <p>下图可以看出两者之间的区别。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-11/50645693.jpg" alt=""><br>当对象释放时，unsafe_unretained 属性仍然指向那个已经回收的实例，而weak属性则指向nil。所以 使用 weak 比 unsafe_unretained 安全。</p>
 <h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>如果某对象不归你所拥有，而只是需要使用这个对象，那么就应该用“弱引用”。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/09/180509-《Effective Objective-C 2.0》第五章阅读笔记(3)/" itemprop="url">
-                  《Effective Objective-C 2.0》第五章阅读笔记(3)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-09T00:00:00+08:00" content="2018-05-09">
-              2018-05-09
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:18:41+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第五章：内存管理-3"><a href="#第五章：内存管理-3" class="headerlink" title="第五章：内存管理(3)"></a><center>第五章：内存管理(3)</center></h1><h2 id="第34条：以“自动释放池块”降低内存"><a href="#第34条：以“自动释放池块”降低内存" class="headerlink" title="第34条：以“自动释放池块”降低内存"></a>第34条：以“自动释放池块”降低内存</h2><p>Objective-C 对象的生命期取决于其引用计数。在 Objective-C 的引用计数架构中，有一项特性叫做“自动释放池”（autorelease pool）。释放对象有两种方式：一种是调用 release 方法，使其引用计数立即递减；另一种是调用 autorelease 方法，将其加入“自动释放池”中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空自动释放池时，系统会向其中的对象发送 release 消息。<br><strong>每一次运行循环开始后，系统都会创建一个自动释放池，当一个对象出了作用域之后就会加入到最近的自动释放池中，运行循环结束前会释放自动释放池（池子满了也会释放）。自动释放池工作的原理就是，给每一个池子的每一个对象发送 release 消息。</strong><br>那么问题来了，在一个运行循环中创建了大量的临时变量，这时就会导致内存峰值很高。例如：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	[<span class="keyword">self</span> doSomethingWithInt:i]; <span class="comment">// 方法内创建了大量的临时变量</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>当循环结束时，大量的对象放到自动释放池中，占用了大量的内存。增加一个自动释放池可以解决这样的问题。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">	<span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">		[<span class="keyword">self</span> doSomethingWithInt:i];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在循环中加入自动释放池，每次循环结束前都会回收当前池子中的对象。这样程序在执行循环时的峰值就会降低。<br>自动释放池机制就像“栈”（stack）一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。  </p>
-<blockquote>
-<p>创建自动释放池会增加额外的开销，是否需要创建还需要根据实际情况来。</p>
-</blockquote>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>自动释放池排布在栈中，对象收到 autorelease 消息后，系统将其放入到最顶端的池里。<br>合理运用自动释放池，可降低应用程序的内存峰值。</p>
-<h2 id="第35条：用“僵尸对象”调试内存管理问题"><a href="#第35条：用“僵尸对象”调试内存管理问题" class="headerlink" title="第35条：用“僵尸对象”调试内存管理问题"></a>第35条：用“僵尸对象”调试内存管理问题</h2><p>向已回收的对象发送消息是不安全的。这么做有时可以，有时不行。具体可行与否，完全取决于对象所占内存有没有被其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔崩溃。在没有崩溃的情况下，那块内存可能只复用了其中一部分，所以部分对象中的某些二进制数据依然有效。还有一种可能，就是那块内存恰好为另外一个有效且存货的对象所占据。在这种情况下，运行期系统会把消息转发到新对象那里，而此对象也许能应答，也许不能。如果能，那程序就不崩溃，可你会觉得奇怪：为什么收到消息的对象不是预想的那个呢？若新对象无法响应选择子，则程序依然会崩溃。  </p>
-<p>Cocoa提供了“僵尸对象”（Zombie Object）这个非常方便的功能。启用这项调试功能之后，运行期系统会把所有已经回收的实例转化为特殊的“僵尸对象”，而不是真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象收到消息之后，会抛出异常，其中准确说明了发送过来的消息，并描述了回收之前的那个对象。僵尸对象是调试内存管理问题的最佳方式。  </p>
-<p>点击 Scheme -&gt; Edit Scheme -&gt; Run -&gt; Diagnostics 里面可以设置僵尸模式。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-14/65940260.jpg" alt=""></p>
-<h4 id="Zombie-Object-工作原理"><a href="#Zombie-Object-工作原理" class="headerlink" title="Zombie Object 工作原理"></a>Zombie Object 工作原理</h4><p>Zombie Object 的实现代码深植于 Objective - C 的运行期程序库、Foundation 框架以及 CoreFoundation 框架中。系统在即将回收对象时，如果发现通过环境变量启用了僵尸对象功能，那么还将执行一个附加步骤。这一步就是把对象转化为僵尸对象，而不彻底回收。</p>
-<h4 id="僵尸类如何将把待回收的对象转换成僵尸对象"><a href="#僵尸类如何将把待回收的对象转换成僵尸对象" class="headerlink" title="僵尸类如何将把待回收的对象转换成僵尸对象"></a>僵尸类如何将把待回收的对象转换成僵尸对象</h4><p>这个过程其实就是 NSObject 的 dealloc 方法所做的事。运行期系统如果发现 NSZombieEnabled 环境变量已设置，那么就把 dealloc 方法的“调配“（swizzle）成一个会执行特定代码的方法。执行到程序末尾时，对象所属的类已经变为_NSZombie_OriginalClass了，其中 OriginalClass 指的是原类名。</p>
-<p>代码中的关键之处在于：对象所占内存没有通过调用 free() 方法释放，因此，这块内存不可复用。虽说内存泄漏了，但这只是个调试手段，发布正式应用程序时不会把这项功能打开，所以这种泄漏问题无关紧要。</p>
-<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>打开 “Zombie Object” 这个功能，系统在回收对象时，可以不将其真正的回收，而是将它转为僵尸对象。<br>系统会修改对象的isa指针，令其指向特殊的僵尸类，从而使改对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接收者的消息，然后终止应用程序。</p>
-<h2 id="第36条：不要使用-retainCount"><a href="#第36条：不要使用-retainCount" class="headerlink" title="第36条：不要使用 retainCount"></a>第36条：不要使用 retainCount</h2><p>MRC 环境下，retainCount 所返回的引用计数只是某个给定时间点上的值。该方法并未考虑到系统会稍后把自动释放池清空，因而不会将后续的释放操作从返回值里减去，这样的话，此值就未必能真实反映实际的引用计数了。<br>ARC 环境下已经废弃此接口。</p>
 
           
         
@@ -1264,164 +1430,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/02/180502-《Effective Objective-C 2.0》第四章阅读笔记/" itemprop="url">
-                  《Effective Objective-C 2.0》第四章阅读笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-02T00:00:00+08:00" content="2018-05-02">
-              2018-05-02
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-05-08T00:31:49+08:00" content="2018-05-08">
-				2018-05-08
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第四章：协议与分类"><a href="#第四章：协议与分类" class="headerlink" title="第四章：协议与分类"></a><center>第四章：协议与分类</center></h1><p>Objective-C 语言有一项特性叫 “协议”（protocol），与 Java 的“接口”（interface）类似。</p>
-<blockquote>
-<p>Java接口是一系列方法的声明，是一些方法特征的集合，一个接口只有方法的特征没有方法的实现，因此这些方法可以在不同的地方被不同的类实现，而这些实现可以具有不同的行为（功能）。</p>
-</blockquote>
-<p>protocol 定义了一套公用的接口，和 Java 的接口同样，一个接口只有方法特征没有方法的实现，不同的类可以实现不同的行为。本质上和 Java 的接口是相同的。  </p>
-<p>Objective-C 不支持多重继承，所以我们可以将某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是实现委托模式。</p>
-<p>“分类”也是 Objective-C 的一个重要特性。利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
-<h2 id="第23条：通过委托与数据源协议进行对象间通信"><a href="#第23条：通过委托与数据源协议进行对象间通信" class="headerlink" title="第23条：通过委托与数据源协议进行对象间通信"></a>第23条：通过委托与数据源协议进行对象间通信</h2><p>对象之间的通信使用最广泛的就是“委托模式”。定义一套接口，某对象若想接受另一对象的委托，则需遵循此接口，以便其成为“委托对象”。此模式可将数据与业务逻辑解耦。</p>
-<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>委托属性一定要用 weak 修饰，不然会造成循环引用。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">PersonDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></div><div class="line"><span class="keyword">@required</span></div><div class="line">- (<span class="built_in">NSDate</span> *)whatTimeIsIt;</div><div class="line"></div><div class="line"><span class="keyword">@optional</span></div><div class="line">- (<span class="built_in">BOOL</span>)isNiceDay;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span>&lt;PersonDelegate&gt; personDelegate;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>委托协议的方法一般会定义“可选的”（optional），当我们在调用这些方法之前就需要先判断委托对象是否有实现这个方法。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)doWork &#123;</div><div class="line">    <span class="built_in">NSDate</span> *date = [<span class="keyword">self</span>.personDelegate whatTimeIsIt];</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"date = %@"</span>,date);</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.personDelegate respondsToSelector:<span class="keyword">@selector</span>(isNiceDay)]) &#123;</div><div class="line">        <span class="built_in">BOOL</span> isNiceDay = [<span class="keyword">self</span>.personDelegate isNiceDay];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"isNiceDay:%zd"</span>,isNiceDay);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>如果需要经常调用某个可选方法，可以用一个状态变量来保存“是否实现这个方法”的状态，如果有多个可选方法也可以用结构体来保存状态。这样做可以大大提高程序效率。</p>
-<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><p>委托对象需要先遵守这个协议。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">Person *person = [[Person alloc] initWithEmail:<span class="string">@"123@163.com"</span>];</div><div class="line">person.personDelegate = <span class="keyword">self</span>;</div><div class="line">[person doWork];</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// log</span></div><div class="line"><span class="comment">// date = Thu May  3 19:43:05 2018</span></div><div class="line"><span class="comment">// isNiceDay:1</span></div></pre></td></tr></table></figure>
-<h2 id="第24条：将类的实现代码分散到便于管理的数个分类中"><a href="#第24条：将类的实现代码分散到便于管理的数个分类中" class="headerlink" title="第24条：将类的实现代码分散到便于管理的数个分类中"></a>第24条：将类的实现代码分散到便于管理的数个分类中</h2><p>可以将类相同功能部分分散到单独的分类中，方便管理。也应该将私有方法放到名为 “private” 的分类中，以“隐藏”实现细节。官方的 NSString 就分成了好几个分类。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>, <span class="title">NSMutableCopying</span>, <span class="title">NSSecureCoding</span>&gt;</span></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringExtensionMethods</span>)</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringEncodingDetection</span>)</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSItemProvider</span>) &lt;<span class="title">NSItemProviderReading</span>, <span class="title">NSItemProviderWriting</span>&gt;</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSExtendedStringPropertyListParsing</span>)</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringDeprecated</span>)</span></div><div class="line"><span class="comment">// 5</span></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<h2 id="第25条：总是为第三方类的分类名称加前缀"><a href="#第25条：总是为第三方类的分类名称加前缀" class="headerlink" title="第25条：总是为第三方类的分类名称加前缀"></a>第25条：总是为第三方类的分类名称加前缀</h2><p>向第三方类中添加分类时，应给分类名称以及方法加上项目专用的名称。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</div><div class="line">- (<span class="keyword">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>这样做很大程度上避免了分类方法和原类方法相同的可能。</p>
-<h2 id="第26条：勿在分类中申明属性"><a href="#第26条：勿在分类中申明属性" class="headerlink" title="第26条：勿在分类中申明属性"></a>第26条：勿在分类中申明属性</h2><p>直接在分类中申明属性编译器只会给一个编译警告。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在分类中定义一个属性</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> (<span class="title">Special</span>)</span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="built_in">NSString</span> *name;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">// Property 'name' requires method 'name' to be defined - use @dynamic or provide a method implementation in this category</span></div><div class="line"><span class="comment">// Property 'name' requires method 'setName:' to be defined - use @dynamic or provide a method implementation in this category</span></div></pre></td></tr></table></figure>
-<p>提示使用 @dynamic 修饰属性或者提供属性的 getter 和 setter 方法。如果没有实现，那么程序会在运行时检测。</p>
-<h4 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h4><p>通过关联对象可以为分类实现属性的功能。使用时应注意内存管理问题。这种方法应该在必要的情况下才使用。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name &#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="string">"kPersonSpecial_name"</span>, name, OBJC_ASSOCIATION_COPY);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)name &#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="string">"kPersonSpecial_name"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>总之,在必要的情况下可以通过关联对象声明属性，但这种方法应该尽量少用。</p>
-</blockquote>
-<h2 id="第27条：使用-“class-continuation-分类”-隐藏实现细节"><a href="#第27条：使用-“class-continuation-分类”-隐藏实现细节" class="headerlink" title="第27条：使用 “class-continuation 分类” 隐藏实现细节"></a>第27条：使用 “class-continuation 分类” 隐藏实现细节</h2><p>类中经常会包含一些无需对外公布的方法及实例变量。这些内容可以对外公布，并写明其为私有。Objective-C 的动态消息系统方式决定了其不可能实现真正的私有方法和私有实例变量。然而，我们最好还是只把确定需要公布的那部分内容公开。此时我们可以将这部分内容放到“class-continuation 分类”中。<br>“class-continuation 分类” 与其他的分类不同，它必须定义在实现文件中，这是唯一能声明实例变量的分类，而且此分类没有特定的实现文件，其中的方法都应该定义在主实现文件里。<br>若对象遵循的协议只应视为私有，也可在“class-continuation 分类”中声明。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> _count;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) Person *person;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<h2 id="第28条：通过协议提供匿名对象"><a href="#第28条：通过协议提供匿名对象" class="headerlink" title="第28条：通过协议提供匿名对象"></a>第28条：通过协议提供匿名对象</h2><p>协议定义了一系列方法，遵从此协议的对象应该实现它们，如果这些方法不是可选的，那么就必须实现。我们可以用协议把自己所写的API之中的实现细节隐藏起来，将返回的对象设计为遵从此协议的纯id类型。这样的话，想要隐藏的类名就不会出现在API之中了。若是接口背后有多个不同的实现类，而你又不想指明具体使用哪个类，那么可以考虑用这个办法，因为有时候这些类可能会变，有时候它们又无法容纳于标准的类继承体系中，因而不能以某个公共基类来统一表示。此概念称为“匿名对象”。<br>例如在定义“受委托者”这个对象时，可以这样写：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;VCHDelegate&gt; delegate;</div></pre></td></tr></table></figure>
-<p>任何遵循了 VCHDelegate 这个协议的对象都可以充当这个属性。对于具备此属性的类来说，delegate就是”匿名的”。<br>处理数据库连接(database connection)的程序库也用这个思路，以匿名对象来表示从另一个库中所返回的对象。对于处理连接所用的那个类，你也许不想让外人知道其名字，因为不同的数据库可能要用到不同的类来处理。如果没办法令其都继承自同一基类，那么就得返回id类型。不过我们可以把所有数据库连接都具备的那些方法放到协议中，令返回的对象遵从此协议。协议可以这样写:</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)connect;</div><div class="line">- (<span class="keyword">void</span>)disconnect;</div><div class="line">- (<span class="built_in">BOOL</span>)isConnected;</div><div class="line">- (<span class="built_in">NSArray</span> *)performQuery:(<span class="built_in">NSString</span> *)query;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>然后可以用“数据库处理器”单例来提供数据库连接，接口可以这样写：   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span>;  </span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCDatabaseManger</span>:<span class="title">NSObject</span>  </span></div><div class="line"></div><div class="line">+ (<span class="keyword">id</span>)sharedInstance;  </div><div class="line">- (<span class="keyword">id</span>&lt;EOCDatabaseConnection&gt;) connectionWithIdentifier:(<span class="built_in">NSString</span> *)identifier;  </div><div class="line"></div><div class="line"><span class="keyword">@end</span>;</div></pre></td></tr></table></figure>
-<p>这样的话，处理数据库连接所用的类的名称就不会泄漏了，有可能来自不同框架的那些类现在均可以经由同一个方法来返回。使用此API的人仅仅要求所返回的对象能用来连接、断开并查询数据库即可。至于使用的哪种数据库则不需要关心。如果后续需要更改数据库，那么此时也不需要更改接口。我们关心的并不是对象的类型，而是对象有没有实现相关的方法。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1467,7 +1475,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">50</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1484,7 +1492,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

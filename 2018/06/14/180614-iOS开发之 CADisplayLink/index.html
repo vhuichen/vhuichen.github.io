@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Swift混编," />
+  <meta name="keywords" content="CADisplayLink," />
 
 
 
@@ -84,31 +84,28 @@
 
 
 
-<meta name="description" content="前言这个问题花了我2天的时间没解决，记下来！
-项目需求由于项目需要定制化，需要在原来的项目上修改部分图片以及部分接口，然后上一个新的APP。于是想到用Target来实现。copy一个新的Target。
-编译后，发现旧的Target编译成功，而新创建的Target编译失败。报错提示：
+<meta name="description" content="CADisplayLinkCADisplayLink 是一个能以和屏幕刷新率相同的频率将内容画到屏幕上的定时器。  
 
-Command failed due to signal: Segmentation fault: 11">
+A timer object that allows your application to synchronize its drawing to the refresh rate of the display.
+
+创建一个 CADisplayLink 对象，设置好 target">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS开发之OC项目混编Swift遇到的一个坑">
-<meta property="og:url" content="http://yoursite.com/2017/05/23/170523-iOS开发之OC项目混编Swift遇到的一个坑/index.html">
+<meta property="og:title" content="iOS开发之 CADisplayLink">
+<meta property="og:url" content="http://yoursite.com/2018/06/14/180614-iOS开发之 CADisplayLink/index.html">
 <meta property="og:site_name" content="vhuichen">
-<meta property="og:description" content="前言这个问题花了我2天的时间没解决，记下来！
-项目需求由于项目需要定制化，需要在原来的项目上修改部分图片以及部分接口，然后上一个新的APP。于是想到用Target来实现。copy一个新的Target。
-编译后，发现旧的Target编译成功，而新创建的Target编译失败。报错提示：
+<meta property="og:description" content="CADisplayLinkCADisplayLink 是一个能以和屏幕刷新率相同的频率将内容画到屏幕上的定时器。  
 
-Command failed due to signal: Segmentation fault: 11">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-12/5962422.jpg">
-<meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-12/21764291.jpg">
-<meta property="og:updated_time" content="2018-07-01T08:07:08.264Z">
+A timer object that allows your application to synchronize its drawing to the refresh rate of the display.
+
+创建一个 CADisplayLink 对象，设置好 target">
+<meta property="og:updated_time" content="2018-07-09T14:32:31.971Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS开发之OC项目混编Swift遇到的一个坑">
-<meta name="twitter:description" content="前言这个问题花了我2天的时间没解决，记下来！
-项目需求由于项目需要定制化，需要在原来的项目上修改部分图片以及部分接口，然后上一个新的APP。于是想到用Target来实现。copy一个新的Target。
-编译后，发现旧的Target编译成功，而新创建的Target编译失败。报错提示：
+<meta name="twitter:title" content="iOS开发之 CADisplayLink">
+<meta name="twitter:description" content="CADisplayLinkCADisplayLink 是一个能以和屏幕刷新率相同的频率将内容画到屏幕上的定时器。  
 
-Command failed due to signal: Segmentation fault: 11">
-<meta name="twitter:image" content="http://ovsbvt5li.bkt.clouddn.com/17-11-12/5962422.jpg">
+A timer object that allows your application to synchronize its drawing to the refresh rate of the display.
+
+创建一个 CADisplayLink 对象，设置好 target">
 
 
 
@@ -129,10 +126,10 @@ Command failed due to signal: Segmentation fault: 11">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/23/170523-iOS开发之OC项目混编Swift遇到的一个坑/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/14/180614-iOS开发之 CADisplayLink/"/>
 
 
-  <title> iOS开发之OC项目混编Swift遇到的一个坑 | vhuichen </title>
+  <title> iOS开发之 CADisplayLink | vhuichen </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +259,7 @@ Command failed due to signal: Segmentation fault: 11">
             
             
               
-                iOS开发之OC项目混编Swift遇到的一个坑
+                iOS开发之 CADisplayLink
               
             
           </h1>
@@ -274,16 +271,16 @@ Command failed due to signal: Segmentation fault: 11">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-23T22:12:31+08:00" content="2017-05-23">
-              2017-05-23
+            <time itemprop="dateCreated" datetime="2018-06-14T00:00:00+08:00" content="2018-06-14">
+              2018-06-14
             </time>
           </span>
           
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:07:08+08:00" content="2018-07-01">
-				2018-07-01
+			    <time itemprop="dateUpdated" datetime="2018-07-09T22:32:31+08:00" content="2018-07-09">
+				2018-07-09
 			    </time>
 			  </span>
 			
@@ -335,33 +332,18 @@ Command failed due to signal: Segmentation fault: 11">
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个问题花了我2天的时间没解决，记下来！</p>
-<h2 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h2><p>由于项目需要定制化，需要在原来的项目上修改部分图片以及部分接口，然后上一个新的APP。于是想到用Target来实现。copy一个新的Target。<br><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-12/5962422.jpg" alt=""></p>
-<p><strong>编译后，发现旧的Target编译成功，而新创建的Target编译失败。</strong><br>报错提示：</p>
+        <h2 id="CADisplayLink"><a href="#CADisplayLink" class="headerlink" title="CADisplayLink"></a>CADisplayLink</h2><p>CADisplayLink 是一个能以和屏幕刷新率相同的频率将内容画到屏幕上的定时器。  </p>
 <blockquote>
-<p><strong>Command failed due to signal: Segmentation fault: 11</strong>     </p>
+<p>A timer object that allows your application to synchronize its drawing to the refresh rate of the display.</p>
 </blockquote>
-<p>在文件上方提示：</p>
-<blockquote>
-<p><strong>An internal error occurred.Editing functionality may be limited</strong><br><strong>An internal error occurred. Soucre Editor functionality is limited,Attempting to restore</strong>            </p>
-</blockquote>
-<p><img src="http://ovsbvt5li.bkt.clouddn.com/17-11-12/21764291.jpg" alt=""></p>
-<p><strong>Xcode版本:8.3.3</strong></p>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><blockquote>
-<p>rm -rf ~/Library/Developer/Xcode/DerivedData/   </p>
-</blockquote>
-<p>或者   </p>
-<blockquote>
-<p>Xcode –&gt; Preferences –&gt; Location –&gt; DerivedData  </p>
-</blockquote>
-<p>点进路径链接后，删除里面的所有内容</p>
-<p>使用上面的方法可以解决问题，但是。。。。<br>当我修改了Swift的代码后问题又出现了同样的问题（Swift类中添加一个新的空函数），编译报错：   </p>
-<blockquote>
-<p><strong>Command failed due to signal: Segmentation fault: 11</strong>   </p>
-</blockquote>
-<p>但这种情况只有copy的Target会出现，原来的Target编译通过，代码是没有问题的，只能重新删除DerivedData里面的数据</p>
-<h3 id="相关连接"><a href="#相关连接" class="headerlink" title="相关连接"></a>相关连接</h3><p><a href="https://stackoverflow.com/questions/33456411/ios-project-showing-error-an-internal-error-occurred-editing-functionality-may" target="_blank" rel="external"><strong>stackoverflow相关问题</strong></a><br> 但是很遗憾无法从根本上解决这个问题</p>
-<h3 id="总之"><a href="#总之" class="headerlink" title="总之"></a>总之</h3><p>这是一个奇葩的问题<br>1、为什么旧的Target没有问题，新的Target就有问题？<br>2、多个Target下 <strong>Objective-C Generated Interface Header Name</strong> 中设置的名称要不要一样，如果一样的话，是不是对应同一个文件？<br>3、为什么修改了Swift文件后，编译出错？（语法没问题）</p>
+<p>创建一个 CADisplayLink 对象，设置好 target 、selector ，并注册到 runloop 中，每次屏幕刷新时就会调用 target 上的 selector。</p>
+<h3 id="属性-amp-方法"><a href="#属性-amp-方法" class="headerlink" title="属性 &amp; 方法"></a>属性 &amp; 方法</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">+ (<span class="built_in">CADisplayLink</span> *)displayLinkWithTarget:(<span class="keyword">id</span>)target selector:(SEL)sel;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)addToRunLoop:(<span class="built_in">NSRunLoop</span> *)runloop forMode:(<span class="built_in">NSRunLoopMode</span>)mode;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)removeFromRunLoop:(<span class="built_in">NSRunLoop</span> *)runloop forMode:(<span class="built_in">NSRunLoopMode</span>)mode;</div><div class="line"></div><div class="line"><span class="comment">// 时间戳</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">nonatomic</span>) <span class="built_in">CFTimeInterval</span> timestamp;</div><div class="line"></div><div class="line"><span class="comment">// 每帧之间的时间间隔（单位：秒）</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">nonatomic</span>) <span class="built_in">CFTimeInterval</span> duration;</div><div class="line"></div><div class="line"><span class="comment">// 暂停</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">getter</span>=isPaused, <span class="keyword">nonatomic</span>) <span class="built_in">BOOL</span> paused;</div><div class="line"></div><div class="line"><span class="comment">// 可读可写，用来设置多少次屏幕刷新触发一次 selector 。默认是1，即每次都出发。</span></div><div class="line"><span class="comment">// 比如iOS设备的屏幕刷新频率为60Hz，也就是每秒60次，当这个值设置为2时，selector 每秒触发30次。</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> frameInterval</div><div class="line">  <span class="built_in">CA_AVAILABLE_BUT_DEPRECATED_IOS</span> (<span class="number">3.1</span>, <span class="number">10.0</span>, <span class="number">9.0</span>, <span class="number">10.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="string">"use preferredFramesPerSecond"</span>);</div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> preferredFramesPerSecond <span class="built_in">CA_AVAILABLE_IOS_STARTING</span>(<span class="number">10.0</span>, <span class="number">10.0</span>, <span class="number">3.0</span>);</div></pre></td></tr></table></figure>
+<p>当不需要使用 DisplayLink 时，应该先调用<code>- (void)invalidate;</code>方法，方法里面会将其从 runloop 中移除。最后将对象释放掉。<br><strong>另外注意 CADisplayLink 不能被继承。</strong></p>
+<a id="more"></a>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">CADisplayLink</span> *displayLink = [<span class="built_in">CADisplayLink</span> displayLinkWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(displayLink:)];</div><div class="line">[displayLink addToRunLoop:[<span class="built_in">NSRunLoop</span> currentRunLoop] forMode:<span class="built_in">NSRunLoopCommonModes</span>];</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)displayLink:(<span class="built_in">CADisplayLink</span> *)sender &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"sender = %f -- %f"</span>,sender.timestamp,sender.duration);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="CADisplayLink-amp-NSTimer-区别"><a href="#CADisplayLink-amp-NSTimer-区别" class="headerlink" title="CADisplayLink &amp; NSTimer 区别"></a>CADisplayLink &amp; NSTimer 区别</h3><p>1、CADisplayLink 精确度高，默认每次屏幕刷新结束后都会调用。<br>2、CADisplayLink 适合做 UI 重绘、动画、视频播放渲染等。NSTimer 则多用于和 UI 无关的定时任务。<br>3、CADisplayLink 不需要担心屏幕的刷新频率，因为默认是相同的。  </p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>官方文档：<code>Xcode -&gt; Window -&gt; Developer Documentation</code> 中搜索 <code>CADisplayLink</code> </p>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/VCHWaveDemo" target="_blank" rel="external">很简单的 Demo</a></p>
 
       
     </div>
@@ -384,7 +366,7 @@ Command failed due to signal: Segmentation fault: 11">
       
         <div class="post-tags">
           
-            <a href="/tags/Swift混编/" rel="tag">#Swift混编</a>
+            <a href="/tags/CADisplayLink/" rel="tag">#CADisplayLink</a>
           
         </div>
       
@@ -393,16 +375,16 @@ Command failed due to signal: Segmentation fault: 11">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/19/170519-iOS基础之理解NSNumericSearch/" rel="next" title="iOS基础之理解NSNumericSearch">
-                <i class="fa fa-chevron-left"></i> iOS基础之理解NSNumericSearch
+              <a href="/2018/06/08/180608-iOS开发之符号表/" rel="next" title="iOS开发之符号表">
+                <i class="fa fa-chevron-left"></i> iOS开发之符号表
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/26/170626-iOS开发之上传代码到CocoaPods/" rel="prev" title="iOS开发之上传代码到CocoaPods">
-                iOS开发之上传代码到CocoaPods <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/27/180627-UITableViewCell默认选中/" rel="prev" title="UITableViewCell默认选中">
+                UITableViewCell默认选中 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -517,7 +499,7 @@ Command failed due to signal: Segmentation fault: 11">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目需求"><span class="nav-number">2.</span> <span class="nav-text">项目需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法"><span class="nav-number">2.1.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关连接"><span class="nav-number">2.2.</span> <span class="nav-text">相关连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总之"><span class="nav-number">2.3.</span> <span class="nav-text">总之</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CADisplayLink"><span class="nav-number">1.</span> <span class="nav-text">CADisplayLink</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性-amp-方法"><span class="nav-number">1.1.</span> <span class="nav-text">属性 & 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">1.2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CADisplayLink-amp-NSTimer-区别"><span class="nav-number">1.3.</span> <span class="nav-text">CADisplayLink & NSTimer 区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo"><span class="nav-number">3.</span> <span class="nav-text">Demo</span></a></li></ol></div>
             
           </div>
         </section>

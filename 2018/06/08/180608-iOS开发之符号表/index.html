@@ -101,7 +101,7 @@
 
 符号表的作用应用发生 crash 时的堆栈信息，一般都是">
 <meta property="og:image" content="http://ovsbvt5li.bkt.clouddn.com/18-6-11/12282547.jpg">
-<meta property="og:updated_time" content="2018-07-01T08:22:16.495Z">
+<meta property="og:updated_time" content="2018-07-01T08:55:16.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS开发之符号表">
 <meta name="twitter:description" content="序言项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。
@@ -284,7 +284,7 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:22:16+08:00" content="2018-07-01">
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:55:16+08:00" content="2018-07-01">
 				2018-07-01
 			    </time>
 			  </span>
@@ -345,6 +345,7 @@
 <h2 id="符号表的作用"><a href="#符号表的作用" class="headerlink" title="符号表的作用"></a>符号表的作用</h2><p>应用发生 crash 时的堆栈信息，一般都是二进制的地址信息。直接使用二进制信息很难定位问题，我们需要将这些二进制信息还原成代码所在的具体位置（哪个文件下，哪个方法，行号是多少）。有了这些信息，定位问题发生的位置就简单多了。这时候就需要符号表了。<br>符号表的作用就是：它能对 crash 的堆栈进行解析和还原，准确定位 APP 发生 crash 的地方。</p>
 <h2 id="符号表-UUID"><a href="#符号表-UUID" class="headerlink" title="符号表 UUID"></a>符号表 UUID</h2><p>每打一个包，都会生成一个新的 UUID ，也就是说 <code>.app</code> <code>符号表</code> <code>dSYM</code> 文件拥有一个相同的 UUID 。当程序出现问题时，就是通过这个 UUID 找到对应的符号表的。</p>
 <h2 id="dSYM-文件"><a href="#dSYM-文件" class="headerlink" title="dSYM 文件"></a>dSYM 文件</h2><p>dSYM 文件是指具有调试信息的目标文件，通过工具可以生成符号表文件。目前 Bugly 已经支持直接上传 dSYM 文件了。  </p>
+<a id="more"></a>
 <h4 id="问题：已经-release-的版本怎样找回-dSYM-文件？"><a href="#问题：已经-release-的版本怎样找回-dSYM-文件？" class="headerlink" title="问题：已经 release 的版本怎样找回 dSYM 文件？"></a>问题：已经 release 的版本怎样找回 dSYM 文件？</h4><h5 id="方法1："><a href="#方法1：" class="headerlink" title="方法1："></a>方法1：</h5><p>在 <code>Xcode -&gt; Window -&gt; Organizer</code>中找到相应的 <strong>.app</strong> 的位置，每一个 <strong>.app</strong> 都包含了相应的 dSYM 文件。在这个包里面找到dSYM 文件。</p>
 <h5 id="方法2："><a href="#方法2：" class="headerlink" title="方法2："></a>方法2：</h5><p><code>在 iTunes Connect 的 &quot;所有构建版本&quot; 中可以找到。</code>   </p>
 <h5 id="方法3："><a href="#方法3：" class="headerlink" title="方法3："></a>方法3：</h5><p>通过 mdfind 命令查找文件 </p>
@@ -398,8 +399,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/27/180627-UITableViewCell默认选中/" rel="prev" title="UITableViewCell默认选中">
-                UITableViewCell默认选中 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/14/180614-iOS开发之 CADisplayLink/" rel="prev" title="iOS开发之 CADisplayLink">
+                iOS开发之 CADisplayLink <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -468,7 +469,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">50</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -485,7 +486,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

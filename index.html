@@ -268,7 +268,7 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:44:09+08:00" content="2018-07-01">
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:51:25+08:00" content="2018-07-01">
 				2018-07-01
 			    </time>
 			  </span>
@@ -372,6 +372,136 @@
             
               
                 
+                <a class="post-title-link" href="/2018/06/14/180614-iOS开发之 CADisplayLink/" itemprop="url">
+                  iOS开发之 CADisplayLink
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-14T00:00:00+08:00" content="2018-06-14">
+              2018-06-14
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-09T22:32:31+08:00" content="2018-07-09">
+				2018-07-09
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="CADisplayLink"><a href="#CADisplayLink" class="headerlink" title="CADisplayLink"></a>CADisplayLink</h2><p>CADisplayLink 是一个能以和屏幕刷新率相同的频率将内容画到屏幕上的定时器。  </p>
+<blockquote>
+<p>A timer object that allows your application to synchronize its drawing to the refresh rate of the display.</p>
+</blockquote>
+<p>创建一个 CADisplayLink 对象，设置好 target 、selector ，并注册到 runloop 中，每次屏幕刷新时就会调用 target 上的 selector。</p>
+<h3 id="属性-amp-方法"><a href="#属性-amp-方法" class="headerlink" title="属性 &amp; 方法"></a>属性 &amp; 方法</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">+ (<span class="built_in">CADisplayLink</span> *)displayLinkWithTarget:(<span class="keyword">id</span>)target selector:(SEL)sel;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)addToRunLoop:(<span class="built_in">NSRunLoop</span> *)runloop forMode:(<span class="built_in">NSRunLoopMode</span>)mode;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)removeFromRunLoop:(<span class="built_in">NSRunLoop</span> *)runloop forMode:(<span class="built_in">NSRunLoopMode</span>)mode;</div><div class="line"></div><div class="line"><span class="comment">// 时间戳</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">nonatomic</span>) <span class="built_in">CFTimeInterval</span> timestamp;</div><div class="line"></div><div class="line"><span class="comment">// 每帧之间的时间间隔（单位：秒）</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">nonatomic</span>) <span class="built_in">CFTimeInterval</span> duration;</div><div class="line"></div><div class="line"><span class="comment">// 暂停</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">getter</span>=isPaused, <span class="keyword">nonatomic</span>) <span class="built_in">BOOL</span> paused;</div><div class="line"></div><div class="line"><span class="comment">// 可读可写，用来设置多少次屏幕刷新触发一次 selector 。默认是1，即每次都出发。</span></div><div class="line"><span class="comment">// 比如iOS设备的屏幕刷新频率为60Hz，也就是每秒60次，当这个值设置为2时，selector 每秒触发30次。</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> frameInterval</div><div class="line">  <span class="built_in">CA_AVAILABLE_BUT_DEPRECATED_IOS</span> (<span class="number">3.1</span>, <span class="number">10.0</span>, <span class="number">9.0</span>, <span class="number">10.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="string">"use preferredFramesPerSecond"</span>);</div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> preferredFramesPerSecond <span class="built_in">CA_AVAILABLE_IOS_STARTING</span>(<span class="number">10.0</span>, <span class="number">10.0</span>, <span class="number">3.0</span>);</div></pre></td></tr></table></figure>
+<p>当不需要使用 DisplayLink 时，应该先调用<code>- (void)invalidate;</code>方法，方法里面会将其从 runloop 中移除。最后将对象释放掉。<br><strong>另外注意 CADisplayLink 不能被继承。</strong></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/06/14/180614-iOS开发之 CADisplayLink/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/06/08/180608-iOS开发之符号表/" itemprop="url">
                   iOS开发之符号表
                 </a>
@@ -394,7 +524,7 @@
           
 			  <span class="post-updated">
 			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:22:16+08:00" content="2018-07-01">
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:55:16+08:00" content="2018-07-01">
 				2018-07-01
 			    </time>
 			  </span>
@@ -443,8 +573,7 @@
 
       
         
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。</p>
+          <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。</p>
 <h2 id="什么是符号表"><a href="#什么是符号表" class="headerlink" title="什么是符号表"></a>什么是符号表</h2><p>符号表是内存地址与函数名、文件名、行号的映射表。格式如下：  </p>
 <blockquote>
 <p><strong>&lt;起始地址&gt; &lt;结束地址&gt; &lt;函数&gt; [&lt;文件名:行号&gt;]</strong>  </p>
@@ -452,20 +581,11 @@
 <h2 id="符号表的作用"><a href="#符号表的作用" class="headerlink" title="符号表的作用"></a>符号表的作用</h2><p>应用发生 crash 时的堆栈信息，一般都是二进制的地址信息。直接使用二进制信息很难定位问题，我们需要将这些二进制信息还原成代码所在的具体位置（哪个文件下，哪个方法，行号是多少）。有了这些信息，定位问题发生的位置就简单多了。这时候就需要符号表了。<br>符号表的作用就是：它能对 crash 的堆栈进行解析和还原，准确定位 APP 发生 crash 的地方。</p>
 <h2 id="符号表-UUID"><a href="#符号表-UUID" class="headerlink" title="符号表 UUID"></a>符号表 UUID</h2><p>每打一个包，都会生成一个新的 UUID ，也就是说 <code>.app</code> <code>符号表</code> <code>dSYM</code> 文件拥有一个相同的 UUID 。当程序出现问题时，就是通过这个 UUID 找到对应的符号表的。</p>
 <h2 id="dSYM-文件"><a href="#dSYM-文件" class="headerlink" title="dSYM 文件"></a>dSYM 文件</h2><p>dSYM 文件是指具有调试信息的目标文件，通过工具可以生成符号表文件。目前 Bugly 已经支持直接上传 dSYM 文件了。  </p>
-<h4 id="问题：已经-release-的版本怎样找回-dSYM-文件？"><a href="#问题：已经-release-的版本怎样找回-dSYM-文件？" class="headerlink" title="问题：已经 release 的版本怎样找回 dSYM 文件？"></a>问题：已经 release 的版本怎样找回 dSYM 文件？</h4><h5 id="方法1："><a href="#方法1：" class="headerlink" title="方法1："></a>方法1：</h5><p>在 <code>Xcode -&gt; Window -&gt; Organizer</code>中找到相应的 <strong>.app</strong> 的位置，每一个 <strong>.app</strong> 都包含了相应的 dSYM 文件。在这个包里面找到dSYM 文件。</p>
-<h5 id="方法2："><a href="#方法2：" class="headerlink" title="方法2："></a>方法2：</h5><p><code>在 iTunes Connect 的 &quot;所有构建版本&quot; 中可以找到。</code>   </p>
-<h5 id="方法3："><a href="#方法3：" class="headerlink" title="方法3："></a>方法3：</h5><p>通过 mdfind 命令查找文件 </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mdfind <span class="string">"com_apple_xcode_dsym_uuids == &lt;UUID&gt;"</span></div></pre></td></tr></table></figure>
-<p>这里的 UUID 格式为 <code>|12345678-1234-1234-1234-xxxxxxxxxxxx|</code></p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>Debug 环境下默认没有生成 dSYM 文件，如果需要可以在项目中设置 <code>Target -&gt; Build Settings -&gt; Debug Information Format</code>，此外<code>Generate Debug Symbols</code>的值为<code>YES</code> 。</p>
-<h2 id="Bugly-脚本自动上传-dSYM-文件"><a href="#Bugly-脚本自动上传-dSYM-文件" class="headerlink" title="Bugly 脚本自动上传 dSYM 文件"></a>Bugly 脚本自动上传 dSYM 文件</h2><p>下面是 Bugly 自动上传的脚本的一部分，主要修改这四个参数即可  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">## Bugly 的 APP ID </span></div><div class="line">BUGLY_APP_ID=<span class="string">"xxxxx"</span></div><div class="line"></div><div class="line"><span class="meta">## Bugly 的 APP KEY </span></div><div class="line">BUGLY_APP_KEY=<span class="string">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"</span></div><div class="line"></div><div class="line"><span class="meta">## 应用的 bundle ID</span></div><div class="line">BUNDLE_IDENTIFIER=<span class="string">"xxxx"</span></div><div class="line"></div><div class="line"><span class="meta"># Debug模式编译是否上传，1＝上传 0＝不上传，默认不上传</span></div><div class="line">UPLOAD_DEBUG_SYMBOLS=<span class="number">0</span></div></pre></td></tr></table></figure>
-<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-6-11/12282547.jpg" alt="">  </p>
-<p>这种方法是所有方法中效率最高的。</p>
-<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>1、在还没有使用自动上传 dSYM 文件之前，当在 Bugly 上发现崩溃问题时，我从 iTunes Connect 的构建版本中下载相应的 dSYM 文件，然后发现 UUID 是不相同的，这种情况是大都数都不相同，偶尔有几次却是可以的，无解。</p>
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><a href="https://bugly.qq.com/docs/user-guide/symbol-configuration-ios/?v=20180521124306" target="_blank" rel="external">Bugly iOS 符号表配置</a></p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/06/08/180608-iOS开发之符号表/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -1239,172 +1359,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/15/180515-《Effective Objective-C 2.0》第六章阅读笔记(1)/" itemprop="url">
-                  《Effective Objective-C 2.0》第六章阅读笔记(1)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
-              2018-05-15
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:19:43+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="第六章：块与大中枢派发-1"><a href="#第六章：块与大中枢派发-1" class="headerlink" title="第六章：块与大中枢派发(1)"></a><center>第六章：块与大中枢派发(1)</center></h1><h2 id="第37条：理解“块”这一概念"><a href="#第37条：理解“块”这一概念" class="headerlink" title="第37条：理解“块”这一概念"></a>第37条：理解“块”这一概念</h2><p>块与函数类似，只不过是直接定义在另一个函数里，和定义他的那个函数共享一个范围内的东西。<br>块类型的语法结构如下：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">return_type (^block_name)(parameters)</div></pre></td></tr></table></figure>
-<h4 id="变量捕获"><a href="#变量捕获" class="headerlink" title="变量捕获"></a>变量捕获</h4><p>block 可以捕获外部变量，例如：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
-<p>block 捕获 additional 变量，仅仅是捕获 additional 那一刻的值，捕获了之后，如果外部 additional 的值改变了，此时并不会影响 block 内部 additional 的值，因为这个值是一个常量，分别存放在两个不同的内存中，是互不干扰的。如果尝试去修改此时 block 内部的additional 变量的值，编译器会报错。<br>事实上，在 ARC 环境下，block 外部的 additional 变量是存放在栈中的，而 block 内部的 additional 变量则是存放在堆中的。<br>那么，如果需要 block 内外共享一份内存呢？这时可以给变量加上 <strong>__block</strong> 关键字。  </p>
-<h4 id="block-关键字修饰变量"><a href="#block-关键字修饰变量" class="headerlink" title="__block 关键字修饰变量"></a>__block 关键字修饰变量</h4><p>下面用 __block 关键字修饰 additional 变量，那么当外部的 additional 变量改变时，里面的 additional 值也会改变。因为这两个是同一个值。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">__block <span class="keyword">int</span> additional = <span class="number">5</span>;</div><div class="line"><span class="keyword">int</span> (^addBlock)(<span class="keyword">int</span> a, <span class="keyword">int</span> b) = ^(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    additional = <span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> a + b + additional;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">int</span> add = addBlock(<span class="number">2</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure>
-<p>用 __block 修饰的变量存放在堆中，和 block 中的 additional 共享同一份内存，是同一个数据。</p>
-<h4 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h4><p>如果在 block 中引用了某个对象，比如self，而这个对象正好直接或者间接引用了 block ，那么就会造成引用循环。<br>所以一般在 block 中引用的变量都会使用弱引用。</p>
-<h4 id="块的内部结构"><a href="#块的内部结构" class="headerlink" title="块的内部结构"></a>块的内部结构</h4><p>块本身也是对象，在存放块对象的内存区域中，首个变量是指向Class对象的指针，该指针叫做isa。其余内存里含有块对象正常运转所需的各种信息。下图描述了块对象的内存布局。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-18/27886440.jpg" alt="">  </p>
-<p>在内存布局中，最重要的就是invoke变量，这是个函数指针，指向块的实现代码。函数原型至少要接受一个void *型的参数，此参数代表块。</p>
-<p>descriptor 变量是指向结构体的指针，每个块里都包含此结构体，其中声明了块对象的总体大小，还声明了 copy 与 dispose 这两个辅助函数所对应的函数指针。辅助函数在拷贝及丢弃块对象时运行，其中会执行一些操作，比方说，前者 copy 要保留捕获的对象，而后者 dispose 则将之释放。</p>
-<p>block 会把它所捕获的所有变量都拷贝一份，拷贝的是指向这些对象的指针变量。invoke函数为何需要把块对象作为参数传进来呢？原因就在于，执行块时，要从内存中把这些捕获到的变量读出来。</p>
-<h4 id="全局块、栈块及堆块"><a href="#全局块、栈块及堆块" class="headerlink" title="全局块、栈块及堆块"></a>全局块、栈块及堆块</h4><p>定义块时，其所占的内存区域是分配在栈中的。这就是说，块只在定义他的那个范围内有效。例如，下面这段代码会有问题：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
-<p>上面两个 block 都是分配在栈中的，当离开了作用域后，就会将其释放掉，也就是两个 block 只在 if else 内有效。所以离开了 if slse 后在执行 block的话就可能会出问题。若编译器未覆写待执行的 block，则程序照常运行，若覆写，则程序崩溃。</p>
-<p><strong>其实这就是为什么 block 属性要使用 copy 修饰的原因。</strong>给 block 发送 copy 消息将其拷贝。这样就可以把 block 从栈复制到堆了。拷贝后的 block，可以在定义它的范围之外使用。而且，一旦复制到堆上，块就成了带引用计数的对象了。后续的复制操作都不会真的执行复制，只是递增对象的引用计数。 </p>
-<p>给上面的 block 发送 copy 消息就可以保证程序可以正确运行   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)();</div><div class="line"><span class="keyword">if</span> ( <span class="comment">/* ... */</span> ) &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block A"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    block = [^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Block B"</span>);</div><div class="line">    &#125; <span class="keyword">copy</span>];</div><div class="line">&#125;</div><div class="line">block();</div></pre></td></tr></table></figure>
-<p>此时的 block 是分配到堆的，这样在 if else 外也可以使用。</p>
-<h4 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h4><p>这种块不会捕捉任何状态（比如外围的变量等），运行时也无须有状态来参与。块所使用的整个内存区域，在编译期已经完全确定了，因此，全局块可以声明在全局内存里，而不需要在每次用到的时候于栈中创建。另外，全局块的拷贝操作是个空操作，因为全局块绝不可能为系统所回收。这种块实际上相当于单例。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> (^block)() = ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"This is a block"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>此 block 所需的全部信息都能在编译期确定，所以可把它做成全局块。</p>
-<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p>块可以分配在栈、堆或者全局上。分配在栈上的块可以拷贝到堆里，就和标准的 Objective-C 对象一样具备了引用计数。</p>
-<h2 id="第38条：为常用的块类型创建typedef"><a href="#第38条：为常用的块类型创建typedef" class="headerlink" title="第38条：为常用的块类型创建typedef"></a>第38条：为常用的块类型创建typedef</h2><p>一开始我们定义 block 是这样的</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> (^variableName)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>这样做会有两个不友好的问题 </p>
-<h4 id="不易读"><a href="#不易读" class="headerlink" title="不易读"></a>不易读</h4><p>如果我们提供的接口中有好几个 block ，每个 block 中又有好几个参数，这样会感觉比较难读。<br>解决方法是给 block 类型定义一个别名  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> (^EOCSomeBlock)(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value);</div><div class="line"></div><div class="line">EOCSomeBlock block = ^(<span class="built_in">BOOL</span> flag, <span class="keyword">int</span> value) &#123;</div><div class="line">    <span class="keyword">return</span> someInt;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>这样使用起来就会简介很多。</p>
-<h4 id="不易修改"><a href="#不易修改" class="headerlink" title="不易修改"></a>不易修改</h4><p>当打算重构 block 的类型签名时，比方说，要给原来的 completion handler block 再加一个参数，如果没有使用别名的话，那么我们需要将所有使用了该 block 的地方都修改，这样显得过于繁杂。如果使用了别名的话，那么只需修改类型定义语句即可。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>当要在多个地方使用同种签名的 block 时，应该给该 block 定义一个别名，然后在需要的地方使用该别名定义 block 。</p>
-<h2 id="第39条：用-handler-块降低代码分散程度"><a href="#第39条：用-handler-块降低代码分散程度" class="headerlink" title="第39条：用 handler 块降低代码分散程度"></a>第39条：用 handler 块降低代码分散程度</h2><p>程序在执行任务时，通常需要 “异步执行” ，这样做的好处在于：处理用户界面的显示及触摸操作所用的线程，不会因为要执行I/O或网络通信这类耗时的任务而阻塞。某些情况下，如果应用程序在一定时间内无响应，那么就会自动终止。“系统监控器”（system watchdog）在发现某个应用程序的主线程已经阻塞了一段时间之后，就会令其终止。  </p>
-<p>通常有两种方式可以处理异步代码  </p>
-<h3 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h3><p>使用 delegate 会使代码变得分散，当一个对象同时接收多个同种类型对象的委托时，还需要在委托方法中判断是哪个对象传来的委托。那么代码会变的更加复杂。delegate 一般用在一个委托对象有多个委托事件的情况下，比如：UITableView，其他情况可以使用 block 来实现。</p>
-<h3 id="block"><a href="#block" class="headerlink" title="block"></a>block</h3><p>用 block 处理起来代码会变的更加清晰。block 可以令这种API变得更紧凑，同时也令开发者调用起来更加方便。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)vch_successWithComplete:(VCHAddNewDeviceComplete)complete failure:(VCHFailure)failure &#123;</div><div class="line">    [<span class="keyword">self</span> vch_startWithComplete:^(<span class="keyword">id</span> object) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        complete();</div><div class="line">    &#125; failure:^(<span class="built_in">NSString</span> *error) &#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">        failure(error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我的处理方式是将成功和失败分开处理，也可以用一个 block 来处理两个两种情况，两种方法均有优劣。具体可多看看官方的做法。</p>
-<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>在创建对象时，可以使用内联的handler块将相关业务逻辑一并声明。使代码变得更加紧凑。  </p>
-<h2 id="第40条：用-block-引用其所属对象时不要出现引用循环"><a href="#第40条：用-block-引用其所属对象时不要出现引用循环" class="headerlink" title="第40条：用 block 引用其所属对象时不要出现引用循环"></a>第40条：用 block 引用其所属对象时不要出现引用循环</h2><p>书中的例子比较长，我用项目中的一部分代码来替代，意思是一样的   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[<span class="keyword">self</span> queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
-<p>上面的代码会出现引用循环，self -&gt; mj_header -&gt; block -&gt; self 。这个是初学时很容易犯的错误。这种情况下有两种比较常用的方法可以解决这个问题，一种就是用完 block 后，立即将其释放，另一种就是使用 __weak 关键字修饰某一环节。这里我使用第二种方法，代码如下  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">__<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakSelf = <span class="keyword">self</span>;</div><div class="line"><span class="keyword">self</span>.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^&#123;</div><div class="line">	[weakSelf queryFence];</div><div class="line">&#125;];</div><div class="line">[<span class="keyword">self</span>.tableView.mj_header beginRefreshing];</div></pre></td></tr></table></figure>
-<p>此时 block 弱引用了 self ，这个循环也就被打破了。</p>
-<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>如果 block 所捕获的对象直接或间接的保留了 block 本身，那么就需要解除引用循环。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1450,7 +1404,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">50</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1467,7 +1421,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
