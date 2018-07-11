@@ -246,6 +246,319 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/17/180417-《Effective Objective-C 2.0》第二章阅读笔记(1)/" itemprop="url">
+                  《Effective Objective-C 2.0》第二章阅读笔记(1)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-17T00:00:00+08:00" content="2018-04-17">
+              2018-04-17
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:14:25+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第二章：对象、消息、运行期-1"><a href="#第二章：对象、消息、运行期-1" class="headerlink" title="第二章：对象、消息、运行期(1)"></a><center>第二章：对象、消息、运行期(1)</center></h1><p>“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。</p>
+<h2 id="第6条：理解-“属性”-这一概念"><a href="#第6条：理解-“属性”-这一概念" class="headerlink" title="第6条：理解 “属性” 这一概念"></a>第6条：理解 “属性” 这一概念</h2><p>“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。</p>
+<h4 id="对象布局"><a href="#对象布局" class="headerlink" title="对象布局"></a>对象布局</h4><p>对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换成偏移量，这个偏移量是“硬编码”，表示该变量距离对象内存起始地址有多远。<br>当类增加了实例变量时，原来的偏移量就已经不再适用，所以这时候需要重新编译。偏移量保存在类对象中，会在运行时查找。</p>
+<h4 id="应用程序二进制接口（Application-Binary-Interface，ABI）"><a href="#应用程序二进制接口（Application-Binary-Interface，ABI）" class="headerlink" title="应用程序二进制接口（Application Binary Interface，ABI）"></a>应用程序二进制接口（Application Binary Interface，ABI）</h4><blockquote>
+<p>应用程序二进制接口描述了应用程序和操作系统之间，一个应用和它的库之间，或者应用的组成部分之间的低层接口。ABI不同于应用程序接口（API），API定义了源代码和库之间的接口，因此同样的代码可以在支持这个API的任何系统中编译，然而ABI允许编译好的目标代码在使用兼容ABI的系统中无需改动就能运行。（百度百科）</p>
+</blockquote>
+<p>ABI定义了许多内容（标准），其中一项就是生成代码时所应遵循的规范，有了这种规范，我们就可以在分类和实现文件定义实例变量，可以将实例变量从接口文件中移开，以便保护和类实现相关的内部信息。</p>
+<h4 id="synthesize-amp-dynamic"><a href="#synthesize-amp-dynamic" class="headerlink" title="@synthesize &amp; @dynamic"></a>@synthesize &amp; @dynamic</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span></span></div><div class="line"><span class="keyword">@synthesize</span> firstName = _myFirstName;</div><div class="line"><span class="keyword">@dynamic</span> firstName;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>@synthesize 用来指定实例变量的名称。<br>@dynamic 告诉编译器不要自动生成实例变量，也不要生成 setter 和 getter 方法。这时编译器不会报错，而是在运行时查找。</p>
+<h4 id="属性特质"><a href="#属性特质" class="headerlink" title="属性特质"></a>属性特质</h4><p>原子性，读写权限，内存管理（assign、strong、weak、unsafe_unretained、copy），方法名</p>
+<h5 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h5><p>iOS 开发的时候应该尽量使用 nonatomic，使用 atomic 会严重影响性能。</p>
+<h5 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h5><p>readwrite 同时生成setter 和 getter 方法。<br>readonly 只生成 getter 方法。  </p>
+<h5 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h5><p>当属性类型为 NSString 时，一定要用 copy 修饰，防止当传递过来的值是 NSMutableString 类型，从而可能会在不知情的情况下更改属性的值。</p>
+<h2 id="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"><a href="#第7条：在对象内部尽量直接访问实例变量（感觉有歧义）" class="headerlink" title="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"></a>第7条：在对象内部尽量直接访问实例变量（感觉有歧义）</h2><p>在对象外面，应该通过属性访问实例变量。在对象内部，除了几种特殊的情况下，读取实例变量应该采用直接访问的形式，设置实例变量则采用属性来设置。</p>
+<h4 id="对象内部不要直接设置实例（有歧义）"><a href="#对象内部不要直接设置实例（有歧义）" class="headerlink" title="对象内部不要直接设置实例（有歧义）"></a>对象内部不要直接设置实例（有歧义）</h4><p>这样做不会调用 setter 方法，也就绕过了相关属性定义的“内存管理语义”，比如使用了 copy 特质，直接访问不会拷贝该属性，只会保留新值并释放旧值。此外当设置了KVO时，直接设置实例也不会触发KVO。</p>
+<h4 id="初始化时应该直接访问实例"><a href="#初始化时应该直接访问实例" class="headerlink" title="初始化时应该直接访问实例"></a>初始化时应该直接访问实例</h4><p>如果父类初始化使用 setter 方法设置属性，而子类又重写了这个 setter 方法，那么子类初始化时，父类也会初始化，这时父类将会调用子类的 setter 方法。<br>例外：如果待初始化的实例变量申明在父类中，而子类无法直接访问此实例变量，这时就需要调用 setter 方法了。</p>
+<blockquote>
+<p>dealloc 方法中也应该直接读写实例变量  </p>
+</blockquote>
+<h4 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h4><p>如果某个属性使用了懒加载，那就必须使用 getter 方法了。</p>
+<h2 id="第8条：理解-“对象同等性”-这一概念"><a href="#第8条：理解-“对象同等性”-这一概念" class="headerlink" title="第8条：理解 “对象同等性” 这一概念"></a>第8条：理解 “对象同等性” 这一概念</h2><p>“对象同等性” 可以理解为某种意义上两个对象相等，这个“相等”是我们自定义的。官方给我们定义了一些判断两个对象是否“相等”的方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSString</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToString:(<span class="built_in">NSString</span> *)aString;</div><div class="line"></div><div class="line"><span class="comment">// NSData</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToData:(<span class="built_in">NSData</span> *)other;</div><div class="line"></div><div class="line"><span class="comment">// NSDictionary</span></div><div class="line">- (<span class="built_in">BOOL</span>)isEqualToDictionary:(<span class="built_in">NSDictionary</span>&lt;KeyType, ObjectType&gt; *)otherDictionary;</div></pre></td></tr></table></figure>
+<h4 id="对象完全相等"><a href="#对象完全相等" class="headerlink" title="对象完全相等"></a>对象完全相等</h4><p>用 “==” 判断两个对象是否是同一个对象，这里判断的是指针。</p>
+<h4 id="自定义-“相等”"><a href="#自定义-“相等”" class="headerlink" title="自定义 “相等”"></a>自定义 “相等”</h4><p>通过 NSObject 协议中的两个方法自定义 “相等”。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object;  </div><div class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span> hash;</div></pre></td></tr></table></figure>
+<p>自定义一个 Person 类，包含一个 email 属性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>()</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>假定对象的 email 属性值相同，就认为这两个类“相同”，那么自定义方法如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isEqualToPerson:(Person *)otherPerson &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="literal">nil</span> == otherPerson) <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == otherPerson) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([_email isEqualToString:otherPerson.email]) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object &#123;</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> <span class="keyword">class</span>] != [object <span class="keyword">class</span>]) <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> isEqualToPerson:object];</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 如果两个对象相等，则其哈希码一定相同。反之，如果哈希码相同，这两个对象不一定相同。</span></div><div class="line"><span class="comment">// 考虑到性能问题，hash 方法要保证高效率</span></div><div class="line">- (<span class="built_in">NSUInteger</span>)hash &#123;</div><div class="line">	<span class="comment">// 此处逻辑可以自定义</span></div><div class="line">    <span class="keyword">return</span> [_email hash];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSArray</span></div><div class="line">- (<span class="built_in">BOOL</span>)containsObject:(ObjectType)anObject;</div><div class="line"><span class="comment">// NSSet</span></div><div class="line">- (<span class="built_in">BOOL</span>)containsObject:(ObjectType)anObject;</div></pre></td></tr></table></figure>
+<p>使用 NSArray 调用 containsObject 这个方法，会直接调用 isEqual 方法判断两个对象是否相等。测试发现这里并没有调用 hash 方法，原因不明，例子如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line">Person *aPerson = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,i]];</div><div class="line">	[array addObject:p];</div><div class="line">	aPerson = p;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([array containsObject:aPerson]) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"array has 'aPerson'"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再使用 NSSet 看看是怎么执行的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableSet</span> *sets = [<span class="built_in">NSMutableSet</span> set];</div><div class="line">Person *aPerson = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,i]];</div><div class="line">	[sets addObject:p];</div><div class="line">	aPerson = p;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([sets containsObject:aPerson]) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"array has 'aPerson'"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>NSSet 在 addObject 和 containsObject 方法中都会调用 hash 方法。再 addObject 方法中会调用 isEqual 方法，而 containsObject 方法中则不再调用。NSArray 则是在 containsObject 方法中调用 isEqual 方法。</p>
+<blockquote>
+<p>不同的集合会使用不同的逻辑判断是否“相等”。</p>
+</blockquote>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>在 NSSet 中， hash 方法是判断的第一步，应该保证此方法的高效性，同时也要考虑 <strong>哈希碰撞</strong> 发生的概率。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/04/13/180413-《Effective Objective-C 2.0》第一章阅读笔记/" itemprop="url">
+                  《Effective Objective-C 2.0》第一章阅读笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-13T00:00:00+08:00" content="2018-04-13">
+              2018-04-13
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:14:08+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第一章：熟悉-Objective-C-语言"><a href="#第一章：熟悉-Objective-C-语言" class="headerlink" title="第一章：熟悉 Objective-C 语言"></a><center>第一章：熟悉 Objective-C 语言</center></h1><h2 id="第1条：了解-Objective-C-语言的起源"><a href="#第1条：了解-Objective-C-语言的起源" class="headerlink" title="第1条：了解 Objective-C 语言的起源"></a>第1条：了解 Objective-C 语言的起源</h2><h4 id="消息结构"><a href="#消息结构" class="headerlink" title="消息结构"></a>消息结构</h4><p>Objective-C 使用的是“消息结构”（messaging structure）而非“函数调用”（function calling）。<br>使用消息结构的语言，其运行时所执行的代码由运行环境决定。而使用函数调用的语言，则由编译器决定。  </p>
+<blockquote>
+<p>在C/C++中，如果使用的函数是多态，那么运行时会根据“虚方法表”（virtual table）来查找应该执行哪个函数实现。而采用消息结构的语言则都是在运行的时候才查找要执行的方法。</p>
+</blockquote>
+<h4 id="运行期组件（runtime-component）"><a href="#运行期组件（runtime-component）" class="headerlink" title="运行期组件（runtime component）"></a>运行期组件（runtime component）</h4><p>Objective-C 中重要工作都由运行期组件完成，而非编译器。里面包含了面向对象所需的全部数据结构及函数。其本质是与开发者所编写的代码相链接的动态库。</p>
+<h4 id="对象内存分配"><a href="#对象内存分配" class="headerlink" title="对象内存分配"></a>对象内存分配</h4><p>对象所占有的内存总是分配到堆空间（Head）中，而指向对象的指针则是分配到栈（stack）中。分配到堆中的内存必须进行管理，分配到栈上用于保存对象地址的内存，则会在栈帧弹出时自动处理。<br>当遇到非指针类型变量的时候，变量可能会分配到栈空间，比如：结构体。</p>
+<h2 id="第2条：在类的头文件中尽量少引用其他头文件"><a href="#第2条：在类的头文件中尽量少引用其他头文件" class="headerlink" title="第2条：在类的头文件中尽量少引用其他头文件"></a>第2条：在类的头文件中尽量少引用其他头文件</h2><h4 id="向前声明（forward-declaring）"><a href="#向前声明（forward-declaring）" class="headerlink" title="向前声明（forward declaring）"></a>向前声明（forward declaring）</h4><p>如果只需要知道有那么一个类名，则不需要引用该类名的头文件（不需要知道其他细节），这时可以向前声明该类，既使用：</p>
+<blockquote>
+<p>@class className;  </p>
+</blockquote>
+<p>然后在实现文件中引入该头文件。这样可以降低类与类之间的耦合。<br>引入头文件的时机应该尽量延后，只有当确定要引用该头文件的时候才引用。将大量的头文件引入到头文件中，会增加文件之间的依赖性，从而增加编译时间。   </p>
+<h4 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h4><p>向前申明可以解决两个类之间的循环引用。文章说道：</p>
+<blockquote>
+<p>使用 #import 虽然不会导致引用循环，但却意味着两个类有一个不能被正确编译。</p>
+</blockquote>
+<p>不过，这句话我。。。。无法理解！！！  </p>
+<h4 id="头文件需要引用协议"><a href="#头文件需要引用协议" class="headerlink" title="头文件需要引用协议"></a>头文件需要引用协议</h4><p>如果要使用某个协议，则不能使用向前声明，为了不引用整个头文件，可以将协议放到“class-continuation 分类”中，或者单独放到一个文件中，然后使用 #import 引用头文件，这样就不会出现上面说的问题。</p>
+<h2 id="第3条：多用字面量语法，少用与之等价的方法"><a href="#第3条：多用字面量语法，少用与之等价的方法" class="headerlink" title="第3条：多用字面量语法，少用与之等价的方法"></a>第3条：多用字面量语法，少用与之等价的方法</h2><p>使用字面量语法可以缩减代码长度，提高代码可读性。也要确保创建对象的时候不能为nil。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string0 = [[<span class="built_in">NSString</span> alloc] initWithString:<span class="string">@"123"</span>];</div><div class="line"><span class="built_in">NSString</span> *string1 = <span class="string">@"123"</span>;</div><div class="line">    </div><div class="line"><span class="built_in">NSNumber</span> *number0 = [<span class="built_in">NSNumber</span> numberWithInt:<span class="number">1</span>];</div><div class="line"><span class="built_in">NSNumber</span> *number1 = @<span class="number">1</span>;</div><div class="line">    </div><div class="line"><span class="built_in">NSArray</span> *array0 = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@"cat"</span>, <span class="string">@"dog"</span>, <span class="string">@"fish"</span>, <span class="literal">nil</span>];</div><div class="line"><span class="built_in">NSString</span> *cat0 = [array0 objectAtIndex:<span class="number">0</span>];</div><div class="line"><span class="built_in">NSArray</span> *array1 = @[<span class="string">@"cat"</span>, <span class="string">@"dog"</span>, <span class="string">@"fish"</span>];</div><div class="line"><span class="built_in">NSString</span> *cat1 = array1[<span class="number">0</span>];</div><div class="line">    </div><div class="line"><span class="built_in">NSDictionary</span> *dictionary0 = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:<span class="string">@"key0"</span>, <span class="string">@"value0"</span>, <span class="string">@"key1"</span>, <span class="string">@"value1"</span>, <span class="literal">nil</span>];</div><div class="line"><span class="built_in">NSString</span> *value0 = [dictionary0 objectForKey:<span class="string">@"key0"</span>];</div><div class="line">	</div><div class="line"><span class="built_in">NSDictionary</span> *dictionary1 = @&#123;<span class="string">@"key0"</span>:<span class="string">@"value0"</span>, <span class="string">@"key1"</span>:<span class="string">@"value1"</span>&#125;;</div><div class="line"><span class="built_in">NSString</span> *value1 = dictionary1[<span class="string">@"key1"</span>];</div></pre></td></tr></table></figure>
+<h2 id="第4条：多用类型常量，少用-define-预处理指令"><a href="#第4条：多用类型常量，少用-define-预处理指令" class="headerlink" title="第4条：多用类型常量，少用 #define 预处理指令"></a>第4条：多用类型常量，少用 #define 预处理指令</h2><h4 id="使用-define-无法确定类型信息"><a href="#使用-define-无法确定类型信息" class="headerlink" title="使用 #define 无法确定类型信息"></a>使用 #define 无法确定类型信息</h4><p>比如下面的代码用 #define 无法预知 kAnimationDuration 的数据类型，不利于编写开发文档。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#define kAnimationDuration 0.1</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">NSTimeInterval</span> kAnimationDuration = <span class="number">0.1</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">float</span> kAnimationDuration = <span class="number">0.1</span>;</div></pre></td></tr></table></figure>
+<h4 id="static-const-修饰"><a href="#static-const-修饰" class="headerlink" title="static const 修饰"></a>static const 修饰</h4><p>如果一个变量用 static const 修饰，那么编译器不会创建符号，而是会像 #define 预处理指令一样，在编译的时候将所有的变量替换成常值。</p>
+<h4 id="extern-声明全局变量"><a href="#extern-声明全局变量" class="headerlink" title="extern 声明全局变量"></a>extern 声明全局变量</h4><p>使用 static const 修饰的变量只能在本文件内使用，但有时候需要对外公布这个变量，比如该变量作为“通知”的key的时候，此时可以稍微改一下。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .h文件 声明一个变量</span></div><div class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> VCHLoginNotification;</div><div class="line"><span class="comment">// .m文件 定义一个变量</span></div><div class="line"><span class="built_in">NSString</span> *<span class="keyword">const</span> VCHLoginNotification = <span class="string">@"kLoginNotification"</span>;</div></pre></td></tr></table></figure>
+<p>这种变量会保存在“全局符号表”中。为了避免命名冲突，这种变量应该加上类名前缀。</p>
+<h4 id="判断-const-修饰的是对象还是指针-自己理解"><a href="#判断-const-修饰的是对象还是指针-自己理解" class="headerlink" title="判断 const 修饰的是对象还是指针(自己理解)"></a>判断 const 修饰的是对象还是指针(自己理解)</h4><p>const 修饰的是右边的第一个字符  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">float</span> <span class="keyword">const</span> valueFloat0 = <span class="number">0.1</span>; <span class="comment">//[1]</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">float</span> valueFloat1 = <span class="number">0.1</span>; <span class="comment">//[2]</span></div><div class="line"><span class="built_in">NSString</span> <span class="keyword">const</span> * string0 = <span class="string">@"abc"</span>; <span class="comment">//[3]</span></div><div class="line"><span class="built_in">NSString</span> * <span class="keyword">const</span> string1 = <span class="string">@"abc"</span>; <span class="comment">//[4]</span></div><div class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> * string2 = <span class="string">@"abc"</span>; <span class="comment">//[5]</span></div><div class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> * <span class="keyword">const</span> string3 = <span class="string">@"abc"</span>; <span class="comment">//[6]</span></div><div class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> <span class="keyword">const</span> * string4 = <span class="string">@"abc"</span>; <span class="comment">//[7]</span></div></pre></td></tr></table></figure>
+<p>[1] const 右边第一个字符是 valueFloat0，表示 valueFloat0 里面的值是不变的。valueFloat0  不能是左值。<br>[2] const 右边第一个字符是 float，而 float 指的就是 valueFloat1，所以 valueFloat1 的值是不变的。valueFloat1 不能是左值。<br>[3] const 右边第一个字符是 string0，string0 是一个指针，所以 string0 指向的地址是不变的。string0 不能是左值。<br>[4] const 右边第一个字符是 string1（指针），所以 string1 指向的地址是不变的。string1 不能是左值。<br>[5] const 右边第一个字符是 NSString，表示的是 @”abc” 这个对象，所以 @”abc 是不可变对象。不可以通过 string2 这个指针来修改它指向的对象的内容。(这里刚好 @”abc” 是不能修改的，就算指向的对象是可以被修改的，也不能通过 const 修饰的指针去修改)<br>[6] 第一个 const 右边第一个字符是 NSString， 等同于 [5]。第二个 const 等同于 [4]。<br>[7] 等同于 [6]  </p>
+<h2 id="第5条：用枚举表示状态、选项、状态码"><a href="#第5条：用枚举表示状态、选项、状态码" class="headerlink" title="第5条：用枚举表示状态、选项、状态码"></a>第5条：用枚举表示状态、选项、状态码</h2><p>枚举可以提高代码可读性。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 状态、状态码</span></div><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIViewAnimationTransition</span>) &#123;</div><div class="line">    <span class="built_in">UIViewAnimationTransitionNone</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionFlipFromLeft</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionFlipFromRight</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionCurlUp</span>,</div><div class="line">    <span class="built_in">UIViewAnimationTransitionCurlDown</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 可组合选项</span></div><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_OPTIONS</span>(<span class="built_in">NSUInteger</span>, <span class="built_in">UIViewAutoresizing</span>) &#123;</div><div class="line">    <span class="built_in">UIViewAutoresizingNone</span>                 = <span class="number">0</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleLeftMargin</span>   = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleWidth</span>        = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleRightMargin</span>  = <span class="number">1</span> &lt;&lt; <span class="number">2</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleTopMargin</span>    = <span class="number">1</span> &lt;&lt; <span class="number">3</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleHeight</span>       = <span class="number">1</span> &lt;&lt; <span class="number">4</span>,</div><div class="line">    <span class="built_in">UIViewAutoresizingFlexibleBottomMargin</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>enum 用来表示状态，options 用来表示可组合的选项。</p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>1、用枚举处理 switch 的时候不要实现 default 分支。这样加入新的分支后，编译器就会提示开发者。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/04/11/180411-iOS开发之编译时与运行时/" itemprop="url">
                   iOS基础之编译时与运行时
                 </a>
@@ -1048,289 +1361,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/22/180323-iOS开发之多线程（NSThread、NSOperation、GCD）/" itemprop="url">
-                  iOS开发之多线程（NSThread、NSOperation、GCD）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-22T23:32:31+08:00" content="2018-03-22">
-              2018-03-22
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:10:34+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>整理一些多线程相关的知识。</p>
-<h3 id="并行-amp-并发"><a href="#并行-amp-并发" class="headerlink" title="并行 &amp; 并发"></a>并行 &amp; 并发</h3><p>1、并行：并行是相对于多核而言的，几个任务同时执行。<br>2、并发：并发是相对于单核而言的，几个任务之间快速切换运行，看起来像是“同时”发生的一样   </p>
-<h3 id="NSThread"><a href="#NSThread" class="headerlink" title="NSThread"></a>NSThread</h3><p>优点：轻量级<br>缺点：需要手动管理线程活动，如生命周期、线程同步、睡眠等。<br>搭配runloop实现常驻线程</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//NSThread</span></div><div class="line"><span class="built_in">NSThread</span> *thread = [[<span class="built_in">NSThread</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(threadRun) object:<span class="literal">nil</span>];</div><div class="line">[thread start];</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)threadRun &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"threadRun"</span>);</div><div class="line"><span class="comment">//        NSTimer *timer = [NSTimer timerWithTimeInterval:2 target:self selector:@selector(timeTask) userInfo:nil repeats:YES];</span></div><div class="line"><span class="comment">//        [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];</span></div><div class="line">        [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">2</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(timeTask) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>];</div><div class="line">        [[<span class="built_in">NSRunLoop</span> currentRunLoop] run];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)timeTask &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"timeTask:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="NSOperation-amp-NSOperationQueue"><a href="#NSOperation-amp-NSOperationQueue" class="headerlink" title="NSOperation &amp; NSOperationQueue"></a>NSOperation &amp; NSOperationQueue</h3><h4 id="NSOperation"><a href="#NSOperation" class="headerlink" title="NSOperation"></a>NSOperation</h4><p>NSOperation 是一个抽象类，只能使用它的自类来进行操作。系统为我们创建了两个子类NSInvocationOperation &amp; NSBlockOperation。<br>直接使用这两个类执行任务，系统不会创建子线程，而是在当前线程执行任务。NSBlockOperation 使用 addExecutionBlock方法的任务是在多线程执行的</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//NSInvocationOperation</span></div><div class="line"><span class="built_in">NSInvocationOperation</span> *invocationOperation = [[<span class="built_in">NSInvocationOperation</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(invocationOperation) object:<span class="literal">nil</span>];</div><div class="line">[invocationOperation start];</div><div class="line">    </div><div class="line"><span class="comment">//NSBlockOperation</span></div><div class="line"><span class="built_in">NSBlockOperation</span> * blockOperation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"blockOperation:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line"><span class="comment">//这里面的任务是多线程执行的</span></div><div class="line">[blockOperation addExecutionBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"addExecutionBlock:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line">[blockOperation start];</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)invocationOperation &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"invocationOperation:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//invocationOperation:&lt;NSThread: 0x60800007e1c0&gt;&#123;number = 1, name = main&#125;</span></div><div class="line"><span class="comment">//blockOperation:&lt;NSThread: 0x60800007e1c0&gt;&#123;number = 1, name = main&#125;</span></div><div class="line"><span class="comment">//addExecutionBlock:&lt;NSThread: 0x608000078800&gt;&#123;number = 3, name = (null)&#125;</span></div></pre></td></tr></table></figure>
-<h4 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h4><p>//主队列，任务在主线程执行，一般用于更新UI的时候使用。<br>NSOperationQueue <em>queue = [NSOperationQueue mainQueue];<br>//子队列，任务在子线程执行，用于处理耗时任务。<br>NSOperationQueue </em>queue = [[NSOperationQueue alloc] init];   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSOperationQueue</span> *operationQueue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</div><div class="line"><span class="comment">//NSInvocationOperation</span></div><div class="line"><span class="built_in">NSInvocationOperation</span> *invocationOperation = [[<span class="built_in">NSInvocationOperation</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(invocationOperation) object:<span class="literal">nil</span>];</div><div class="line"><span class="comment">//NSBlockOperation</span></div><div class="line"><span class="built_in">NSBlockOperation</span> * blockOperation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"blockOperation:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line">[operationQueue addOperation:invocationOperation];</div><div class="line">[operationQueue addOperation:blockOperation];</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)invocationOperation &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"invocationOperation:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// invocationOperation:&lt;NSThread: 0x60c00046b940&gt;&#123;number = 4, name = (null)&#125;</span></div><div class="line"><span class="comment">// blockOperation:&lt;NSThread: 0x60800026b580&gt;&#123;number = 3, name = (null)&#125;</span></div></pre></td></tr></table></figure>
-<p>也可以直接添加block   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSOperationQueue</span> *operationQueue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</div><div class="line">[operationQueue addOperationWithBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line">[operationQueue addOperationWithBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line">[operationQueue addOperationWithBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line">    </div><div class="line"><span class="comment">// &lt;NSThread: 0x6080002637c0&gt;&#123;number = 4, name = (null)&#125;</span></div><div class="line"><span class="comment">// &lt;NSThread: 0x60c0002667c0&gt;&#123;number = 5, name = (null)&#125;</span></div><div class="line"><span class="comment">// &lt;NSThread: 0x60000047b2c0&gt;&#123;number = 3, name = (null)&#125;</span></div></pre></td></tr></table></figure>
-<p>可以通过 <strong>maxConcurrentOperationCount</strong> 来控制最大并发数，当最大并发数为1时，就相当于串行队列</p>
-<h5 id="NSOperation添加依赖关系"><a href="#NSOperation添加依赖关系" class="headerlink" title="NSOperation添加依赖关系"></a>NSOperation添加依赖关系</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSOperationQueue</span> *operationQueue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</div><div class="line"><span class="comment">//NSBlockOperation</span></div><div class="line"><span class="built_in">NSBlockOperation</span> * blockOperation0 = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"blockOperation0:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line"><span class="built_in">NSBlockOperation</span> * blockOperation1 = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</div><div class="line">	sleep(<span class="number">1</span>);</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"blockOperation1:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line">    </div><div class="line"><span class="comment">//blockOperation0 依赖 blockOperation1，只有在 blockOperation1 执行完成才能执行 blockOperation0</span></div><div class="line">[blockOperation0 addDependency:blockOperation1];</div><div class="line">    </div><div class="line">[operationQueue addOperation:blockOperation0];</div><div class="line">[operationQueue addOperation:blockOperation1];</div><div class="line"></div><div class="line"><span class="comment">//blockOperation1:&lt;NSThread: 0x600000269c80&gt;&#123;number = 3, name = (null)&#125;</span></div><div class="line"><span class="comment">//blockOperation0:&lt;NSThread: 0x60c000479040&gt;&#123;number = 4, name = (null)&#125;</span></div></pre></td></tr></table></figure>
-<p><strong>注意：NSOperationQueue 是非线程安全的，多个线程访问统一资源时，需要加锁。</strong></p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.lock = [[<span class="built_in">NSLock</span> alloc] init];</div><div class="line"></div><div class="line">[<span class="keyword">self</span>.lock lock];</div><div class="line"><span class="comment">//不能同时访问的资源</span></div><div class="line">[<span class="keyword">self</span>.lock unlock];</div></pre></td></tr></table></figure>
-<h3 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h3><p>创建队列，然后再往队列添加任务。也可以直接使用系统创建的队列。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//创建串行队列</span></div><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"com.vhuichen.queue"</span>, DISPATCH_QUEUE_SERIAL);</div><div class="line"><span class="comment">//创建并发队列</span></div><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"com.vhuichen.queue"</span>, DISPATCH_QUEUE_CONCURRENT);</div><div class="line"><span class="comment">//获取主队列</span></div><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_main_queue();</div><div class="line"><span class="comment">//获取全局并发队列</span></div><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</div></pre></td></tr></table></figure>
-<p>创建同步、异步任务   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_sync</span>(queue, ^&#123;</div><div class="line">    <span class="comment">//同步执行</span></div><div class="line">&#125;);</div><div class="line"><span class="comment">// 异步执行任务创建方法</span></div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="comment">//异步执行</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h4 id="GCD常用方法"><a href="#GCD常用方法" class="headerlink" title="GCD常用方法"></a>GCD常用方法</h4><h5 id="dispatch-barrier"><a href="#dispatch-barrier" class="headerlink" title="dispatch_barrier"></a>dispatch_barrier</h5><p>只有当添加在dispatch_barrier前面的任务完成了，才开始执行dispatch_barrier任务。<br>有两种方式：<strong>dispatch_barrier_sync</strong> 和 <strong>dispatch_barrier_async</strong></p>
-<h5 id="dispatch-barrier-sync"><a href="#dispatch-barrier-sync" class="headerlink" title="dispatch_barrier_sync"></a>dispatch_barrier_sync</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"com.vhuichen.queue"</span>, DISPATCH_QUEUE_CONCURRENT);</div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task0....."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task1....."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_barrier_sync(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task2....."</span>);</div><div class="line">    sleep(<span class="number">5</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"test"</span>);</div><div class="line"></div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task3....."</span>);</div><div class="line">    sleep(<span class="number">2</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task4....."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//task0.....</span></div><div class="line"><span class="comment">//task1.....</span></div><div class="line"><span class="comment">//task2.....</span></div><div class="line"><span class="comment">//test....</span></div><div class="line"><span class="comment">//task3.....</span></div><div class="line"><span class="comment">//task4.....</span></div><div class="line"></div><div class="line"><span class="comment">//只有当task0、task1 执行完才会执行tast2.</span></div><div class="line"><span class="comment">//task2 执行完才会往下执行。</span></div><div class="line"><span class="comment">//test 执行完后，才会把task3、task4 加进队列.</span></div></pre></td></tr></table></figure>
-<h5 id="dispatch-barrier-async"><a href="#dispatch-barrier-async" class="headerlink" title="dispatch_barrier_async"></a>dispatch_barrier_async</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"com.vhuichen.queue"</span>, DISPATCH_QUEUE_CONCURRENT);</div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task0....."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task1....."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_barrier_async(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task2....."</span>);</div><div class="line">    sleep(<span class="number">5</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"test"</span>);</div><div class="line"></div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task3....."</span>);</div><div class="line">    sleep(<span class="number">2</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"task4....."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//test....</span></div><div class="line"><span class="comment">//task1.....</span></div><div class="line"><span class="comment">//task0.....</span></div><div class="line"><span class="comment">//task2.....</span></div><div class="line"><span class="comment">//task3.....</span></div><div class="line"><span class="comment">//task4.....</span></div><div class="line"></div><div class="line"><span class="comment">//test、task0、task1 并发执行。</span></div><div class="line"><span class="comment">//task0、task1 执行完才会执行tast2.</span></div><div class="line"><span class="comment">//tast2 执行完才会执行tast3、tast4.</span></div></pre></td></tr></table></figure>
-<h5 id="dispatch-after"><a href="#dispatch-after" class="headerlink" title="dispatch_after"></a>dispatch_after</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="number">1</span> * <span class="built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"dispatch_after task..."</span>);</div><div class="line">&#125;);</div><div class="line"><span class="comment">//dispatch_after 会在到了指定的时间之后，将才将任务加到相应的队列中。</span></div></pre></td></tr></table></figure>
-<h5 id="dispatch-once"><a href="#dispatch-once" class="headerlink" title="dispatch_once"></a>dispatch_once</h5><p>一般会以这种形式出现    </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line"><span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"dispatch_once task..."</span>);</div><div class="line">&#125;);</div><div class="line"><span class="comment">//block里面的任务只会执行一次。</span></div></pre></td></tr></table></figure>
-<h5 id="dispatch-apply"><a href="#dispatch-apply" class="headerlink" title="dispatch_apply"></a>dispatch_apply</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">"com.vhuichen.queue"</span>, DISPATCH_QUEUE_CONCURRENT);</div><div class="line">dispatch_apply(<span class="number">10</span>, queue, ^(size_t index) &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%zu"</span>,index);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"end"</span>);</div><div class="line"></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="comment">// 5</span></div><div class="line"><span class="comment">// 6</span></div><div class="line"><span class="comment">// 7</span></div><div class="line"><span class="comment">// 8</span></div><div class="line"><span class="comment">// 9</span></div><div class="line"><span class="comment">// end</span></div><div class="line"></div><div class="line"><span class="comment">// dispatch_apply 会等待所有的任务完成了，才会往下执行。</span></div></pre></td></tr></table></figure>
-<h5 id="dispatch-semaphore"><a href="#dispatch-semaphore" class="headerlink" title="dispatch_semaphore"></a>dispatch_semaphore</h5><p>可以用于线程同步、线程加锁、控制并发线程数量</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//实现同步请求</span></div><div class="line"><span class="keyword">let</span> semaphoreSignal = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</div><div class="line"><span class="type">ZBDepthAPI</span>.<span class="type">GET</span>(market: market.name!, succeed: &#123; (depthModel) <span class="keyword">in</span></div><div class="line">	<span class="comment">//......</span></div><div class="line">	semaphoreSignal.signal()</div><div class="line">&#125;) &#123; (error) <span class="keyword">in</span></div><div class="line">	<span class="comment">//......</span></div><div class="line">	semaphoreSignal.signal()</div><div class="line">&#125;</div><div class="line">semaphoreSignal.wait()</div></pre></td></tr></table></figure>
-<h5 id="dispatch-group"><a href="#dispatch-group" class="headerlink" title="dispatch_group"></a>dispatch_group</h5><p>当需要同时执行多个耗时任务，并且当所有任务执行完后更新UI。那么这时可以使用 dispatch_group 来实现。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">dispatch_group_t group = dispatch_group_create();</div><div class="line"><span class="built_in">dispatch_queue_t</span> global = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</div><div class="line"></div><div class="line">dispatch_group_async(group, global, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"tast0......."</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"0"</span>);</div><div class="line"></div><div class="line">dispatch_group_async(group, global, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"tast1......."</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"1"</span>);</div><div class="line"></div><div class="line">dispatch_group_async(group, global, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"tast2......."</span>);</div><div class="line">    sleep(<span class="number">1</span>);</div><div class="line">&#125;);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"2"</span>);</div><div class="line"></div><div class="line">dispatch_group_enter(group);</div><div class="line"><span class="built_in">dispatch_async</span>(global, ^&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"tast00......."</span>);</div><div class="line">    dispatch_group_leave(group);</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 所有任务完成的时候调用</span></div><div class="line"><span class="comment">//dispatch_group_notify(group, global, ^&#123;</span></div><div class="line"><span class="comment">//    NSLog(@"tast complete...");</span></div><div class="line"><span class="comment">//&#125;);</span></div><div class="line"></div><div class="line"><span class="comment">//会阻塞当前线程，直到 group 里面的任务全部完成</span></div><div class="line">dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"wait"</span>);</div><div class="line"></div><div class="line"><span class="comment">// 异步加入的任务会立即执行</span></div><div class="line"><span class="comment">// dispatch_group_wait会阻塞当前线程，直到 group 里面的任务全部完成</span></div><div class="line"><span class="comment">// dispatch_group_enter &amp; dispatch_group_leave 必须成对出现，相当于 dispatch_group_async</span></div></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>当遇到相应场景的时候，知道使用哪种方法比较合理就行了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/22/180322-iOS开发之封装FMDB/" itemprop="url">
-                  iOS开发之封装FMDB
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-03-22T20:12:39+08:00" content="2018-03-22">
-              2018-03-22
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:09:58+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>之前在项目中使用过，写出来记录一下。</p>
-<h3 id="常用类-FMDatabaseQueue-FMDatabase"><a href="#常用类-FMDatabaseQueue-FMDatabase" class="headerlink" title="常用类 FMDatabaseQueue FMDatabase"></a>常用类 FMDatabaseQueue FMDatabase</h3><h4 id="FMDatabase"><a href="#FMDatabase" class="headerlink" title="FMDatabase"></a>FMDatabase</h4><p>FMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。</p>
-<h4 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h4><p>使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。</p>
-<h3 id="考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase"><a href="#考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase" class="headerlink" title="考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase"></a>考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase</h3><p>方法如下：   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-<p>如果要处理事务，则使用下面的方法            </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDeferredTransaction:^(FMDatabase * _Nonnull db, <span class="built_in">BOOL</span> * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
-<p>不管是使用 inDatabase 还是 inDeferredTransaction 都是同步的，所以在这里不需要任何处理。</p>
-<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">BOOL</span> isOK = <span class="literal">NO</span>;</div><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db executeQuery:sql];</div><div class="line">	isOK = results.next;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
-<p><strong>备注：</strong> 在block内处理完FMResultSet的相关逻辑，就算不调用 [results close] ，也不会报错，可能是由于block处理完，就自动释放了这个类。但注意不要在block外面使用FMResultSet。</p>
-<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p>Demo中目前没有加入keyid，操作不当会出现多个相同的数据，只能以后再改了。。。。<br><a href="https://github.com/vhuichen/VCHFMDB" target="_blank" rel="external">GitHub Demo</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1376,7 +1406,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">52</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1393,7 +1423,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">53</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
