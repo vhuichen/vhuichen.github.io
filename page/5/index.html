@@ -246,6 +246,271 @@
             
               
                 
+                <a class="post-title-link" href="/2018/04/03/180403-iOS开发之Push Notification/" itemprop="url">
+                  iOS开发之Push Notification
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-04-03T15:12:39+08:00" content="2018-04-03">
+              2018-04-03
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:11:01+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>iOS远程推送是怎么实现的？</p>
+<h3 id="远程推送逻辑图"><a href="#远程推送逻辑图" class="headerlink" title="远程推送逻辑图"></a>远程推送逻辑图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg" alt=""></p>
+<p>1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。<br>2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。<br>3、 APP 将 Device Token 发送给自己的服务器。<br>4、 当服务器发生APP感兴趣事件的时候，服务器将该消息以及对应的 Device Token 发送给APNS。<br>5、 APNS 再根据 Device Token 将消息发送给对应的APP（用户）。   </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/31/180331-iOS开发之Designated Initializer/" itemprop="url">
+                  iOS开发之Designated Initializer(指定初始化方法)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-31T00:00:00+08:00" content="2018-03-31">
+              2018-03-31
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:10:48+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以在编译的时候帮我们找出潜在的问题。<br>如果一个类中的初始化方法没有用 NS_DESIGNATED_INITIALIZER 修饰，说明这个方法是便利初始化方法（Convenience Initializer）。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#ifndef NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#if __has_attribute(objc_designated_initializer)</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></div><div class="line"><span class="meta">#else</span></div><div class="line"><span class="meta">#define NS_DESIGNATED_INITIALIZER</span></div><div class="line"><span class="meta">#endif</span></div><div class="line"><span class="meta">#endif</span></div></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>看看官方的接口是怎么使用的。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// UIViewController</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithNibName:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)nibNameOrNil bundle:(<span class="keyword">nullable</span> <span class="built_in">NSBundle</span> *)nibBundleOrNil <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UIView</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">CGRect</span>)frame <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line"></div><div class="line"><span class="comment">// UITableViewCell</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithStyle:(<span class="built_in">UITableViewCellStyle</span>)style reuseIdentifier:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)reuseIdentifier <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_0) <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div><div class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>两个指定初始化方法分别对应纯代码方式和文件（Xib、Storyboard）方式创建。</p>
+</blockquote>
+<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>在OC中它想表达的意思大概就是：当你alloc了一个类的时候，必须直接或间接调用这个类的其中一个带有 NS_DESIGNATED_INITIALIZER 后缀的初始化方法。不然初始化不完全，编译器会报出一个警告！下图是官方给的逻辑图。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/50413485.jpg?imageView2/2/w/600" alt=""></p>
+<blockquote>
+<p>这里有两个约束<br>约束1、便利初始化方法只能调用本类的初始化方法，最终一定会调用本类的指定初始化方法。<br>约束2、子类的指定初始化方法一定会调用父类的指定初始化方法。</p>
+</blockquote>
+<p>当存在多个初始化方法的时候，流程如下图。这里的 Secondary initializer 就是 Convenience (便利初始化方法)<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/93397245.jpg?imageView2/2/w/700" alt=""></p>
+<blockquote>
+<p>这里便利初始化方法最终调用了本类的指定初始化方法，本类的指定初始化方法调用了父类的指定初始化方法。满足了约束1和约束2。</p>
+</blockquote>
+<p>子类要先初始化父类，然后再初始化实例变量。如下图<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/37631710.jpg?imageView2/2/w/500" alt=""></p>
+<blockquote>
+<p>子类的指定初始化方法调用了父类的指定初始化方法。满足了约束2。</p>
+</blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://developer.apple.com/library/content/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150-CH1-SW8" target="_blank" rel="external">Object Initialization</a><br><a href="https://developer.apple.com/library/content/documentation/General/Conceptual/CocoaEncyclopedia/Initialization/Initialization.html" target="_blank" rel="external">Concepts in Objective-C Programming: Object Initialization</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/03/22/180323-iOS开发之多线程（NSThread、NSOperation、GCD）/" itemprop="url">
                   iOS开发之多线程（NSThread、NSOperation、GCD）
                 </a>
@@ -1044,269 +1309,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/11/170711-iOS开发之判断View是否显示在当前窗口/" itemprop="url">
-                  iOS开发之判断View是否显示在当前窗口
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-11T21:01:43+08:00" content="2017-07-11">
-              2017-07-11
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:07:46+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="判断View是否显示在当前窗口"><a href="#判断View是否显示在当前窗口" class="headerlink" title="判断View是否显示在当前窗口"></a>判断View是否显示在当前窗口</h3><p>写一个分类</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">VCHFrame</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isShowingOnKeyWindow &#123;</div><div class="line">    <span class="built_in">UIWindow</span> *window = [<span class="built_in">UIApplication</span> sharedApplication].keyWindow;</div><div class="line">    <span class="built_in">CGRect</span> newRect = [window convertRect:<span class="keyword">self</span>.frame fromView:<span class="keyword">self</span>.superview];</div><div class="line">    <span class="built_in">BOOL</span> intersects = <span class="built_in">CGRectIntersectsRect</span>(newRect, window.bounds);</div><div class="line">    <span class="keyword">return</span> intersects &amp;&amp; !<span class="keyword">self</span>.isHidden &amp;&amp; (<span class="keyword">self</span>.alpha &gt; <span class="number">0.01</span>) &amp;&amp; (<span class="keyword">self</span>.window == window);</div><div class="line">&#125;</div><div class="line">~~~   </div><div class="line"></div><div class="line"><span class="meta">### 判断控制器是否显示到当前窗口   </span></div><div class="line">可以用一种简单的方法，判断view是否已经加载，再判断window是否存在。用这两个条件正常情况下都可以判断出来。   </div><div class="line">**这种方法不是绝对的。**</div><div class="line"></div><div class="line">~~~ objc</div><div class="line">- (<span class="built_in">BOOL</span>)isShowing &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">self</span>.isViewLoaded &amp;&amp; <span class="keyword">self</span>.view.window;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="坐标转变方法"><a href="#坐标转变方法" class="headerlink" title="坐标转变方法"></a>坐标转变方法</h3><pre><code class="objc"><span class="built_in">CGRect</span> newRect = [view1 convertRect:view2.frame toView:view3];
-<span class="built_in">CGRect</span> newRect = [view3 convertRect:view2.frame fromView:view1];
-</code></pre>
-<p>view1：view2的父类（view2的frame相对的坐标系的view）<br>view2：需要转换坐标的view<br>view3：转换后坐标所在的view   </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/26/170626-iOS开发之上传代码到CocoaPods/" itemprop="url">
-                  iOS开发之上传代码到CocoaPods
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-26T19:54:23+08:00" content="2017-06-26">
-              2017-06-26
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:07:17+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习下怎样将自己的代码上传到CocoaPods</p>
-<h2 id="1-在GitHub上创建新的仓库，并clone到本地"><a href="#1-在GitHub上创建新的仓库，并clone到本地" class="headerlink" title="1.在GitHub上创建新的仓库，并clone到本地"></a>1.在GitHub上创建新的仓库，并clone到本地</h2><p>此时将库文件但放到一个单独的文件夹内，并将相关的演示Demo写好。</p>
-<h2 id="2-创建podspec文件"><a href="#2-创建podspec文件" class="headerlink" title="2.创建podspec文件"></a>2.创建podspec文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd path****</div><div class="line">pod spec create VCHKit</div></pre></td></tr></table></figure>
-<h2 id="3-修改podspec文件"><a href="#3-修改podspec文件" class="headerlink" title="3.修改podspec文件"></a>3.修改podspec文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">s.name         = &quot;VCHKit&quot;</div><div class="line">s.version      = &quot;0.0.1&quot;</div><div class="line">s.summary      = &quot;this is summary&quot;</div><div class="line">s.description  = &lt;&lt;-DESC</div><div class="line">                 this is description</div><div class="line">                 DESC</div><div class="line">s.homepage     = &quot;https://github.com/vhuichen/VCHKit&quot;</div><div class="line">s.license      = &quot;MIT&quot;</div><div class="line">s.author       = &#123; &quot;vhuichen&quot; =&gt; &quot;vhuichen@163.com&quot; &#125;</div><div class="line">s.platform     = :ios, &quot;8.0&quot;</div><div class="line">s.source       = &#123; :git =&gt; &quot;https://github.com/vhuichen/VCHKit.git&quot;, :tag =&gt; &quot;#&#123;s.version&#125;&quot; &#125;</div><div class="line">s.source_files  = &quot;VCHMapKit/*.&#123;h,m&#125;&quot;, &quot;VCHMapKit/XXXX/*.&#123;h,m&#125;&quot;</div><div class="line">s.frameworks = &quot;UIKit&quot;</div><div class="line">s.requires_arc = true</div></pre></td></tr></table></figure>
-<p>*注意：描述description必须填写，并且不能和summary相同</p>
-<h3 id="验证pod"><a href="#验证pod" class="headerlink" title="验证pod"></a>验证pod</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod lib lint</div></pre></td></tr></table></figure>
-<p>如果验证成功则会显示成功信息<br>–<strong>VCHMapKit passed validation.</strong></p>
-<h2 id="4-提交库到CocoaPods-trunk"><a href="#4-提交库到CocoaPods-trunk" class="headerlink" title="4.提交库到CocoaPods trunk"></a>4.提交库到CocoaPods trunk</h2><h3 id="如果没有注册，则先注册trunk"><a href="#如果没有注册，则先注册trunk" class="headerlink" title="如果没有注册，则先注册trunk"></a>如果没有注册，则先注册trunk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk register vhuichen@163.com &apos;vhuichen&apos;  --verbose</div></pre></td></tr></table></figure>
-<h3 id="向trunk服务器查询自己的注册信息"><a href="#向trunk服务器查询自己的注册信息" class="headerlink" title="向trunk服务器查询自己的注册信息"></a>向trunk服务器查询自己的注册信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk me</div></pre></td></tr></table></figure>
-<h3 id="打上和GitHub上相同的tag"><a href="#打上和GitHub上相同的tag" class="headerlink" title="打上和GitHub上相同的tag"></a>打上和GitHub上相同的tag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">set the new version to 0.0.1</div><div class="line">set the new tag to 0.0.1</div></pre></td></tr></table></figure>
-<h2 id="5-提交代码到GitHub"><a href="#5-提交代码到GitHub" class="headerlink" title="5.提交代码到GitHub"></a>5.提交代码到GitHub</h2><p>将代码提交到GitHub后，再打上tag   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git tag 0.0.1   </div><div class="line">git push --tags</div></pre></td></tr></table></figure>
-<h2 id="6-上传或更新trunk"><a href="#6-上传或更新trunk" class="headerlink" title="6.上传或更新trunk"></a>6.上传或更新trunk</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk push</div></pre></td></tr></table></figure>
-<h2 id="7-出现的问题"><a href="#7-出现的问题" class="headerlink" title="7.出现的问题"></a>7.出现的问题</h2><p><strong>1、Unable to find a pod with name, author, summary, or description matching <code>VCHMapKit</code></strong><br>解决方法，先删除缓存，然后在重新搜索<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rm ~/Library/Caches/CocoaPods/search_index.json</div><div class="line">pod search VCHMapKit</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1352,7 +1354,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">54</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1369,7 +1371,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -1,0 +1,667 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="地图," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="前言由于某些原因，国内的经纬度坐标系并不是使用通用的经纬度坐标系。当坐标定位到国内时就会出现偏差，所以我们需要先判断经纬度坐标是否在国内，如果是，则需要先转成国内坐标。
+常用坐标系WGS84坐标系国际坐标，Google地图、苹果地图使用的坐标系。GPS信号直接解析的经纬度信息也是这个坐标系的。
+GCJ02坐标系中国坐标，高德地图、腾讯地图使用这个坐标系。国内基站定位、WIFI定位获取到的也是 GC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 地图定位坐标偏差解决方案">
+<meta property="og:url" content="http://yoursite.com/2018/07/09/180709-iOS 地图定位坐标偏差解决方案/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="前言由于某些原因，国内的经纬度坐标系并不是使用通用的经纬度坐标系。当坐标定位到国内时就会出现偏差，所以我们需要先判断经纬度坐标是否在国内，如果是，则需要先转成国内坐标。
+常用坐标系WGS84坐标系国际坐标，Google地图、苹果地图使用的坐标系。GPS信号直接解析的经纬度信息也是这个坐标系的。
+GCJ02坐标系中国坐标，高德地图、腾讯地图使用这个坐标系。国内基站定位、WIFI定位获取到的也是 GC">
+<meta property="og:updated_time" content="2018-07-17T15:35:00.693Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 地图定位坐标偏差解决方案">
+<meta name="twitter:description" content="前言由于某些原因，国内的经纬度坐标系并不是使用通用的经纬度坐标系。当坐标定位到国内时就会出现偏差，所以我们需要先判断经纬度坐标是否在国内，如果是，则需要先转成国内坐标。
+常用坐标系WGS84坐标系国际坐标，Google地图、苹果地图使用的坐标系。GPS信号直接解析的经纬度信息也是这个坐标系的。
+GCJ02坐标系中国坐标，高德地图、腾讯地图使用这个坐标系。国内基站定位、WIFI定位获取到的也是 GC">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/09/180709-iOS 地图定位坐标偏差解决方案/"/>
+
+
+  <title> iOS 地图定位坐标偏差解决方案 | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS 地图定位坐标偏差解决方案
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-09T00:00:00+08:00" content="2018-07-09">
+              2018-07-09
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-17T23:35:00+08:00" content="2018-07-17">
+				2018-07-17
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于某些原因，国内的经纬度坐标系并不是使用通用的经纬度坐标系。当坐标定位到国内时就会出现偏差，所以我们需要先判断经纬度坐标是否在国内，如果是，则需要先转成国内坐标。</p>
+<h3 id="常用坐标系"><a href="#常用坐标系" class="headerlink" title="常用坐标系"></a>常用坐标系</h3><h4 id="WGS84坐标系"><a href="#WGS84坐标系" class="headerlink" title="WGS84坐标系"></a>WGS84坐标系</h4><p>国际坐标，Google地图、苹果地图使用的坐标系。GPS信号直接解析的经纬度信息也是这个坐标系的。</p>
+<h4 id="GCJ02坐标系"><a href="#GCJ02坐标系" class="headerlink" title="GCJ02坐标系"></a>GCJ02坐标系</h4><p>中国坐标，高德地图、腾讯地图使用这个坐标系。国内基站定位、WIFI定位获取到的也是 GCJ02 的坐标。</p>
+<h4 id="国内的其他坐标系"><a href="#国内的其他坐标系" class="headerlink" title="国内的其他坐标系"></a>国内的其他坐标系</h4><p>还有一些国内的地图，在 GCJ02 坐标的基础上再进行一次加密。例如：百度坐标（BD09）。</p>
+<h3 id="iOS-苹果地图开发"><a href="#iOS-苹果地图开发" class="headerlink" title="iOS 苹果地图开发"></a>iOS 苹果地图开发</h3><p>苹果地图在国内使用的是高德地图的数据（GCJ02坐标系），在国外则使用自己的数据（WGS84坐标系）。那么我们应该怎么区分国内外呢？这里有几种方法</p>
+<h4 id="1、国家区域判断"><a href="#1、国家区域判断" class="headerlink" title="1、国家区域判断"></a>1、国家区域判断</h4><p>用大量的点将将中国圈出来（港澳台地区要单独出来），然后判断经纬度是否在这个区域内。边界点越多越精确。<br>缺点：数据越多运算量越大，数据少精确度就低。</p>
+<a id="more"></a>
+<h4 id="2、调用逆地理编码接口，返回国家码"><a href="#2、调用逆地理编码接口，返回国家码" class="headerlink" title="2、调用逆地理编码接口，返回国家码"></a>2、调用逆地理编码接口，返回国家码</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[[[<span class="built_in">CLGeocoder</span> alloc] init] reverseGeocodeLocation:location completionHandler:^(<span class="built_in">NSArray</span> *placemarks, <span class="built_in">NSError</span> *error) &#123;</div><div class="line">	<span class="keyword">if</span>(placemarks.count) &#123;</div><div class="line">		<span class="built_in">CLPlacemark</span> *placemark = [placemarks firstObject];</div><div class="line">		<span class="built_in">NSLog</span>(<span class="string">@"placemark = %@ %@"</span>,placemark.country, placemark.ISOcountryCode);</div><div class="line">	&#125;</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>通过上面的接口就可以返回国家码，当国家码为<code>CN</code>时就判定为国内。这里由于 GCJ02 和 WGS84 坐标的偏差在一千米内，所以在判断国家码时可以忽略。<br>缺点：请求接口会有网络延时，依赖网络。</p>
+<h4 id="3、判断是否有“高德地图”的图片"><a href="#3、判断是否有“高德地图”的图片" class="headerlink" title="3、判断是否有“高德地图”的图片"></a>3、判断是否有“高德地图”的图片</h4><p>当苹果地图使用高德地图的数据时，地图上会出现 “高德地图”的字眼（其实是一张图片），我们可以通过这个来判断应该使用什么坐标系来显示。判断代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.mapView.subviews enumerateObjectsUsingBlock:^(__kindof <span class="built_in">UIView</span> * _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</div><div class="line">	<span class="keyword">if</span> ([obj isKindOfClass:[<span class="built_in">UIImageView</span> <span class="keyword">class</span>]] &amp;&amp; (obj.size.width == <span class="number">45.5</span>) &amp;&amp; (obj.size.height == <span class="number">10.5</span>)) &#123;</div><div class="line">		isAutoNavi = <span class="literal">YES</span>;</div><div class="line">	&#125;</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>缺点：目前是通过判断图片大小来断定是否有使用高德数据，图片大小都是（45.5 x 10.5）。可能不同手机会不同，这个有待测试。  </p>
+<h4 id="4、使用国内版和国际版"><a href="#4、使用国内版和国际版" class="headerlink" title="4、使用国内版和国际版"></a>4、使用国内版和国际版</h4><p>在国内上架国内版，使用 GCJ02 坐标系。国际则使用国际版（WGS84 坐标系）。这里由于港澳台使用的是 WGS84 坐标系，所以也划分到国际版里面。<br>缺点：国内版只能在国内使用，到了国外就会有偏差，反之亦然。</p>
+<h4 id="5、登录界面添加选择框"><a href="#5、登录界面添加选择框" class="headerlink" title="5、登录界面添加选择框"></a>5、登录界面添加选择框</h4><p>让用户去选择地区，类似于 Android 在登录页面让用户去选择使用高德地图还是谷歌地图。<br>缺点：UI需要改动。</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>使用上面的几种方法都可以“解决”地图定位坐标偏差的问题。网上有个经纬度坐标转换的库，坐标系转换没问题，但判断是否在国内的误差比较大，没有分离港澳台。有兴趣可以看看，<a href="https://github.com/JackZhouCn/JZLocationConverter" target="_blank" rel="external">JZLocationConverter</a>。<br>目前我用这个库来实现坐标系转换，但判断是否在国内使用的是上面的方法3。虽然我们的用户不多，但从目前后台收集到的数据看来，<strong>方法2和方法3都是可以准确判断的。</strong> </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/地图/" rel="tag">#地图</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/05/180704-iOS获取系统时区/" rel="next" title="iOS获取系统时区">
+                <i class="fa fa-chevron-left"></i> iOS获取系统时区
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用坐标系"><span class="nav-number">1.1.</span> <span class="nav-text">常用坐标系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WGS84坐标系"><span class="nav-number">1.1.1.</span> <span class="nav-text">WGS84坐标系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GCJ02坐标系"><span class="nav-number">1.1.2.</span> <span class="nav-text">GCJ02坐标系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#国内的其他坐标系"><span class="nav-number">1.1.3.</span> <span class="nav-text">国内的其他坐标系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iOS-苹果地图开发"><span class="nav-number">1.2.</span> <span class="nav-text">iOS 苹果地图开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、国家区域判断"><span class="nav-number">1.2.1.</span> <span class="nav-text">1、国家区域判断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、调用逆地理编码接口，返回国家码"><span class="nav-number">1.2.2.</span> <span class="nav-text">2、调用逆地理编码接口，返回国家码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、判断是否有“高德地图”的图片"><span class="nav-number">1.2.3.</span> <span class="nav-text">3、判断是否有“高德地图”的图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、使用国内版和国际版"><span class="nav-number">1.2.4.</span> <span class="nav-text">4、使用国内版和国际版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、登录界面添加选择框"><span class="nav-number">1.2.5.</span> <span class="nav-text">5、登录界面添加选择框</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结束"><span class="nav-number">2.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Cookie,NSHTTPCookieStorage,NSHTTPCookie,自动登录," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="需求用 Cookie 来实现自动登录的功能。
+CookieCookie 是由服务器生成的，会在首次登陆或者重新登录时，通过 HTTP 的 Respone Header 发送给客户端。客户端一般会保存这个 Cookie 并在下一次访问该服务器时携带。服务器收到 Cookie 时会先判断 Cookie 是否有效，如果无效则提示客户端需要重新登录。  
+在 iOS 系统中，使用 NSURLRequest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Cookie 自动登录">
+<meta property="og:url" content="http://yoursite.com/2018/06/30/180630-iOS Cookie 自动登录/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="需求用 Cookie 来实现自动登录的功能。
+CookieCookie 是由服务器生成的，会在首次登陆或者重新登录时，通过 HTTP 的 Respone Header 发送给客户端。客户端一般会保存这个 Cookie 并在下一次访问该服务器时携带。服务器收到 Cookie 时会先判断 Cookie 是否有效，如果无效则提示客户端需要重新登录。  
+在 iOS 系统中，使用 NSURLRequest">
+<meta property="og:updated_time" content="2018-07-17T15:39:26.568Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Cookie 自动登录">
+<meta name="twitter:description" content="需求用 Cookie 来实现自动登录的功能。
+CookieCookie 是由服务器生成的，会在首次登陆或者重新登录时，通过 HTTP 的 Respone Header 发送给客户端。客户端一般会保存这个 Cookie 并在下一次访问该服务器时携带。服务器收到 Cookie 时会先判断 Cookie 是否有效，如果无效则提示客户端需要重新登录。  
+在 iOS 系统中，使用 NSURLRequest">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/30/180630-iOS Cookie 自动登录/"/>
+
+
+  <title> iOS Cookie 自动登录 | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS Cookie 自动登录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
+              2018-06-30
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-17T23:39:26+08:00" content="2018-07-17">
+				2018-07-17
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>用 Cookie 来实现自动登录的功能。</p>
+<h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><p>Cookie 是由服务器生成的，会在首次登陆或者重新登录时，通过 HTTP 的 Respone Header 发送给客户端。客户端一般会保存这个 Cookie 并在下一次访问该服务器时携带。服务器收到 Cookie 时会先判断 Cookie 是否有效，如果无效则提示客户端需要重新登录。  </p>
+<p>在 iOS 系统中，使用 NSURLRequest 的请求会默认加上 Cookie。同时也会默认保存以及更新 Cookie 。<br>Cookie 一般会在使用账号密码登陆时由服务器返回回来，下次登录时会根据这个 Cookie 来决定是否需要重新登录。登陆后每一次请求也会携带这个 Cookie ，用来判断是否有异地登录（Cookie 失效）。</p>
+<blockquote>
+<p>在 macOS 中的 Cookie 是共享的，而 iOS 中的 Cookie 则是单独使用的。</p>
+</blockquote>
+<p>iOS 对 Cookie 的相关操作主要有两个类。NSHTTPCookieStorage 和 NSHTTPCookie 。下面介绍下这两个类</p>
+<a id="more"></a>
+<h4 id="NSHTTPCookieStorage"><a href="#NSHTTPCookieStorage" class="headerlink" title="NSHTTPCookieStorage"></a>NSHTTPCookieStorage</h4><p>用来管理所有的 Cookie ，是个单例 。使用 NSURLRequest 请求返回的 Cookie 就是保存在这个类中。NSHTTPCookieStorage 默认的缓存策略是 NSHTTPCookieAcceptPolicyAlways ，也就是默认接受所有 Cookie 。<br>APP 运行时可以通过 NSHTTPCookieStorage 这个类获取到所有的 Cookie ，那么当 APP 退出关闭后，再重新打开还能不能从 NSHTTPCookieStorage 获取到上次使用的 Cookie 呢？答案是：能，但有条件限制，下面会讲到。  </p>
+<h4 id="NSHTTPCookie"><a href="#NSHTTPCookie" class="headerlink" title="NSHTTPCookie"></a>NSHTTPCookie</h4><p>一个 NSHTTPCookie 对象只会保存一条 Cookie 信息。一般情况下 Cookie 都是服务器给的，有时候也可以手动创建一个</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableDictionary</span> *properties = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">[properties setObject:<span class="string">@"CookieName"</span> forKey:<span class="built_in">NSHTTPCookieName</span>];</div><div class="line">[properties setObject:<span class="string">@"134567890"</span> forKey:<span class="built_in">NSHTTPCookieValue</span>];</div><div class="line">[properties setObject:<span class="string">@"www.vhuichen.com"</span> forKey:<span class="built_in">NSHTTPCookieDomain</span>];</div><div class="line">[properties setObject:<span class="string">@"192.198.1.11"</span> forKey:<span class="built_in">NSHTTPCookieOriginURL</span>];</div><div class="line">[properties setObject:<span class="string">@"/"</span> forKey:<span class="built_in">NSHTTPCookiePath</span>];</div><div class="line">[properties setObject:<span class="string">@"0"</span> forKey:<span class="built_in">NSHTTPCookieVersion</span>];</div><div class="line">[properties setObject:[<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:<span class="number">8</span> * <span class="number">60</span> * <span class="number">60</span>] forKey:<span class="built_in">NSHTTPCookieExpires</span>];</div><div class="line"><span class="built_in">NSHTTPCookie</span> *cookie = [<span class="built_in">NSHTTPCookie</span> cookieWithProperties: properties];</div><div class="line">[[<span class="built_in">NSHTTPCookieStorage</span> sharedHTTPCookieStorage] setCookie:cookie];</div></pre></td></tr></table></figure>
+<p>想要让 NSHTTPCookieStorage 保存手动设置的 Cookie，以便在下次启动是使用，这里也有一些限制条件，下面一起会讲到。</p>
+<h3 id="流程实现"><a href="#流程实现" class="headerlink" title="流程实现"></a>流程实现</h3><p>我的做法是，当 APP 重启后，会先获取 NSHTTPCookieStorage 保存的 Cookie，如果有则尝试用 Cookie 直接登录，没有则进入登录页面。当用户主动退出登录时，则需要手动清除掉 NSHTTPCookieStorage 中保留的 Cookie 。</p>
+<h3 id="APP-退出后，系统自动保存-Cookie-的前提条件"><a href="#APP-退出后，系统自动保存-Cookie-的前提条件" class="headerlink" title="APP 退出后，系统自动保存 Cookie 的前提条件"></a>APP 退出后，系统自动保存 Cookie 的前提条件</h3><p>要想 APP 退出后，系统自动保留 Cookie ，有两个前提条件。只要 Cookie 符合了 NSHTTPCookieStorage 的一些特定条件，NSHTTPCookieStorage 就会自动保存这个 Cookie ，在下次启动 APP 也就可以直接读出来使用。</p>
+<h4 id="1、必须移除-NSHTTPCookieDiscard-这个-key"><a href="#1、必须移除-NSHTTPCookieDiscard-这个-key" class="headerlink" title="1、必须移除 NSHTTPCookieDiscard 这个 key"></a>1、必须移除 NSHTTPCookieDiscard 这个 key</h4><p>如果 Cookie 中保存有这个 key ，那么必须要移除这个 key ，否则系统不会自动保存。  </p>
+<h4 id="2、必须设置-NSHTTPCookieExpires-这个-key，设置的时间必须大于当前系统时间"><a href="#2、必须设置-NSHTTPCookieExpires-这个-key，设置的时间必须大于当前系统时间" class="headerlink" title="2、必须设置 NSHTTPCookieExpires 这个 key，设置的时间必须大于当前系统时间"></a>2、必须设置 NSHTTPCookieExpires 这个 key，设置的时间必须大于当前系统时间</h4><p>只有设置了有效时间，并且有效时间大于当前时间，系统才会保存这个 Cookie 。一旦系统检测到保存的 Cookie 过时了（设置时间小于当前时间），就会直接删除 Cookie 。如果想长期保存 Cookie ，可以给这个 key 设置一个很大的时间。</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>了解了 Cookie 的相关原理后，发现对 Cookie 的操作其实并不多。只需要在 APP 启动时获取 Cookie ，并在 APP 退出登录后，清空 Cookie 即可。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cookie/" rel="tag">#Cookie</a>
+          
+            <a href="/tags/NSHTTPCookieStorage/" rel="tag">#NSHTTPCookieStorage</a>
+          
+            <a href="/tags/NSHTTPCookie/" rel="tag">#NSHTTPCookie</a>
+          
+            <a href="/tags/自动登录/" rel="tag">#自动登录</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/27/180627-UITableViewCell默认选中/" rel="next" title="UITableViewCell默认选中">
+                <i class="fa fa-chevron-left"></i> UITableViewCell默认选中
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/05/180704-iOS获取系统时区/" rel="prev" title="iOS获取系统时区">
+                iOS获取系统时区 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie"><span class="nav-number">1.1.</span> <span class="nav-text">Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NSHTTPCookieStorage"><span class="nav-number">1.1.1.</span> <span class="nav-text">NSHTTPCookieStorage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSHTTPCookie"><span class="nav-number">1.1.2.</span> <span class="nav-text">NSHTTPCookie</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程实现"><span class="nav-number">1.2.</span> <span class="nav-text">流程实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#APP-退出后，系统自动保存-Cookie-的前提条件"><span class="nav-number">1.3.</span> <span class="nav-text">APP 退出后，系统自动保存 Cookie 的前提条件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、必须移除-NSHTTPCookieDiscard-这个-key"><span class="nav-number">1.3.1.</span> <span class="nav-text">1、必须移除 NSHTTPCookieDiscard 这个 key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、必须设置-NSHTTPCookieExpires-这个-key，设置的时间必须大于当前系统时间"><span class="nav-number">1.3.2.</span> <span class="nav-text">2、必须设置 NSHTTPCookieExpires 这个 key，设置的时间必须大于当前系统时间</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结束"><span class="nav-number">2.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
