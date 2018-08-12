@@ -1,0 +1,664 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据去重,hash,isEqual," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/vhuichen.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="基本类型数据去重（4种方法）1、利用 NSDictionary key 的唯一性2、利用 NSSet 的特性，数据不能重复3、利用 NSArray 的 containsObject 方法4、利用 NSArray 的 valueForKeyPath 方法，传入的 keyPath 为 @distinctUnionOfObjects.self
+示例1234567891011121314151617181">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 数据去重的几种方法">
+<meta property="og:url" content="http://yoursite.com/2018/08/04/180804-iOS 数据去重的几种方法/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="基本类型数据去重（4种方法）1、利用 NSDictionary key 的唯一性2、利用 NSSet 的特性，数据不能重复3、利用 NSArray 的 containsObject 方法4、利用 NSArray 的 valueForKeyPath 方法，传入的 keyPath 为 @distinctUnionOfObjects.self
+示例1234567891011121314151617181">
+<meta property="og:updated_time" content="2018-08-12T12:00:32.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 数据去重的几种方法">
+<meta name="twitter:description" content="基本类型数据去重（4种方法）1、利用 NSDictionary key 的唯一性2、利用 NSSet 的特性，数据不能重复3、利用 NSArray 的 containsObject 方法4、利用 NSArray 的 valueForKeyPath 方法，传入的 keyPath 为 @distinctUnionOfObjects.self
+示例1234567891011121314151617181">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/04/180804-iOS 数据去重的几种方法/"/>
+
+
+  <title> iOS 数据去重的几种方法 | vhuichen </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">vhuichen</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录、分享</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS 数据去重的几种方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-04T00:00:00+08:00" content="2018-08-04">
+              2018-08-04
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-08-12T20:00:32+08:00" content="2018-08-12">
+				2018-08-12
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基本类型数据去重（4种方法）"><a href="#基本类型数据去重（4种方法）" class="headerlink" title="基本类型数据去重（4种方法）"></a>基本类型数据去重（4种方法）</h2><p>1、利用 NSDictionary key 的唯一性<br>2、利用 NSSet 的特性，数据不能重复<br>3、利用 NSArray 的 containsObject 方法<br>4、利用 NSArray 的 valueForKeyPath 方法，传入的 keyPath 为 <code>@distinctUnionOfObjects.self</code></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSArray</span> *dataArray = @[<span class="string">@"a"</span>,<span class="string">@"b"</span>,<span class="string">@"c"</span>,<span class="string">@"d"</span>,<span class="string">@"e"</span>,<span class="string">@"f"</span>,<span class="string">@"g"</span>,</div><div class="line">                       <span class="string">@"b"</span>,<span class="string">@"d"</span>,<span class="string">@"a"</span>];</div><div class="line">                       </div><div class="line"><span class="built_in">NSMutableDictionary</span> *dict = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line"><span class="keyword">for</span>(<span class="built_in">NSString</span> *str <span class="keyword">in</span> dataArray) &#123;</div><div class="line">    [dict setValue:str forKey:str];</div><div class="line">&#125;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"dict = %@"</span>,[dict allKeys]);</div><div class="line"></div><div class="line"><span class="built_in">NSSet</span> *set = [<span class="built_in">NSSet</span> setWithArray:dataArray];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"set = %@"</span>,[set allObjects]);</div><div class="line"></div><div class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line"><span class="keyword">for</span> (<span class="built_in">NSString</span> *str <span class="keyword">in</span> dataArray) &#123;</div><div class="line">    <span class="keyword">if</span> (![array containsObject:str]) &#123;</div><div class="line">        [array addObject:str];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"array = %@"</span>,array);</div><div class="line"></div><div class="line"><span class="built_in">NSArray</span> *keyPathArray = [dataArray valueForKeyPath:<span class="string">@"@distinctUnionOfObjects.self"</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"keyPathArray = %@"</span>,keyPathArray);</div></pre></td></tr></table></figure>
+<p>通过上面4中方法均可过滤掉重复数据。</p>
+<a id="more"></a>
+<h2 id="自定义类型数据去重"><a href="#自定义类型数据去重" class="headerlink" title="自定义类型数据去重"></a>自定义类型数据去重</h2><p>可以通过重写 <code>hash</code> <code>isEqual</code> 两个方法实现  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//.h</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHAnimal</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="keyword">int</span> ID;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="keyword">int</span> age;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//.m</span></div><div class="line"><span class="meta">#import <span class="meta-string">"VCHAnimal.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VCHAnimal</span></span></div><div class="line"></div><div class="line">- (<span class="built_in">NSUInteger</span>)hash &#123;</div><div class="line">    <span class="keyword">return</span> [[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,<span class="keyword">self</span>.ID] hash];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)object &#123;</div><div class="line">    <span class="keyword">if</span> ([object isKindOfClass:[<span class="keyword">self</span> <span class="keyword">class</span>]]) &#123;</div><div class="line">        <span class="keyword">return</span> ((VCHAnimal *)object).ID == <span class="keyword">self</span>.ID;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">    VCHAnimal *animal = [VCHAnimal new];</div><div class="line">    animal.ID = i;</div><div class="line">    animal.age = arc4random()%<span class="number">1000</span>;</div><div class="line">    [array addObject:animal];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">    VCHAnimal *animal = [VCHAnimal new];</div><div class="line">    animal.ID = i;</div><div class="line">    animal.age = arc4random()%<span class="number">1000</span>;</div><div class="line">    [array addObject:animal];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">NSSet</span> *set = [<span class="built_in">NSSet</span> setWithArray:array];</div><div class="line"></div><div class="line">[array enumerateObjectsUsingBlock:^(VCHAnimal *obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"obj = %@ ID = %zd"</span>,obj, obj.ID);</div><div class="line">&#125;];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"---------"</span>);</div><div class="line">[set enumerateObjectsUsingBlock:^(VCHAnimal *obj, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"obj = %@ ID = %zd"</span>,obj, obj.ID);</div><div class="line">&#125;];</div><div class="line"></div><div class="line"><span class="comment">// log</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017af0&gt; ID = 0</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b60&gt; ID = 1</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b70&gt; ID = 2</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b50&gt; ID = 0</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b80&gt; ID = 1</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b90&gt; ID = 2</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017ba0&gt; ID = 3</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000201e50&gt; ID = 4</span></div><div class="line"><span class="comment">// ---------</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017ba0&gt; ID = 3</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000201e50&gt; ID = 4</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017af0&gt; ID = 0</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b60&gt; ID = 1</span></div><div class="line"><span class="comment">// obj = &lt;VCHAnimal: 0x600000017b70&gt; ID = 2</span></div></pre></td></tr></table></figure>
+<p>用<code>containsObject</code>方法可以得到相同的效果。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableArray</span> *arraySort = [<span class="built_in">NSMutableArray</span> array];</div><div class="line"><span class="keyword">for</span> (VCHAnimal *animal <span class="keyword">in</span> array) &#123;</div><div class="line">    <span class="keyword">if</span> (![arraySort containsObject:animal]) &#123;</div><div class="line">        [arraySort addObject:animal];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>考虑到性能问题，hash 方法应该尽量简洁，避免做过多的运算。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据去重/" rel="tag">#数据去重</a>
+          
+            <a href="/tags/hash/" rel="tag">#hash</a>
+          
+            <a href="/tags/isEqual/" rel="tag">#isEqual</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/18/180718-iOS开发之 anchorPoint/" rel="next" title="iOS开发之 anchorPoint">
+                <i class="fa fa-chevron-left"></i> iOS开发之 anchorPoint
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/vhuichen.jpg"
+               alt="vhuichen" />
+          <p class="site-author-name" itemprop="name">vhuichen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型数据去重（4种方法）"><span class="nav-number">1.</span> <span class="nav-text">基本类型数据去重（4种方法）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">1.1.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义类型数据去重"><span class="nav-number">2.</span> <span class="nav-text">自定义类型数据去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例-1"><span class="nav-number">2.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.2.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

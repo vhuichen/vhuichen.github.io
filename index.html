@@ -246,6 +246,389 @@
             
               
                 
+                <a class="post-title-link" href="/2018/08/04/180804-iOS 数据去重的几种方法/" itemprop="url">
+                  iOS 数据去重的几种方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-08-04T00:00:00+08:00" content="2018-08-04">
+              2018-08-04
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-08-12T20:00:32+08:00" content="2018-08-12">
+				2018-08-12
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="基本类型数据去重（4种方法）"><a href="#基本类型数据去重（4种方法）" class="headerlink" title="基本类型数据去重（4种方法）"></a>基本类型数据去重（4种方法）</h2><p>1、利用 NSDictionary key 的唯一性<br>2、利用 NSSet 的特性，数据不能重复<br>3、利用 NSArray 的 containsObject 方法<br>4、利用 NSArray 的 valueForKeyPath 方法，传入的 keyPath 为 <code>@distinctUnionOfObjects.self</code></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSArray</span> *dataArray = @[<span class="string">@"a"</span>,<span class="string">@"b"</span>,<span class="string">@"c"</span>,<span class="string">@"d"</span>,<span class="string">@"e"</span>,<span class="string">@"f"</span>,<span class="string">@"g"</span>,</div><div class="line">                       <span class="string">@"b"</span>,<span class="string">@"d"</span>,<span class="string">@"a"</span>];</div><div class="line">                       </div><div class="line"><span class="built_in">NSMutableDictionary</span> *dict = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line"><span class="keyword">for</span>(<span class="built_in">NSString</span> *str <span class="keyword">in</span> dataArray) &#123;</div><div class="line">    [dict setValue:str forKey:str];</div><div class="line">&#125;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"dict = %@"</span>,[dict allKeys]);</div><div class="line"></div><div class="line"><span class="built_in">NSSet</span> *set = [<span class="built_in">NSSet</span> setWithArray:dataArray];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"set = %@"</span>,[set allObjects]);</div><div class="line"></div><div class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line"><span class="keyword">for</span> (<span class="built_in">NSString</span> *str <span class="keyword">in</span> dataArray) &#123;</div><div class="line">    <span class="keyword">if</span> (![array containsObject:str]) &#123;</div><div class="line">        [array addObject:str];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"array = %@"</span>,array);</div><div class="line"></div><div class="line"><span class="built_in">NSArray</span> *keyPathArray = [dataArray valueForKeyPath:<span class="string">@"@distinctUnionOfObjects.self"</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"keyPathArray = %@"</span>,keyPathArray);</div></pre></td></tr></table></figure>
+<p>通过上面4中方法均可过滤掉重复数据。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/08/04/180804-iOS 数据去重的几种方法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/18/180718-iOS开发之 anchorPoint/" itemprop="url">
+                  iOS开发之 anchorPoint
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-18T00:00:00+08:00" content="2018-07-18">
+              2018-07-18
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-08-12T10:07:52+08:00" content="2018-08-12">
+				2018-08-12
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>将一个视图对象绕设定点旋转</p>
+<h3 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h3><p>当我们需要将一个 View 旋转90°时，可以这样做  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.view.transform = <span class="built_in">CGAffineTransformMakeRotation</span>(M_PI_2);</div></pre></td></tr></table></figure>
+<p>这时，这个 view 就会绕着“旋转中心”旋转，那么这个“旋转中心”能否自定义呢？肯定是可以的，继续往下看。。。  </p>
+<p>我们知道每一个 UIView 内部都关联着一个 CALayer ，而 CALayer 中有一个属性</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Defines the anchor point of the layer's bounds rect, as a point in</div><div class="line"> * normalized layer coordinates - '(0, 0)' is the bottom left corner of</div><div class="line"> * the bounds rect, '(1, 1)' is the top right corner. Defaults to</div><div class="line"> * '(0.5, 0.5)', i.e. the center of the bounds rect. Animatable. */</span></div><div class="line"><span class="keyword">@property</span> <span class="built_in">CGPoint</span> anchorPoint;</div></pre></td></tr></table></figure>
+<p>这个 anchorPoint 俗称“锚点”，其实也就是上面所说的“旋转中心”。<br>从注释中我们可以看懂，anchorPoint 是一个已经“归一化”的数据，也就是默认值是中心（0.5, 0.5），左上角是（0, 0），右下角是（1, 1）。anchorPoint 是一个以自身为参考系的“归一化”坐标。<br>所以当我们想绕某个点旋转时，只需要将这个点相对于自身的“归一化”坐标赋值给 anchorPoint 就行了。但，事实上当我们改动 anchorPoint 时，发现 layer 也改动了。也就是 anchorPoint 和 frame 之间存在某种关系。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/07/18/180718-iOS开发之 anchorPoint/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/13/180713-UITextField 添加点击事件/" itemprop="url">
+                  UITextField 添加点击事件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-13T00:00:00+08:00" content="2018-07-13">
+              2018-07-13
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-08-12T09:54:52+08:00" content="2018-08-12">
+				2018-08-12
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>点击 UITextField 没有成为第一响应者，而是触发一个事件。</p>
+<h3 id="常规做法-UITapGestureRecognizer"><a href="#常规做法-UITapGestureRecognizer" class="headerlink" title="常规做法 UITapGestureRecognizer"></a>常规做法 UITapGestureRecognizer</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UITapGestureRecognizer</span> *tap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(tapGesture:)];</div><div class="line">[<span class="keyword">self</span>.searchTextField addGestureRecognizer:tap];</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)tapGesture:(<span class="built_in">UIGestureRecognizer</span> *)gesture &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"--%@"</span>, gesture);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样做可以触发一个事件，同时也成为了第一响应者。那么怎样不让 UITextField 成为第一响应者呢？可以通过委托事件完成  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.searchTextField.delegate = <span class="keyword">self</span>;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)textFieldShouldBeginEditing:(<span class="built_in">UITextField</span> *)textField &#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/07/13/180713-UITextField 添加点击事件/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/07/09/180709-iOS 地图定位坐标偏差解决方案/" itemprop="url">
                   iOS 地图定位坐标偏差解决方案
                 </a>
@@ -328,6 +711,131 @@
               阅读全文 &raquo;
             </a>
           </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/08/180708-iOS 单例完整写法/" itemprop="url">
+                  iOS 单例完整写法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-08T00:00:00+08:00" content="2018-07-08">
+              2018-07-08
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-08-12T11:53:12+08:00" content="2018-08-12">
+				2018-08-12
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h4><p>1、第一次生成对象时不能调用<code>[self alloc]</code>，因为这个方法内部调用的<code>allocWithZone</code>方法会被重写。可以调用<code>[super allocWithZone:nil]</code>来解决这个问题。<br>2、必须要遵守<code>NSCopying</code> <code>NSMutableCopying</code> 者两个协议，重写<code>copyWithZone</code> <code>mutableCopyWithZone</code>这两个方法，不然外部调用 <code>copy</code> <code>mutableCopy</code>方法会崩溃。 方法返回<code>self</code>。<br>3、重写<code>allocWithZone</code>这个方法。返回第一次生成的对象。</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//.h</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHSingleton</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line">+ (<span class="keyword">instancetype</span>)sharedInstance;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//.m</span></div><div class="line"><span class="meta">#import <span class="meta-string">"VCHSingleton.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHSingleton</span>() &lt;<span class="title">NSCopying</span>, <span class="title">NSMutableCopying</span>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VCHSingleton</span></span></div><div class="line"></div><div class="line">+ (<span class="keyword">instancetype</span>)sharedInstance &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">id</span> instane = <span class="literal">nil</span>;</div><div class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line">        instane = [[<span class="keyword">super</span> allocWithZone:<span class="literal">nil</span>] init];</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">return</span> instane;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="keyword">instancetype</span>)allocWithZone:(<span class="keyword">struct</span> _NSZone *)zone &#123;</div><div class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> sharedInstance];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">id</span>)mutableCopyWithZone:(<span class="built_in">NSZone</span> *)zone &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">VCHSingleton *singleton0 = [VCHSingleton sharedInstance];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"singleton0 = %@"</span>,singleton0);</div><div class="line"></div><div class="line">VCHSingleton *singleton1 = [VCHSingleton new];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"singleton1 = %@"</span>,singleton1);</div><div class="line"></div><div class="line">VCHSingleton *singleton2 = [VCHSingleton alloc];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"singleton2 = %@"</span>,singleton2);</div><div class="line"></div><div class="line">VCHSingleton *singleton3 = [[VCHSingleton alloc] init];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"singleton3 = %@"</span>,singleton3);</div><div class="line"></div><div class="line">VCHSingleton *singleton4 = [singleton0 <span class="keyword">copy</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"singleton4 = %@"</span>,singleton4);</div><div class="line"></div><div class="line">VCHSingleton *singleton5 = [singleton0 mutableCopy];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"singleton5 = %@"</span>,singleton5);</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line"><span class="comment">// singleton0 = &lt;VCHSingleton: 0x60000001d410&gt;</span></div><div class="line"><span class="comment">// singleton1 = &lt;VCHSingleton: 0x60000001d410&gt;</span></div><div class="line"><span class="comment">// singleton2 = &lt;VCHSingleton: 0x60000001d410&gt;</span></div><div class="line"><span class="comment">// singleton3 = &lt;VCHSingleton: 0x60000001d410&gt;</span></div><div class="line"><span class="comment">// singleton4 = &lt;VCHSingleton: 0x60000001d410&gt;</span></div><div class="line"><span class="comment">// singleton5 = &lt;VCHSingleton: 0x60000001d410&gt;</span></div></pre></td></tr></table></figure>
+
+          
         
       
     </div>
@@ -742,548 +1250,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/27/180627-NSPredicate 用法/" itemprop="url">
-                  NSPredicate用法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-27T00:00:00+08:00" content="2018-06-27">
-              2018-06-27
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-11T23:00:15+08:00" content="2018-07-11">
-				2018-07-11
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>谓词 NSPredicate 的基本用法。</p>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><blockquote>
-<p>比较运算符(&gt; , &lt; , &gt;= , &lt;=)</p>
-</blockquote>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.age == 1"];</span></div><div class="line"><span class="comment">// NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.age &gt;= 11"];</span></div><div class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@"self.age &lt; 5"</span>];</div><div class="line"><span class="built_in">NSArray</span> *filterArray = [arrays filteredArrayUsingPredicate:predicate];</div></pre></td></tr></table></figure>
-<blockquote>
-<p>逻辑运算符(and[&amp;&amp;] , or[||] , not[!])</p>
-</blockquote>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(self.age &lt; 5) or (self.age &gt; 8)"];</span></div><div class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@"not (self.age == 5)"</span>];</div><div class="line"><span class="built_in">NSArray</span> *filterArray = [arrays filteredArrayUsingPredicate:predicate];</div></pre></td></tr></table></figure>
-<blockquote>
-<p>范围运算符(in , between)</p>
-</blockquote>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.age between &#123;2,5&#125;"];</span></div><div class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@"self.age in &#123;2,3&#125;"</span>];</div><div class="line"><span class="built_in">NSArray</span> *filterArray = [arrays filteredArrayUsingPredicate:predicate];</div></pre></td></tr></table></figure>
-<blockquote>
-<p>包含字符串(beginswith , endswith , contains)</p>
-</blockquote>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name beginswith[c] 'vch'"];</span></div><div class="line"><span class="comment">//NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name endswith[d] 'chan'"];</span></div><div class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@"self.name contains 'an'"</span>];</div><div class="line"><span class="built_in">NSArray</span> *filterArray = [arrays filteredArrayUsingPredicate:predicate];</div></pre></td></tr></table></figure>
-<p>[c] 不区分大小写，[d] 不区分发音符号，[cd] 不区分大小写和发音符号  </p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/27/180627-NSPredicate 用法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/14/180614-iOS开发之 CADisplayLink/" itemprop="url">
-                  iOS开发之 CADisplayLink
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-14T00:00:00+08:00" content="2018-06-14">
-              2018-06-14
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-09T22:34:35+08:00" content="2018-07-09">
-				2018-07-09
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="CADisplayLink"><a href="#CADisplayLink" class="headerlink" title="CADisplayLink"></a>CADisplayLink</h2><p>CADisplayLink 是一个能以和屏幕刷新率相同的频率将内容画到屏幕上的定时器。  </p>
-<blockquote>
-<p>A timer object that allows your application to synchronize its drawing to the refresh rate of the display.</p>
-</blockquote>
-<p>创建一个 CADisplayLink 对象，设置好 target 、selector ，并注册到 runloop 中，每次屏幕刷新时就会调用 target 上的 selector。</p>
-<h3 id="属性-amp-方法"><a href="#属性-amp-方法" class="headerlink" title="属性 &amp; 方法"></a>属性 &amp; 方法</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">+ (<span class="built_in">CADisplayLink</span> *)displayLinkWithTarget:(<span class="keyword">id</span>)target selector:(SEL)sel;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)addToRunLoop:(<span class="built_in">NSRunLoop</span> *)runloop forMode:(<span class="built_in">NSRunLoopMode</span>)mode;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)removeFromRunLoop:(<span class="built_in">NSRunLoop</span> *)runloop forMode:(<span class="built_in">NSRunLoopMode</span>)mode;</div><div class="line"></div><div class="line"><span class="comment">// 时间戳</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">nonatomic</span>) <span class="built_in">CFTimeInterval</span> timestamp;</div><div class="line"></div><div class="line"><span class="comment">// 每帧之间的时间间隔（单位：秒）</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">readonly</span>, <span class="keyword">nonatomic</span>) <span class="built_in">CFTimeInterval</span> duration;</div><div class="line"></div><div class="line"><span class="comment">// 暂停</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">getter</span>=isPaused, <span class="keyword">nonatomic</span>) <span class="built_in">BOOL</span> paused;</div><div class="line"></div><div class="line"><span class="comment">// 可读可写，用来设置多少次屏幕刷新触发一次 selector 。默认是1，即每次都出发。</span></div><div class="line"><span class="comment">// 比如iOS设备的屏幕刷新频率为60Hz，也就是每秒60次，当这个值设置为2时，selector 每秒触发30次。</span></div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> frameInterval</div><div class="line">  <span class="built_in">CA_AVAILABLE_BUT_DEPRECATED_IOS</span> (<span class="number">3.1</span>, <span class="number">10.0</span>, <span class="number">9.0</span>, <span class="number">10.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>, <span class="string">"use preferredFramesPerSecond"</span>);</div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> preferredFramesPerSecond <span class="built_in">CA_AVAILABLE_IOS_STARTING</span>(<span class="number">10.0</span>, <span class="number">10.0</span>, <span class="number">3.0</span>);</div></pre></td></tr></table></figure>
-<p>当不需要使用 DisplayLink 时，应该先调用<code>- (void)invalidate;</code>方法，方法里面会将其从 runloop 中移除。最后将对象释放掉。<br><strong>另外注意 CADisplayLink 不能被继承。</strong></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/14/180614-iOS开发之 CADisplayLink/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/08/180608-iOS开发之符号表/" itemprop="url">
-                  iOS开发之符号表
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-08T00:00:00+08:00" content="2018-06-08">
-              2018-06-08
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-15T16:10:39+08:00" content="2018-07-15">
-				2018-07-15
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>项目中，我用腾讯的 Bugly 作为项目统计和错误分析工具。一般在 Bugly 中分析出错堆栈时，用符号表可以更加精确的定位 bug 出现的地方。</p>
-<h2 id="什么是符号表"><a href="#什么是符号表" class="headerlink" title="什么是符号表"></a>什么是符号表</h2><p>符号表是内存地址与函数名、文件名、行号的映射表。格式如下：  </p>
-<blockquote>
-<p><strong>&lt;起始地址&gt; &lt;结束地址&gt; &lt;函数&gt; [&lt;文件名:行号&gt;]</strong>  </p>
-</blockquote>
-<h2 id="符号表的作用"><a href="#符号表的作用" class="headerlink" title="符号表的作用"></a>符号表的作用</h2><p>应用发生 crash 时的堆栈信息，一般都是二进制的地址信息。直接使用二进制信息很难定位问题，我们需要将这些二进制信息还原成代码所在的具体位置（哪个文件下，哪个方法，行号是多少）。有了这些信息，定位问题发生的位置就简单多了。这时候就需要符号表了。<br>符号表的作用就是：它能对 crash 的堆栈进行解析和还原，准确定位 APP 发生 crash 的地方。</p>
-<h2 id="符号表-UUID"><a href="#符号表-UUID" class="headerlink" title="符号表 UUID"></a>符号表 UUID</h2><p>每打一个包，都会生成一个新的 UUID ，也就是说 <code>.app</code> <code>符号表</code> <code>dSYM</code> 文件拥有一个相同的 UUID 。当程序出现问题时，就是通过这个 UUID 找到对应的符号表的。</p>
-<h2 id="dSYM-文件"><a href="#dSYM-文件" class="headerlink" title="dSYM 文件"></a>dSYM 文件</h2><p>dSYM 文件是指具有调试信息的目标文件，通过工具可以生成符号表文件。目前 Bugly 已经支持直接上传 dSYM 文件了。  </p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/08/180608-iOS开发之符号表/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/05/180605-iOS开发之加密解密/" itemprop="url">
-                  iOS开发之加密解密
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-05T00:00:00+08:00" content="2018-06-05">
-              2018-06-05
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:22:08+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS开发</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><h2 id="Base64-编码"><a href="#Base64-编码" class="headerlink" title="Base64 编码"></a>Base64 编码</h2><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>Base64 编码会把 3 字节的二进制数据编码为 4 字节的数据，长度增加 33% 。如果要编码的二进制数据不是 3 的倍数，Base64 会用 <strong>\x00</strong> 字节在末尾补齐，然后在末尾加上1、2个 = 号，表示补的字节数。例如：   </p>
-<hr>
-<p>需要加密的数据：s 1 3<br>对应的 ascii：115 49 51<br>2进制： 01110011 00110001 00110011<br>转换：每三个字节转换成四个字节<br>转换后： 011100.11 0011.0001 00.110011  (标点处分割)<br>转换后： 011100 110011 000100 110011<br>高两位自动补0<br>最终数据： 00011100 00110011 00000100 00110011<br>得到 28 51 4 51<br>查对下照表 c z E z  </p>
-<hr>
-<p>iOS下有两种比较常见的 Base64 编码方式<br>第一种：<strong>iOS自带的编码方式</strong><br>这里我写了一个分类，可以直接对字符串编码、解码。  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHBase64.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHBase64</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_base64Encode &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [<span class="keyword">self</span> dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    <span class="keyword">return</span> [data base64EncodedStringWithOptions:<span class="built_in">NSDataBase64Encoding64CharacterLineLength</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_base64Decode &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [[<span class="built_in">NSData</span> alloc] initWithBase64EncodedString:<span class="keyword">self</span> options:<span class="built_in">NSDataBase64DecodingIgnoreUnknownCharacters</span>];</div><div class="line">    <span class="keyword">return</span> [[<span class="built_in">NSString</span> alloc] initWithData:data encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>第二种：<strong>用 Google 的 GTMBase64</strong><br>可以直接在GitHub上搜索。下面的 <strong>Demo</strong> 里面也有。</p>
-<h2 id="MD5-加密"><a href="#MD5-加密" class="headerlink" title="MD5 加密"></a>MD5 加密</h2><h4 id="加密代码"><a href="#加密代码" class="headerlink" title="加密代码"></a>加密代码</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;CommonCrypto/CommonDigest.h&gt;</span></span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_md5 &#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *cStr = [<span class="keyword">self</span> UTF8String];</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> digest[CC_MD5_DIGEST_LENGTH];</div><div class="line">    CC_MD5(cStr, (uint32_t)strlen(cStr), digest);</div><div class="line">    <span class="built_in">NSMutableString</span> *output = [<span class="built_in">NSMutableString</span> stringWithCapacity:CC_MD5_DIGEST_LENGTH * <span class="number">2</span>];</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; CC_MD5_DIGEST_LENGTH; i++) &#123;</div><div class="line">        [output appendFormat:<span class="string">@"%02x"</span>, digest[i]];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> output;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>MD5 加密一般是不可解密的，但可以通过穷举法解密（就是一个一个去匹配）。我们可以给 MD5 加个数字，然后再加密一次，那么这样加密后就基本无法再解密出来了。</p>
-<h2 id="AES-加密"><a href="#AES-加密" class="headerlink" title="AES 加密"></a>AES 加密</h2><p>AES 加密、解密需要同一个密钥，这种加密方法称为单密钥加密，也称对称加密。<br>AES 有多种加密方式（ECB、CBC、CFB、OFB），如果使用 CBC 方式加密，那么还需要提供密钥偏移量 IV 这个值。<br>AES 可以采用128位 或者 256位的加密方式。  </p>
-<p>下面代码采用了 AES256 CBC 模式。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"NSString+VCHAES.h"</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;CommonCrypto/CommonCryptor.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSString</span> (<span class="title">VCHAES</span>)</span></div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_AESEncryptWithKey:(<span class="built_in">NSString</span> *)key iv:(<span class="built_in">NSString</span> *)iv &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [<span class="keyword">self</span> dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    <span class="built_in">NSData</span> *encryptData = [<span class="keyword">self</span> AES256operation:kCCEncrypt data:data key:key iv:iv];</div><div class="line">    <span class="built_in">NSString</span> *encryptString = [encryptData base64EncodedStringWithOptions:<span class="built_in">NSDataBase64Encoding64CharacterLineLength</span>];</div><div class="line">    <span class="keyword">return</span> encryptString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSString</span> *)vch_AESDecryptWithKey:(<span class="built_in">NSString</span> *)key iv:(<span class="built_in">NSString</span> *)iv &#123;</div><div class="line">    <span class="built_in">NSData</span> *data = [[<span class="built_in">NSData</span> alloc] initWithBase64EncodedString:<span class="keyword">self</span> options:<span class="built_in">NSDataBase64DecodingIgnoreUnknownCharacters</span>];</div><div class="line">    <span class="built_in">NSData</span> *decryptData = [<span class="keyword">self</span> AES256operation:kCCDecrypt data:data key:key iv:iv];</div><div class="line">    <span class="built_in">NSString</span> *decryptString = [[<span class="built_in">NSString</span> alloc] initWithData:decryptData encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    <span class="keyword">return</span> decryptString;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSData</span> *)AES256operation:(CCOperation)operation data:(<span class="built_in">NSData</span> *)data key:(<span class="built_in">NSString</span> *)key iv:(<span class="built_in">NSString</span> *)iv &#123;</div><div class="line">    <span class="keyword">char</span> keyPtr[kCCKeySizeAES256 + <span class="number">1</span>];</div><div class="line">    bzero(keyPtr, <span class="keyword">sizeof</span>(keyPtr));</div><div class="line">    [key getCString:keyPtr maxLength:<span class="keyword">sizeof</span>(keyPtr) encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    </div><div class="line">    <span class="keyword">char</span> ivPtr[kCCKeySizeAES256 + <span class="number">1</span>];</div><div class="line">    bzero(ivPtr, <span class="keyword">sizeof</span>(ivPtr));</div><div class="line">    [iv getCString:ivPtr maxLength:<span class="keyword">sizeof</span>(ivPtr) encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">    size_t bufferSize = [data length] + kCCKeySizeAES256;</div><div class="line">    <span class="keyword">void</span> *buffer = malloc(bufferSize);</div><div class="line">    size_t numBytesEncrypted = <span class="number">0</span>;</div><div class="line">    </div><div class="line">    CCCryptorStatus cryptorStatus = CCCrypt(operation, kCCAlgorithmAES, kCCOptionPKCS7Padding,</div><div class="line">                                            keyPtr, kCCKeySizeAES256, ivPtr, [data bytes], [data length],</div><div class="line">                                            buffer, bufferSize, &amp;numBytesEncrypted);</div><div class="line">    <span class="keyword">if</span>(cryptorStatus == kCCSuccess) &#123;</div><div class="line">        <span class="keyword">return</span> [<span class="built_in">NSData</span> dataWithBytesNoCopy:buffer length:numBytesEncrypted];</div><div class="line">    &#125;</div><div class="line">    free(buffer);</div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
-<p>这里的 key 和 iv ，是由加密者提供的。</p>
-<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p><a href="https://github.com/vhuichen/VCHEncrypt.git" target="_blank" rel="external">Github Demo</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1324,7 +1295,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">58</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1341,7 +1312,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">64</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
