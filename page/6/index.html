@@ -168,6 +168,14 @@
     <ul id="menu" class="menu">
       
         
+        <li class="menu-item menu-item-favorite">
+          <a href="/categories/精选/" rel="section">
+            
+            精选
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
@@ -224,6 +232,138 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/22/180322-iOS开发之封装FMDB/" itemprop="url">
+                  iOS开发之封装FMDB
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-22T20:12:39+08:00" content="2018-03-22">
+              2018-03-22
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2018-07-01T16:09:58+08:00" content="2018-07-01">
+				2018-07-01
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS开发/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS开发</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>之前在项目中使用过，写出来记录一下。</p>
+<h3 id="常用类-FMDatabaseQueue-FMDatabase"><a href="#常用类-FMDatabaseQueue-FMDatabase" class="headerlink" title="常用类 FMDatabaseQueue FMDatabase"></a>常用类 FMDatabaseQueue FMDatabase</h3><h4 id="FMDatabase"><a href="#FMDatabase" class="headerlink" title="FMDatabase"></a>FMDatabase</h4><p>FMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。</p>
+<h4 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h4><p>使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。</p>
+<h3 id="考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase"><a href="#考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase" class="headerlink" title="考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase"></a>考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase</h3><p>方法如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>如果要处理事务，则使用下面的方法            </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.databaseQueue inDeferredTransaction:^(FMDatabase * _Nonnull db, <span class="built_in">BOOL</span> * _Nonnull rollback) &#123;</div><div class="line">     </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>不管是使用 inDatabase 还是 inDeferredTransaction 都是同步的，所以在这里不需要任何处理。</p>
+<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">BOOL</span> isOK = <span class="literal">NO</span>;</div><div class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</div><div class="line">	FMResultSet *results = [db executeQuery:sql];</div><div class="line">	isOK = results.next;</div><div class="line">	[results close];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">return</span> isOK;</div></pre></td></tr></table></figure>
+<p><strong>备注：</strong> 在block内处理完FMResultSet的相关逻辑，就算不调用 [results close] ，也不会报错，可能是由于block处理完，就自动释放了这个类。但注意不要在block外面使用FMResultSet。</p>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p>Demo中目前没有加入keyid，操作不当会出现多个相同的数据，只能以后再改了。。。。<br><a href="https://github.com/vhuichen/VCHFMDB" target="_blank" rel="external">GitHub Demo</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -1172,133 +1312,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/19/170519-iOS基础之理解NSNumericSearch/" itemprop="url">
-                  iOS基础之理解NSNumericSearch
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-19T21:51:32+08:00" content="2017-05-19">
-              2017-05-19
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:06:50+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>项目有个需求，比较两个字符串的大小，百度一下发现这个方法，记录下来！</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>方法名   </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSComparisonResult</span>)compare:(<span class="built_in">NSString</span> *)string options:(<span class="built_in">NSStringCompareOptions</span>)mask;</div></pre></td></tr></table></figure>
-<p>代码实现：  </p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="built_in">NSString</span> *str0 = <span class="string">@"F0FF23FF"</span>;</div><div class="line"><span class="built_in">NSString</span> *str1 = <span class="string">@"F0FF023FF"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@ compare %@ == %zd"</span>, str0, str1, [str0 compare:str1 options:<span class="built_in">NSNumericSearch</span>]);</div><div class="line"><span class="comment">//log : F0FF23FF compare F0FF023FF == 0</span></div><div class="line"><span class="comment">//理解：compare方法内部可以理解为把两个字符串拆分成</span></div><div class="line"><span class="comment">//F0FF23FF  --&gt; F 0 FF  23 FF</span></div><div class="line"><span class="comment">//F0FF023FF --&gt; F 0 FF 023 FF</span></div><div class="line"><span class="comment">//结果等于:0(两者相等)</span></div><div class="line"><span class="comment">//说明这个方法会将相邻的数字当成一个整体</span></div><div class="line"></div><div class="line">str0 = <span class="string">@"E0FF23FF"</span>;</div><div class="line">str1 = <span class="string">@"F0FF23FF"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@ compare %@ == %zd"</span>, str0, str1, [str0 compare:str1 options:<span class="built_in">NSNumericSearch</span>]);</div><div class="line"><span class="comment">//log : E0FF23FF compare F0FF23FF == -1</span></div><div class="line"><span class="comment">//理解：compare方法内部可以理解为把两个字符串拆分成</span></div><div class="line"><span class="comment">//E0FF23FF --&gt; E 0 FF 23 FF</span></div><div class="line"><span class="comment">//F0FF23FF --&gt; F 0 FF 23 FF</span></div><div class="line"><span class="comment">// E &lt; F , 结果等于:-1(前者小于后者)</span></div><div class="line"><span class="comment">//说明非数字也会进行比较</span></div><div class="line"></div><div class="line">str0 = <span class="string">@"EF0FF23FF"</span>;</div><div class="line">str1 = <span class="string">@"F0FF23FF"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@ compare %@ == %zd"</span>, str0, str1, [str0 compare:str1 options:<span class="built_in">NSNumericSearch</span>]);</div><div class="line"><span class="comment">//log : EF0FF23FF compare F0FF23FF == -1</span></div><div class="line"><span class="comment">//理解：compare方法内部可以理解为把两个字符串拆分成</span></div><div class="line"><span class="comment">//EF0FF23FF --&gt; EF 0 FF 23 FF</span></div><div class="line"><span class="comment">//F0FF23FF  --&gt; F  0 FF 23 FF</span></div><div class="line"><span class="comment">//从左到右进行比较，E &lt; F , 结果等于:-1(前者小于后者)</span></div><div class="line"><span class="comment">//说明此处是将"EF"中的"E" 和 "F" 比较，非数字不当成一个整体</span></div><div class="line"></div><div class="line">str0 = <span class="string">@"E1FF23FF"</span>;</div><div class="line">str1 = <span class="string">@"F0FF23FF"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@ compare %@ == %zd"</span>, str0, str1, [str0 compare:str1 options:<span class="built_in">NSNumericSearch</span>]);</div><div class="line"><span class="comment">//log : E1FF23FF compare F0FF23FF == -1</span></div><div class="line"><span class="comment">//理解：compare方法内部可以理解为把两个字符串拆分成</span></div><div class="line"><span class="comment">//E0FF23FF --&gt; E 1 FF 23 FF</span></div><div class="line"><span class="comment">//F0FF23FF --&gt; F 0 FF 23 FF</span></div><div class="line"><span class="comment">//说明从左到右开始判断，数字有没优先权</span></div><div class="line"></div><div class="line">str0 = <span class="string">@"1"</span>;</div><div class="line">str1 = <span class="string">@".1"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@ compare %@ == %zd"</span>, str0, str1, [str0 compare:str1 options:<span class="built_in">NSNumericSearch</span>]);</div><div class="line"><span class="comment">//log : 1 compare .1 == 1</span></div><div class="line"><span class="comment">//理解：compare方法内部可以理解为把两个字符串拆分成</span></div><div class="line"><span class="comment">//1 --&gt;  0 1</span></div><div class="line"><span class="comment">//.1 --&gt; . 1</span></div><div class="line"><span class="comment">//空格处应该不补充了一个数字，"."的ASCII码小于补充数字0的ASCII码。结果等于:1(前者大于后者)</span></div><div class="line"></div><div class="line">str0 = <span class="string">@"1"</span>;</div><div class="line">str1 = <span class="string">@":1"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@ compare %@ == %zd"</span>, str0, str1, [str0 compare:str1 options:<span class="built_in">NSNumericSearch</span>]);</div><div class="line"><span class="comment">//log : 1 compare :1 == -1</span></div><div class="line"><span class="comment">//1 --&gt;  0 1</span></div><div class="line"><span class="comment">//.1 --&gt; : 1</span></div><div class="line"><span class="comment">//空格处应该不补充了一个数字，":"的ASCII码大于补充数字0的ASCII码。结果等于:-1(前者小于后者)</span></div></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>NSNumericSearch options 会将相邻数字作为一个整体，然后两个字符串的数字整体左对齐，首位补0后进行比较。<br>(以上结论纯属个人理解🙂)</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1344,7 +1357,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">59</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1352,7 +1365,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1361,7 +1374,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1398,7 +1411,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

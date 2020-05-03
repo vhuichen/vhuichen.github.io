@@ -168,6 +168,14 @@
     <ul id="menu" class="menu">
       
         
+        <li class="menu-item menu-item-favorite">
+          <a href="/categories/精选/" rel="section">
+            
+            精选
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
@@ -224,6 +232,139 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/05/03/200503-记一次代码优化/" itemprop="url">
+                  记一次代码优化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-05-03T00:00:00+08:00" content="2020-05-03">
+              2020-05-03
+            </time>
+          </span>
+          
+          
+			  <span class="post-updated">
+			    &nbsp; | &nbsp; 更新于
+			    <time itemprop="dateUpdated" datetime="2020-05-03T12:57:47+08:00" content="2020-05-03">
+				2020-05-03
+			    </time>
+			  </span>
+			
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/精选/" itemprop="url" rel="index">
+                    <span itemprop="name">精选</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><blockquote>
+<p>下拉刷新某个主页面，需要刷新这个主页面里的所有子页面，每个子页面都是一个独立的模块，也就是要等到所有的模块都请求完成时，主页面的刷新才能结束,并执行一系列相应的操作。   </p>
+</blockquote>
+<p>以上就是一个完成的需求，OK，开始写代码，第一版的代码思路是这样的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">NSInteger</span> dataCallbackCount;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)refreshView &#123;</div><div class="line">	<span class="keyword">self</span>.dataCallbackCount = <span class="number">0</span>;</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData0lWithComplete:^&#123;</div><div class="line">		<span class="keyword">self</span>.dataCallbackCount++;</div><div class="line">		[<span class="keyword">self</span> shouldEndRefresh:dataCallbackCount];</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData1lWithComplete:^&#123;</div><div class="line">		<span class="keyword">self</span>.dataCallbackCount++;</div><div class="line">		[<span class="keyword">self</span> shouldEndRefresh:dataCallbackCount];</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData2lWithComplete:^&#123;</div><div class="line">		<span class="keyword">self</span>.dataCallbackCount++;</div><div class="line">		[<span class="keyword">self</span> shouldEndRefresh:dataCallbackCount];</div><div class="line">	&#125;];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)shouldEndRefresh:(<span class="built_in">NSInteger</span>)count &#123;</div><div class="line">    <span class="keyword">if</span> (count &gt;= <span class="number">3</span>) &#123;</div><div class="line">        [<span class="keyword">self</span>.refreshView endRefresh];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一版的代码有个问题，dataCallbackCount 属性和 shouldEndRefresh 方法 都是刷新方法内部才需要使用的，现在都变成类内部全局的了，其他的方法也可以使用这个属性和方法，而且 dataCallbackCount 还一直占用内存，这是不应该的。<br>我们知道block可以捕获变量，方法也可以用block代替。那么第二版改动如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)refreshView &#123;</div><div class="line">    __block <span class="built_in">NSInteger</span> dataCallbackCount = <span class="number">0</span>;</div><div class="line">	 </div><div class="line">    <span class="keyword">void</span> (^shouldEndRefresh)(<span class="keyword">void</span>) = ^(<span class="keyword">void</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (++dataCallbackCount &gt;= <span class="number">3</span>) &#123;</div><div class="line">            [<span class="keyword">self</span>.refreshView endRefresh];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData0lWithComplete:^&#123;</div><div class="line">		shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData1lWithComplete:^&#123;</div><div class="line">		shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData2lWithComplete:^&#123;</div><div class="line">		shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第二版我们将所有的代码都放到一个方法内了，同时也将 self.dataCallbackCount++; 放到了block内部，避免多次调用。dataCallbackCount 这个变量也会在结束刷新后释放内存，对于外部来说只需要调用 refreshView 就可以了，这样显得内聚很多。<br>但是仔细看的话，又会发现现在的 dataCallbackCount 也只是 shouldEndRefresh 内部需要使用而已 对于 [self.viewModel fetchxxx] 方法来说也应该是不可见的，但显然目前的这种写法是可见的。于是第三版改动如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)refreshView &#123;</div><div class="line">    <span class="keyword">void</span> (^_shouldEndRefresh)(<span class="keyword">void</span>) = ^(<span class="built_in">NSInteger</span> dataCallbackCountMax) &#123;</div><div class="line">        __block <span class="built_in">NSInteger</span> dataCallbackCount = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> ^&#123;</div><div class="line">            <span class="keyword">if</span> (++dataCallbackCount &gt;= dataCallbackCountMax) &#123;</div><div class="line">                [<span class="keyword">self</span>.refreshView endRefresh];</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">    &#125;(<span class="number">3</span>);</div><div class="line">    </div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData0lWithComplete:^&#123;</div><div class="line">		_shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData1lWithComplete:^&#123;</div><div class="line">		_shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData2lWithComplete:^&#123;</div><div class="line">		_shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>优化结束，如果需要优化的话可以将 [self.refreshView endRefresh]; 方法抽出来。最终代码如下： </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)refreshViewWithCallBack:(<span class="keyword">void</span>(^)(<span class="keyword">void</span>))callback &#123;</div><div class="line">    <span class="keyword">void</span> (^_shouldEndRefresh)(<span class="keyword">void</span>) = ^(<span class="built_in">NSInteger</span> dataCallbackCountMax) &#123;</div><div class="line">        __block <span class="built_in">NSInteger</span> dataCallbackCount = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> ^&#123;</div><div class="line">            <span class="keyword">if</span> (++dataCallbackCount &gt;= dataCallbackCountMax) &#123;</div><div class="line">                callback ? callback() : <span class="literal">nil</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">    &#125;(<span class="number">3</span>);</div><div class="line">    </div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData0lWithComplete:^&#123;</div><div class="line">		_shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData1lWithComplete:^&#123;</div><div class="line">		_shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">	</div><div class="line">	[<span class="keyword">self</span>.viewModel fetchData2lWithComplete:^&#123;</div><div class="line">		_shouldEndRefresh();</div><div class="line">	&#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>-END-</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -1124,132 +1265,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/27/180627-UITableViewCell默认选中/" itemprop="url">
-                  UITableViewCell默认选中
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-27T00:00:00+08:00" content="2018-06-27">
-              2018-06-27
-            </time>
-          </span>
-          
-          
-			  <span class="post-updated">
-			    &nbsp; | &nbsp; 更新于
-			    <time itemprop="dateUpdated" datetime="2018-07-01T16:51:25+08:00" content="2018-07-01">
-				2018-07-01
-			    </time>
-			  </span>
-			
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS基础/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS基础</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>UITableView 默认选中某一行的 Cell。</p>
-<h3 id="错误方法"><a href="#错误方法" class="headerlink" title="错误方法"></a>错误方法</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Controller</span></div><div class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123;</div><div class="line">    <span class="built_in">UITableViewCell</span> *cell = [tableView dequeueReusableCellWithIdentifier:<span class="string">@"xxxCellId"</span>) forIndexPath:indexPath];</div><div class="line">    <span class="keyword">if</span> (<span class="comment">/* ... */</span>) &#123;</div><div class="line">        cell.selected = <span class="literal">YES</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cell;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// View</span></div><div class="line">- (<span class="keyword">void</span>)setSelected:(<span class="built_in">BOOL</span>)selected &#123;</div><div class="line">    [<span class="keyword">super</span> setSelected:selected];</div><div class="line">    <span class="keyword">if</span> (selected) &#123;</div><div class="line">        <span class="comment">// do something </span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// do something </span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这种做法无效。<br>测试发现，<code>tableView:cellForRowAtIndexPath</code> 方法执行完后，会<strong>自动调用 <code>setSelected:</code> 方法</strong>，而此时传入的参数均为 <code>NO</code>，所以导致此前手动调用 <code>setSelected:</code> 方法无效。  </p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/27/180627-UITableViewCell默认选中/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1295,7 +1310,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">59</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1303,7 +1318,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1312,7 +1327,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1349,7 +1364,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
