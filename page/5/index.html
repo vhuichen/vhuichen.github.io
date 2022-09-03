@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>vhuichen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="vhuichen">
+<meta property="og:url" content="https://vhuichen.github.io/page/5/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:locale">
+<meta property="article:author" content="vhuichen">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="vhuichen" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">vhuichen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录、分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://vhuichen.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-2018/05/iOS基础之UINavigationBar属性设置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/2018/05/iOS%E5%9F%BA%E7%A1%80%E4%B9%8BUINavigationBar%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2018-05-09T16:00:00.000Z" itemprop="datePublished">2018-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/05/2018/05/iOS%E5%9F%BA%E7%A1%80%E4%B9%8BUINavigationBar%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE/">iOS基础之 UINavigationBar 属性设置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>用最简单、快捷的方法设置 UINavigationBar 的属性。</p>
+<h3 id="去掉返回按钮的文字，只保留返回箭头"><a href="#去掉返回按钮的文字，只保留返回箭头" class="headerlink" title="去掉返回按钮的文字，只保留返回箭头"></a>去掉返回按钮的文字，只保留返回箭头</h3><p>默认情况下的样式是这样的，现在只需要保留返回箭头，不需要文字。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-10/2817090.jpg"></p>
+<h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>自定义一个 UIBarButtonItem 。比较麻烦，还要给图片。创建 UINavigationController 的子类，重写 pushViewController 方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)pushViewController:(<span class="built_in">UIViewController</span> *)viewController animated:(<span class="type">BOOL</span>)animated &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.childViewControllers.count) &#123;</span><br><span class="line">        viewController.navigationItem.leftBarButtonItem = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;back&quot;</span>] style:<span class="built_in">UIBarButtonItemStylePlain</span> target:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(back)];</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="variable language_">super</span> pushViewController:viewController animated:animated];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)back &#123;</span><br><span class="line">    [<span class="keyword">self</span> popViewControllerAnimated:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>将文字偏移到看不到的地方，刚好系统有给出相关的接口。经过实践发现，偏移到左边屏幕之外是最好的方法。同样创建 UINavigationController 的子类，在 initialize 中实现以下方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">	<span class="built_in">UIBarButtonItem</span> *item = [<span class="built_in">UIBarButtonItem</span> appearance];</span><br><span class="line">	[item setBackButtonTitlePositionAdjustment:<span class="built_in">UIOffsetMake</span>(<span class="built_in">NSIntegerMin</span>, <span class="number">0</span>) forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用这个方法同样可以将箭头往右偏移。</p>
+<h3 id="设置属性和图片颜色"><a href="#设置属性和图片颜色" class="headerlink" title="设置属性和图片颜色"></a>设置属性和图片颜色</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">	<span class="built_in">UIBarButtonItem</span> *item = [<span class="built_in">UIBarButtonItem</span> appearance];</span><br><span class="line">	<span class="built_in">NSMutableDictionary</span> *attrs = [<span class="built_in">NSMutableDictionary</span> dictionary];</span><br><span class="line">	attrs[<span class="built_in">NSForegroundColorAttributeName</span>] = [<span class="built_in">UIColor</span> whiteColor]; <span class="comment">// 文字颜色</span></span><br><span class="line">	[item setTitleTextAttributes:attrs forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">	item.tintColor = [<span class="built_in">UIColor</span> whiteColor]; <span class="comment">// 图片颜色</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置返回按钮图片"><a href="#设置返回按钮图片" class="headerlink" title="设置返回按钮图片"></a>设置返回按钮图片</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">	<span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</span><br><span class="line">	<span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;back&quot;</span>];</span><br><span class="line">	bar.backIndicatorImage = image;</span><br><span class="line">	bar.backIndicatorTransitionMaskImage = image;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="去掉-UINavigationBar-下边线"><a href="#去掉-UINavigationBar-下边线" class="headerlink" title="去掉 UINavigationBar 下边线"></a>去掉 UINavigationBar 下边线</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">    <span class="built_in">UINavigationBar</span> *bar = [<span class="built_in">UINavigationBar</span> appearance];</span><br><span class="line">    [bar setBackgroundImage:[[<span class="built_in">UIImage</span> alloc] init] forBarPosition:<span class="built_in">UIBarPositionAny</span> barMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line">    [bar setShadowImage:[[<span class="built_in">UIImage</span> alloc] init]];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="给-UINavigationBar-加阴影"><a href="#给-UINavigationBar-加阴影" class="headerlink" title="给 UINavigationBar 加阴影"></a>给 UINavigationBar 加阴影</h3><p>这里我创建一个分类，可以直接调用这个方法来设置。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UINavigationBar</span> (<span class="title">VCHDropShadow</span>)</span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)dropShadowWithOffset:(<span class="built_in">CGSize</span>)offset</span><br><span class="line">                      radius:(<span class="built_in">CGFloat</span>)radius</span><br><span class="line">                       color:(<span class="built_in">UIColor</span> *)color</span><br><span class="line">                     opacity:(<span class="built_in">CGFloat</span>)opacity &#123;</span><br><span class="line">    <span class="comment">// 也可以不创建 path ，直接使用。</span></span><br><span class="line">    <span class="built_in">CGMutablePathRef</span> path = <span class="built_in">CGPathCreateMutable</span>();</span><br><span class="line">    <span class="built_in">CGPathAddRect</span>(path, <span class="literal">NULL</span>, <span class="keyword">self</span>.bounds);</span><br><span class="line">    <span class="keyword">self</span>.layer.shadowPath = path;</span><br><span class="line">    <span class="built_in">CGPathCloseSubpath</span>(path);</span><br><span class="line">    <span class="built_in">CGPathRelease</span>(path);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.layer.shadowColor = color.CGColor;</span><br><span class="line">    <span class="keyword">self</span>.layer.shadowOffset = offset;</span><br><span class="line">    <span class="keyword">self</span>.layer.shadowRadius = radius;</span><br><span class="line">    <span class="keyword">self</span>.layer.shadowOpacity = opacity;</span><br><span class="line"> 	</span><br><span class="line">    <span class="keyword">self</span>.clipsToBounds = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/05/2018/05/iOS%E5%9F%BA%E7%A1%80%E4%B9%8BUINavigationBar%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE/" data-id="cl7m9prde004p5lzyat3e7edg" data-title="iOS基础之 UINavigationBar 属性设置" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UINavigationBar/" rel="tag">UINavigationBar</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/05/《Effective Objective-C 2.0》第五章阅读笔记(2)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/" class="article-date">
+  <time class="dt-published" datetime="2018-05-08T16:00:00.000Z" itemprop="datePublished">2018-05-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/">《Effective Objective-C 2.0》第五章阅读笔记(2)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第五章：内存管理-2"><a href="#第五章：内存管理-2" class="headerlink" title="第五章：内存管理(2)"></a><center>第五章：内存管理(2)</center></h1><h2 id="第31条：在-dealloc-方法中只释放引用并解除监听"><a href="#第31条：在-dealloc-方法中只释放引用并解除监听" class="headerlink" title="第31条：在 dealloc 方法中只释放引用并解除监听"></a>第31条：在 dealloc 方法中只释放引用并解除监听</h2><p>对象经历其生命期后，最终会为系统所回收，这时候就会执行 dealloc 方法。也就是引用计数为0时调用，且在生命期内仅调用一次，并且我们也无法控制其什么时候调用。</p>
+<p>在这个方法里会释放所有的方法引用，也就是把 Objective-C 对象全部释放。ARC 会生成一个 .cxx_destruct 方法，在 dealloc 中为你自动添加这些释放代码。但也有一些对象是需要自己手动释放。</p>
+<h4 id="释放-CoreFoundation-对象"><a href="#释放-CoreFoundation-对象" class="headerlink" title="释放 CoreFoundation 对象"></a>释放 CoreFoundation 对象</h4><p>CoreFoundation 对象必须手动释放，因为这个是由纯C生成的。这些对象最好在不需要时就立刻释放掉，没必要等到 dealloc 才释放。</p>
+<h4 id="释放-KVO-amp-amp-NSNotificationCenter"><a href="#释放-KVO-amp-amp-NSNotificationCenter" class="headerlink" title="释放 KVO &amp;&amp; NSNotificationCenter"></a>释放 KVO &amp;&amp; NSNotificationCenter</h4><p>如果有 KVO 那么最迟应该在这里将其释放。如果注册了通知也应该最迟在这里移除。不然可能会造成程序崩溃。</p>
+<h4 id="释放由对象管理的资源"><a href="#释放由对象管理的资源" class="headerlink" title="释放由对象管理的资源"></a>释放由对象管理的资源</h4><p>如果此对象管理者某些资源，那么也要在这里释放掉。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>不要在 dealloc 中调用属性的存取方法。<br>不要在这里调用异步方法，因为对象已经处于回收状态了。<br>不需要用的资源应该及时释放，系统不能保证每个 dealloc 方法都会执行。</p>
+<h2 id="第32条：编写“异常安全代码”时留意内存管理问题"><a href="#第32条：编写“异常安全代码”时留意内存管理问题" class="headerlink" title="第32条：编写“异常安全代码”时留意内存管理问题"></a>第32条：编写“异常安全代码”时留意内存管理问题</h2><p>有时候我们需要编写异常代码来捕获并处理异常，发生异常时应该如何管理内存是个值得深究的问题。先看看在MRC环境下应该怎么处理，直接上代码</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@try</span> &#123; </span><br><span class="line">	EOCSomeClass *object = [[EOCSomeClass alloc]init]; </span><br><span class="line">	[object doSomethingThatMayThrow]; </span><br><span class="line">	[object release]; </span><br><span class="line">&#125; <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) &#123; </span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;there was an error.&quot;</span>); </span><br><span class="line">&#125;</span><br><span class="line">~~~  </span><br><span class="line">事实上当 doSomethingThatMayThrow 发生异常时，就会直接跳出，不会再往下执行，所以 release 方法无法执行，也就出现内存泄漏了。  </span><br><span class="line">使用 <span class="keyword">@finally</span> 可以解决这个问题  </span><br><span class="line"></span><br><span class="line">~~~ objc</span><br><span class="line">EOCSomeClass *object = <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">@try</span> &#123;</span><br><span class="line">	object = [[EOCSomeClass alloc] init]; </span><br><span class="line">	[object doSomethingThatMayThrow];</span><br><span class="line">&#125; <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) &#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;there was an error.&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">@finally</span> &#123;</span><br><span class="line">	[object release];</span><br><span class="line">&#125;</span><br><span class="line">~~~  </span><br><span class="line"></span><br><span class="line">在 ARC 环境下，也会出现这样的问题，由于 ARC 不能调用 release 方法。上面的代码同样会出问题    </span><br><span class="line"></span><br><span class="line">~~~ objc</span><br><span class="line"><span class="keyword">@try</span> &#123; </span><br><span class="line">	EOCSomeClass *object = [[EOCSomeClass alloc] init];</span><br><span class="line">	[object doSomethingThatMayThrow];</span><br><span class="line">&#125; <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) &#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;there was an error.&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">@finally</span> &#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认情况下 如果 doSomethingThatMayThrow 出现异常了，那么 ARC 也不会自动去处理这个问题。导致 object 这个对象无法回收。虽然默认状况下不能处理这个问题，但ARC依然能生成这种安全处理异常所用的附加代码。**-fobjc-arc-exception** 这个编译器标志用来开启此功能。打开这个标志会加入大量的样例代码，会影响运行期的性能。<br>处于 Objective-C++ 模式时，编译器会自动把 <strong>-fobjc-arc-exception</strong> 标志打开，因为C++处理异常所用的代码与ARC实现的附加代码类似，所以令ARC加入自己的代码以安全处理异常，其性能损失并不太大。</p>
+<blockquote>
+<p>这里需要了解的是，Objective-C中，只有当应用程序必须因异常状况而终止时才抛出异常。因此，如果应用程序即将终止，那么是否还会发生内存泄露就已经无关紧要了。在应用程序必须立即终止的情况下，还去添加安全处理异常所用的附加代码是没有意义的。</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>捕获异常时，一定要注意将try块内所创立的对象清理干净。<br>在默认情况下，ARC不生成安全处理异常所需的清理代码。开启编译器标志后，可生成这种代码，不过会导致应用程序变大，而且会降低运行效率。</p>
+<h2 id="第33条：用弱引用避免循环引用"><a href="#第33条：用弱引用避免循环引用" class="headerlink" title="第33条：用弱引用避免循环引用"></a>第33条：用弱引用避免循环引用</h2><p>对象图里经常会出现一种情况，就是几个对象都以某种方式互相引用，从而形成”环“。由于 Objective-C 内存管理模型使用引用计数架构，所以这种情况通常会泄露内存，因为最后没有别的东西会引用环中的对象。这样的话，环里的对象就无法为外界所访问了，但对象之间尚有引用，这些引用使得他们都能继续存活下去，而不会为系统所回收。<br>如下图是最简单的一种内存泄漏，两个对象相互引用，永远无法释放。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-11/81656748.jpg"> </p>
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><p>避免循环引用的最佳方式就是弱引用，即表示“非拥有关系”。有两个关键字可以用来修饰这种方式，分别是 unsafe_unretained 和 weak 。</p>
+<h4 id="unsafe-unretained"><a href="#unsafe-unretained" class="headerlink" title="unsafe_unretained"></a>unsafe_unretained</h4><p>用 unsafe_unretained 修饰的属性特质，其语义同 assign 特质等价，然而 assign 通常只用于数值类型，unsafe_unretained 则多用于对象类型。这个词本身就表明其所修饰的属性可能无法安全使用。也就是 unsafe_unretained 修饰的属性所指向的对象即使已经释放，unsafe_unretained 修饰的属性的值也不会自动置nil(相对于weak)。</p>
+<h4 id="weak"><a href="#weak" class="headerlink" title="weak"></a>weak</h4><p>weak 和 unsafe_unretained 同样用于修饰对象，唯一不同的是，当 weak 修饰的属性所指的对象被系统回收时，weak会自动置nil。</p>
+<p>下图可以看出两者之间的区别。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-11/50645693.jpg"><br>当对象释放时，unsafe_unretained 属性仍然指向那个已经回收的实例，而weak属性则指向nil。所以 使用 weak 比 unsafe_unretained 安全。</p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>如果某对象不归你所拥有，而只是需要使用这个对象，那么就应该用“弱引用”。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/" data-id="cl7m9prdl005a5lzy9jwi7emj" data-title="《Effective Objective-C 2.0》第五章阅读笔记(2)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/05/《Effective Objective-C 2.0》第五章阅读笔记(3)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(3)/" class="article-date">
+  <time class="dt-published" datetime="2018-05-08T16:00:00.000Z" itemprop="datePublished">2018-05-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(3)/">《Effective Objective-C 2.0》第五章阅读笔记(3)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第五章：内存管理-3"><a href="#第五章：内存管理-3" class="headerlink" title="第五章：内存管理(3)"></a><center>第五章：内存管理(3)</center></h1><h2 id="第34条：以“自动释放池块”降低内存"><a href="#第34条：以“自动释放池块”降低内存" class="headerlink" title="第34条：以“自动释放池块”降低内存"></a>第34条：以“自动释放池块”降低内存</h2><p>Objective-C 对象的生命期取决于其引用计数。在 Objective-C 的引用计数架构中，有一项特性叫做“自动释放池”（autorelease pool）。释放对象有两种方式：一种是调用 release 方法，使其引用计数立即递减；另一种是调用 autorelease 方法，将其加入“自动释放池”中。自动释放池用于存放那些需要在稍后某个时刻释放的对象。清空自动释放池时，系统会向其中的对象发送 release 消息。<br><strong>每一次运行循环开始后，系统都会创建一个自动释放池，当一个对象出了作用域之后就会加入到最近的自动释放池中，运行循环结束前会释放自动释放池（池子满了也会释放）。自动释放池工作的原理就是，给每一个池子的每一个对象发送 release 消息。</strong><br>那么问题来了，在一个运行循环中创建了大量的临时变量，这时就会导致内存峰值很高。例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">	[<span class="keyword">self</span> doSomethingWithInt:i]; <span class="comment">// 方法内创建了大量的临时变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当循环结束时，大量的对象放到自动释放池中，占用了大量的内存。增加一个自动释放池可以解决这样的问题。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">	<span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">		[<span class="keyword">self</span> doSomethingWithInt:i];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在循环中加入自动释放池，每次循环结束前都会回收当前池子中的对象。这样程序在执行循环时的峰值就会降低。<br>自动释放池机制就像“栈”（stack）一样。系统创建好自动释放池之后，就将其推入栈中，而清空自动释放池，则相当于将其从栈中弹出。在对象上执行自动释放操作，就等于将其放入栈顶的那个池里。  </p>
+<blockquote>
+<p>创建自动释放池会增加额外的开销，是否需要创建还需要根据实际情况来。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>自动释放池排布在栈中，对象收到 autorelease 消息后，系统将其放入到最顶端的池里。<br>合理运用自动释放池，可降低应用程序的内存峰值。</p>
+<h2 id="第35条：用“僵尸对象”调试内存管理问题"><a href="#第35条：用“僵尸对象”调试内存管理问题" class="headerlink" title="第35条：用“僵尸对象”调试内存管理问题"></a>第35条：用“僵尸对象”调试内存管理问题</h2><p>向已回收的对象发送消息是不安全的。这么做有时可以，有时不行。具体可行与否，完全取决于对象所占内存有没有被其他内容所复写。而这块内存有没有移作他用，又无法确定，因此，应用程序只是偶尔崩溃。在没有崩溃的情况下，那块内存可能只复用了其中一部分，所以部分对象中的某些二进制数据依然有效。还有一种可能，就是那块内存恰好为另外一个有效且存货的对象所占据。在这种情况下，运行期系统会把消息转发到新对象那里，而此对象也许能应答，也许不能。如果能，那程序就不崩溃，可你会觉得奇怪：为什么收到消息的对象不是预想的那个呢？若新对象无法响应选择子，则程序依然会崩溃。  </p>
+<p>Cocoa提供了“僵尸对象”（Zombie Object）这个非常方便的功能。启用这项调试功能之后，运行期系统会把所有已经回收的实例转化为特殊的“僵尸对象”，而不是真正回收他们。这种对象所在的核心内存无法重用，因此不可能遭到复写。僵尸对象收到消息之后，会抛出异常，其中准确说明了发送过来的消息，并描述了回收之前的那个对象。僵尸对象是调试内存管理问题的最佳方式。  </p>
+<p>点击 Scheme -&gt; Edit Scheme -&gt; Run -&gt; Diagnostics 里面可以设置僵尸模式。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-14/65940260.jpg"></p>
+<h4 id="Zombie-Object-工作原理"><a href="#Zombie-Object-工作原理" class="headerlink" title="Zombie Object 工作原理"></a>Zombie Object 工作原理</h4><p>Zombie Object 的实现代码深植于 Objective - C 的运行期程序库、Foundation 框架以及 CoreFoundation 框架中。系统在即将回收对象时，如果发现通过环境变量启用了僵尸对象功能，那么还将执行一个附加步骤。这一步就是把对象转化为僵尸对象，而不彻底回收。</p>
+<h4 id="僵尸类如何将把待回收的对象转换成僵尸对象"><a href="#僵尸类如何将把待回收的对象转换成僵尸对象" class="headerlink" title="僵尸类如何将把待回收的对象转换成僵尸对象"></a>僵尸类如何将把待回收的对象转换成僵尸对象</h4><p>这个过程其实就是 NSObject 的 dealloc 方法所做的事。运行期系统如果发现 NSZombieEnabled 环境变量已设置，那么就把 dealloc 方法的“调配“（swizzle）成一个会执行特定代码的方法。执行到程序末尾时，对象所属的类已经变为_NSZombie_OriginalClass了，其中 OriginalClass 指的是原类名。</p>
+<p>代码中的关键之处在于：对象所占内存没有通过调用 free() 方法释放，因此，这块内存不可复用。虽说内存泄漏了，但这只是个调试手段，发布正式应用程序时不会把这项功能打开，所以这种泄漏问题无关紧要。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>打开 “Zombie Object” 这个功能，系统在回收对象时，可以不将其真正的回收，而是将它转为僵尸对象。<br>系统会修改对象的isa指针，令其指向特殊的僵尸类，从而使改对象变为僵尸对象。僵尸类能够响应所有的选择子，响应方式为：打印一条包含消息内容及其接收者的消息，然后终止应用程序。</p>
+<h2 id="第36条：不要使用-retainCount"><a href="#第36条：不要使用-retainCount" class="headerlink" title="第36条：不要使用 retainCount"></a>第36条：不要使用 retainCount</h2><p>MRC 环境下，retainCount 所返回的引用计数只是某个给定时间点上的值。该方法并未考虑到系统会稍后把自动释放池清空，因而不会将后续的释放操作从返回值里减去，这样的话，此值就未必能真实反映实际的引用计数了。<br>ARC 环境下已经废弃此接口。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(3)/" data-id="cl7m9prdl005c5lzy5v96dcx2" data-title="《Effective Objective-C 2.0》第五章阅读笔记(3)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/05/《Effective Objective-C 2.0》第五章阅读笔记(1)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/" class="article-date">
+  <time class="dt-published" datetime="2018-05-07T16:00:00.000Z" itemprop="datePublished">2018-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/">《Effective Objective-C 2.0》第五章阅读笔记(1)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第五章：内存管理-1"><a href="#第五章：内存管理-1" class="headerlink" title="第五章：内存管理(1)"></a><center>第五章：内存管理(1)</center></h1><p>ARC 几乎把所有内存管理事宜都交由编译器来决定，开发者只需专注于业务逻辑。  </p>
+<h2 id="第29条：理解引用计数"><a href="#第29条：理解引用计数" class="headerlink" title="第29条：理解引用计数"></a>第29条：理解引用计数</h2><p>Objective-C 语言使用引用计数来管理内存，每个对象都有个可以递增或递减的计数器。如果想使某个对象继续存活，那就递增其引用计数；用完了之后，就递减其计数。计数变为0，就表示没人关注此对象了，于是，就可以把它销毁。</p>
+<h3 id="引用计数的工作原理"><a href="#引用计数的工作原理" class="headerlink" title="引用计数的工作原理"></a>引用计数的工作原理</h3><p>在引用计数架构下，对象有个计数器，用以表示当前有多少个事物想令此对象继续存活下去。这在 Objective-C 中叫做“引用计数”（reference count）。NSObject协议声明了下面三个方法用于操作计数器，以递增或递减其值：<br>retain：递增保留计数。<br>release：递减保留计数。<br>autorelease：待稍后清理“自动释放池”（autorelease pool）时，再递减保留计数。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)<span class="keyword">retain</span> OBJC_ARC_UNAVAILABLE;</span><br><span class="line">- (<span class="keyword">oneway</span> <span class="type">void</span>)release OBJC_ARC_UNAVAILABLE;</span><br><span class="line">- (<span class="keyword">instancetype</span>)autorelease OBJC_ARC_UNAVAILABLE;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>对象创建出来时，其引用计数至少为1。若想令其继续存活，则调用 retain 方法。要是某部分代码不再使用此对象，不想令其继续存活，那就调用 release 或 autorelease 方法。最终当引用计数归零时，对象就回收了（deallocated），也就是说，系统会将其占用的内存标记为“可重用”（reuse）。此时，所有指向该对象的引用也都变得无效了。</p>
+<h4 id="调用-release-之后，就已经无法保证所指的对象仍然存活"><a href="#调用-release-之后，就已经无法保证所指的对象仍然存活" class="headerlink" title="调用 release 之后，就已经无法保证所指的对象仍然存活"></a>调用 release 之后，就已经无法保证所指的对象仍然存活</h4><p>例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSNumber</span> *number = [[<span class="built_in">NSNumber</span> alloc] initWithInt:<span class="number">1234</span>];</span><br><span class="line">[array addObject:number];</span><br><span class="line">[number release];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;number = %@&quot;</span>,number);</span><br></pre></td></tr></table></figure>
+<p>调用 release 之后，其引用计数降至0，那么 number 对象所占内存也许会回收，那么再调用NSLog可能会使应用程序崩溃。这里说“可能”，是因为对象所占的内存在“解除分配”（deallocated）之后，只是放回“可用内存池”（avaliable pool）。如果执行 NSLog 时尚未覆写对象内存，那么该对象仍然有效，这时程序不会崩溃。</p>
+<h3 id="属性存取方法中的内存管理"><a href="#属性存取方法中的内存管理" class="headerlink" title="属性存取方法中的内存管理"></a>属性存取方法中的内存管理</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)setFoo:(<span class="type">id</span>)foo &#123;</span><br><span class="line">    [foo <span class="keyword">retain</span>];</span><br><span class="line">    [_foo release];</span><br><span class="line">    _foo = foo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是必须先 retain 对象，然后再 release 。原因就是新对象和旧对象可能是同一个对象，这时如果先 release 这个对象，可能会导致系统永久回收对象。之后再 retain 也无法再复生。</p>
+<h3 id="自动释放池"><a href="#自动释放池" class="headerlink" title="自动释放池"></a>自动释放池</h3><p>调用 release 会立刻递减对象的保留计数，而且还有可能令系统回收此对象，然而有时候可以不调用它，改为调用 autorelease ，此方法会在稍后递减计数，通常是在下一次“事件循环”（event loop）时递减，不过也可能执行得更早些（why ？？后面会提到）。<br>这个特性很有用，例如：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSString</span> *)stringValue &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;I am this: %@&quot;</span>,<span class="keyword">self</span>];</span><br><span class="line">    <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 MRC 环境下，此时 str 对象的引用计数会比期望值多1 ，因为 alloc 会使引用计数加1，但却没有释放。这时就应该用 autorelease 。此方法可以保证对象在跨越“方法调用边界”（method call boundary）后一定存活。实际上，释放操作会在清空最外层的自动释放池时执行，除非你有自己的自动释放池，否则这个时机指的就是当前线程的下一次事件循环。    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSString</span> *)stringValue &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;I am this: %@&quot;</span>,<span class="keyword">self</span>];</span><br><span class="line">    <span class="keyword">return</span> [str autorelease];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h3><p>使用引用计数机制时，经常要注意的一个问题就是“引用循环”（retain cycle），也就是呈环状相互引用的多个对象（如下图）。这将导致内存泄露，因为循环中的对象其引用计数都不会为0。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-5-8/55922608.jpg"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>引用计数机制通过可以递增递减的计数机制来管理内存。对象创建好之后，其引用计数至少为1。若引用计数为正，则对象继续存活。当引用计数降为0时，对象就被销毁了。<br>在对象生命期中，其余对象通过引用来保留或释放此对象。保留与释放操作分别会递增及递减保留计数。</p>
+<h2 id="第30条：用-ARC-简化引用计数"><a href="#第30条：用-ARC-简化引用计数" class="headerlink" title="第30条：用 ARC 简化引用计数"></a>第30条：用 ARC 简化引用计数</h2><p>在 MRC 环境下，下面代码会出现内存泄漏问题   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([<span class="keyword">self</span> showLogMsg]) &#123;</span><br><span class="line">	<span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;I am this: %@&quot;</span>,<span class="keyword">self</span>];</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原因是 if 语句结束后，并没有释放 str 对象。所以我们必须手动去释放</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([<span class="keyword">self</span> showLogMsg]) &#123;</span><br><span class="line">	<span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;I am this: %@&quot;</span>,<span class="keyword">self</span>];</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,str);</span><br><span class="line">	[str release];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而这个操作完全可以交给 ARC (Automatic Reference Counting)来完成，也就是在 ARC 环境下，编译器会在编译时会自动加上内存管理语句。<br>由于 ARC 会自动执行retain、release、autorelease等操作，所以直接在 ARC 下调用这些内存管理方法是非法的。具体来说，不能调用下列方法：<br><strong>retain<br>release<br>autorelease<br>dealloc</strong><br>实际上，ARC在调用这些方法时，并不通过普通的 Objective-C 消息派发机制，而是直接调用其底层C语言版本。这样做性能更好，因为保留及释放操作需要频繁执行，所以直接调用底层函数能节省很多CPU周期。  </p>
+<h3 id="使用-ARC-时必须遵循的方法命名规则"><a href="#使用-ARC-时必须遵循的方法命名规则" class="headerlink" title="使用 ARC 时必须遵循的方法命名规则"></a>使用 ARC 时必须遵循的方法命名规则</h3><p>将内存管理语义在方法名中表示出来早已成为 Objective-C 的惯例，而 ARC 则将之确立为硬性规定。这些规则简单地体现在方法名上。若方法名以下列词语开头，则其返回的对象归调用者所有：<br><strong>alloc<br>new<br>copy<br>mutableCopy</strong><br>归调用者所有的意思是：<strong>调用上述四种方法的那段代码要负责释放方法所返回的对象。</strong><br>举个例子，演示了ARC的用法：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法名以关键字 new 开头，ARC 不会加入 retain、release 或 autorelease 语句。</span></span><br><span class="line">+ (EOCPerson *)newPerson &#123;</span><br><span class="line">	EOCPerson *person = [[EOCPerson alloc] init]; </span><br><span class="line">	<span class="keyword">return</span> person; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法名不以关键字开头，ARC 会自动加上 autorelease 语句。</span></span><br><span class="line">+ (EOCPerson *)somePerson &#123;</span><br><span class="line">	EOCPerson *person = [[EOCPerson alloc] init]; </span><br><span class="line">	<span class="keyword">return</span> person; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ARC 会在函数末尾给 personOne 加上 release 语句。</span></span><br><span class="line">- (<span class="type">void</span>)doSomething &#123;</span><br><span class="line">	EOCPerson *personOne = [EOCPerson newPerson]; </span><br><span class="line">	EOCPerson *personTwo = [EOCPerson somePerson]; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了会自动调用“保留”与“释放”方法外，ARC 还可以执行一些手工操作很难甚至无法完成的优化。如果发现在同一个对象上执行多次“保留”与“释放”操作，那么ARC有时可以成对地移除这两个操作。  </p>
+<p>一般，在方法中返回自动释放的对象时，要执行一个特殊函数。此时不直接调用对象的 autorelease 方法，而是改为调用 objc_autoreleaseReturnValue 。此函数会检视当前方法返回之后即将要执行的那段代码。若发现那段代码在返回的对象上执行 retain 操作，则设置全局数据结构（此数据结构的具体内容因处理器而异）中的一个标志位而不执行 autorelease 操作。与之相似，如果方法返回了一个自动释放的对象，而调用方法的代码要保留此对象，那么此时不直接执行 retain，而是改为执行objc_retainAutoreleaseReturnValue 函数。此函数要检测刚才提到的那个标志位，若已经置位，则不执行 retain 操作。设置并检测标志位，要比调用 autorelease 和 retain 更快。</p>
+<h3 id="ARC-如何清理实例变量"><a href="#ARC-如何清理实例变量" class="headerlink" title="ARC 如何清理实例变量"></a>ARC 如何清理实例变量</h3><p>ARC 会在 dealloc 方法中自动生成回收对象时所执行的代码。ARC 会借用 Objective-C++ 的一项特性来生成清理例程（cleanup routime）。回收 Objective-C++ 对象时，待回收的对象会调用所有C++对象的析构函数（destructor）。编译器如果发现某个对象里含有C++对象，就会生成名为.cxx_destruct的方法。而ARC则借助此特性，在该方法中生成清理内存所需的代码。<br>如果有非 Objective-C 的对象，比如 CoreFoundation 中的对象或是由malloc()分配在堆中的内存，那么仍然需要手动清理。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>用ARC管理内存，可省去类中的许多的“样板代码”。<br>ARC会在合适的地方插入“保留”及“释放”对象。<br>CoreFoundation 对象不归 ARC 管理，开发者必须实时调用 CFRetain&#x2F;CFRelease 手动释放。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%94%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/" data-id="cl7m9prdk00565lzy9ot272qf" data-title="《Effective Objective-C 2.0》第五章阅读笔记(1)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/05/《Effective Objective-C 2.0》第四章阅读笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2018-05-01T16:00:00.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">《Effective Objective-C 2.0》第四章阅读笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第四章：协议与分类"><a href="#第四章：协议与分类" class="headerlink" title="第四章：协议与分类"></a><center>第四章：协议与分类</center></h1><p>Objective-C 语言有一项特性叫 “协议”（protocol），与 Java 的“接口”（interface）类似。</p>
+<blockquote>
+<p>Java接口是一系列方法的声明，是一些方法特征的集合，一个接口只有方法的特征没有方法的实现，因此这些方法可以在不同的地方被不同的类实现，而这些实现可以具有不同的行为（功能）。</p>
+</blockquote>
+<p>protocol 定义了一套公用的接口，和 Java 的接口同样，一个接口只有方法特征没有方法的实现，不同的类可以实现不同的行为。本质上和 Java 的接口是相同的。  </p>
+<p>Objective-C 不支持多重继承，所以我们可以将某个类应该实现的一系列方法定义在协议里面。协议最常见的用途就是实现委托模式。</p>
+<p>“分类”也是 Objective-C 的一个重要特性。利用分类机制，我们无需继承子类即可直接为当前类添加方法。</p>
+<h2 id="第23条：通过委托与数据源协议进行对象间通信"><a href="#第23条：通过委托与数据源协议进行对象间通信" class="headerlink" title="第23条：通过委托与数据源协议进行对象间通信"></a>第23条：通过委托与数据源协议进行对象间通信</h2><p>对象之间的通信使用最广泛的就是“委托模式”。定义一套接口，某对象若想接受另一对象的委托，则需遵循此接口，以便其成为“委托对象”。此模式可将数据与业务逻辑解耦。</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>委托属性一定要用 weak 修饰，不然会造成循环引用。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">PersonDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"><span class="keyword">@required</span></span><br><span class="line">- (<span class="built_in">NSDate</span> *)whatTimeIsIt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@optional</span></span><br><span class="line">- (<span class="type">BOOL</span>)isNiceDay;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="type">id</span>&lt;PersonDelegate&gt; personDelegate;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>委托协议的方法一般会定义“可选的”（optional），当我们在调用这些方法之前就需要先判断委托对象是否有实现这个方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)doWork &#123;</span><br><span class="line">    <span class="built_in">NSDate</span> *date = [<span class="keyword">self</span>.personDelegate whatTimeIsIt];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;date = %@&quot;</span>,date);</span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.personDelegate respondsToSelector:<span class="keyword">@selector</span>(isNiceDay)]) &#123;</span><br><span class="line">        <span class="type">BOOL</span> isNiceDay = [<span class="keyword">self</span>.personDelegate isNiceDay];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;isNiceDay:%zd&quot;</span>,isNiceDay);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>如果需要经常调用某个可选方法，可以用一个状态变量来保存“是否实现这个方法”的状态，如果有多个可选方法也可以用结构体来保存状态。这样做可以大大提高程序效率。</p>
+<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><p>委托对象需要先遵守这个协议。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">Person *person = [[Person alloc] initWithEmail:<span class="string">@&quot;123@163.com&quot;</span>];</span><br><span class="line">person.personDelegate = <span class="keyword">self</span>;</span><br><span class="line">[person doWork];</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// log</span></span><br><span class="line"><span class="comment">// date = Thu May  3 19:43:05 2018</span></span><br><span class="line"><span class="comment">// isNiceDay:1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="第24条：将类的实现代码分散到便于管理的数个分类中"><a href="#第24条：将类的实现代码分散到便于管理的数个分类中" class="headerlink" title="第24条：将类的实现代码分散到便于管理的数个分类中"></a>第24条：将类的实现代码分散到便于管理的数个分类中</h2><p>可以将类相同功能部分分散到单独的分类中，方便管理。也应该将私有方法放到名为 “private” 的分类中，以“隐藏”实现细节。官方的 NSString 就分成了好几个分类。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>, <span class="title">NSMutableCopying</span>, <span class="title">NSSecureCoding</span>&gt;</span></span><br><span class="line"><span class="comment">// 0</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringExtensionMethods</span>)</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringEncodingDetection</span>)</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSItemProvider</span>) &lt;<span class="title">NSItemProviderReading</span>, <span class="title">NSItemProviderWriting</span>&gt;</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSExtendedStringPropertyListParsing</span>)</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSString</span> (<span class="title">NSStringDeprecated</span>)</span></span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="第25条：总是为第三方类的分类名称加前缀"><a href="#第25条：总是为第三方类的分类名称加前缀" class="headerlink" title="第25条：总是为第三方类的分类名称加前缀"></a>第25条：总是为第三方类的分类名称加前缀</h2><p>向第三方类中添加分类时，应给分类名称以及方法加上项目专用的名称。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>这样做很大程度上避免了分类方法和原类方法相同的可能。</p>
+<h2 id="第26条：勿在分类中申明属性"><a href="#第26条：勿在分类中申明属性" class="headerlink" title="第26条：勿在分类中申明属性"></a>第26条：勿在分类中申明属性</h2><p>直接在分类中申明属性编译器只会给一个编译警告。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在分类中定义一个属性</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> (<span class="title">Special</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Property &#x27;name&#x27; requires method &#x27;name&#x27; to be defined - use @dynamic or provide a method implementation in this category</span></span><br><span class="line"><span class="comment">// Property &#x27;name&#x27; requires method &#x27;setName:&#x27; to be defined - use @dynamic or provide a method implementation in this category</span></span><br></pre></td></tr></table></figure>
+<p>提示使用 @dynamic 修饰属性或者提供属性的 getter 和 setter 方法。如果没有实现，那么程序会在运行时检测。</p>
+<h4 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h4><p>通过关联对象可以为分类实现属性的功能。使用时应注意内存管理问题。这种方法应该在必要的情况下才使用。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)setName:(<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="string">&quot;kPersonSpecial_name&quot;</span>, name, OBJC_ASSOCIATION_COPY);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="string">&quot;kPersonSpecial_name&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>总之,在必要的情况下可以通过关联对象声明属性，但这种方法应该尽量少用。</p>
+</blockquote>
+<h2 id="第27条：使用-“class-continuation-分类”-隐藏实现细节"><a href="#第27条：使用-“class-continuation-分类”-隐藏实现细节" class="headerlink" title="第27条：使用 “class-continuation 分类” 隐藏实现细节"></a>第27条：使用 “class-continuation 分类” 隐藏实现细节</h2><p>类中经常会包含一些无需对外公布的方法及实例变量。这些内容可以对外公布，并写明其为私有。Objective-C 的动态消息系统方式决定了其不可能实现真正的私有方法和私有实例变量。然而，我们最好还是只把确定需要公布的那部分内容公开。此时我们可以将这部分内容放到“class-continuation 分类”中。<br>“class-continuation 分类” 与其他的分类不同，它必须定义在实现文件中，这是唯一能声明实例变量的分类，而且此分类没有特定的实现文件，其中的方法都应该定义在主实现文件里。<br>若对象遵循的协议只应视为私有，也可在“class-continuation 分类”中声明。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">PersonDelegate</span>&gt;</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> _count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) Person *person;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="第28条：通过协议提供匿名对象"><a href="#第28条：通过协议提供匿名对象" class="headerlink" title="第28条：通过协议提供匿名对象"></a>第28条：通过协议提供匿名对象</h2><p>协议定义了一系列方法，遵从此协议的对象应该实现它们，如果这些方法不是可选的，那么就必须实现。我们可以用协议把自己所写的API之中的实现细节隐藏起来，将返回的对象设计为遵从此协议的纯id类型。这样的话，想要隐藏的类名就不会出现在API之中了。若是接口背后有多个不同的实现类，而你又不想指明具体使用哪个类，那么可以考虑用这个办法，因为有时候这些类可能会变，有时候它们又无法容纳于标准的类继承体系中，因而不能以某个公共基类来统一表示。此概念称为“匿名对象”。<br>例如在定义“受委托者”这个对象时，可以这样写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="type">id</span> &lt;VCHDelegate&gt; delegate;</span><br></pre></td></tr></table></figure>
+<p>任何遵循了 VCHDelegate 这个协议的对象都可以充当这个属性。对于具备此属性的类来说，delegate就是”匿名的”。<br>处理数据库连接(database connection)的程序库也用这个思路，以匿名对象来表示从另一个库中所返回的对象。对于处理连接所用的那个类，你也许不想让外人知道其名字，因为不同的数据库可能要用到不同的类来处理。如果没办法令其都继承自同一基类，那么就得返回id类型。不过我们可以把所有数据库连接都具备的那些方法放到协议中，令返回的对象遵从此协议。协议可以这样写:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)connect;</span><br><span class="line">- (<span class="type">void</span>)disconnect;</span><br><span class="line">- (<span class="type">BOOL</span>)isConnected;</span><br><span class="line">- (<span class="built_in">NSArray</span> *)performQuery:(<span class="built_in">NSString</span> *)query;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>然后可以用“数据库处理器”单例来提供数据库连接，接口可以这样写：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">EOCDatabaseConnection</span>;  </span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCDatabaseManger</span>:<span class="title">NSObject</span>  </span></span><br><span class="line"></span><br><span class="line">+ (<span class="type">id</span>)sharedInstance;  </span><br><span class="line">- (<span class="type">id</span>&lt;EOCDatabaseConnection&gt;) connectionWithIdentifier:(<span class="built_in">NSString</span> *)identifier;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span>;  </span><br></pre></td></tr></table></figure>
+<p>这样的话，处理数据库连接所用的类的名称就不会泄漏了，有可能来自不同框架的那些类现在均可以经由同一个方法来返回。使用此API的人仅仅要求所返回的对象能用来连接、断开并查询数据库即可。至于使用的哪种数据库则不需要关心。如果后续需要更改数据库，那么此时也不需要更改接口。我们关心的并不是对象的类型，而是对象有没有实现相关的方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" data-id="cl7m9prdp005o5lzy3mjzgf04" data-title="《Effective Objective-C 2.0》第四章阅读笔记" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/iOS基础之动画切换根控制器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/iOS%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8A%A8%E7%94%BB%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2018-04-28T16:00:00.000Z" itemprop="datePublished">2018-04-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/iOS%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8A%A8%E7%94%BB%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/">iOS基础之动画切换根控制器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>在我的所有项目里面，“登录成功”以及“退出登录”都是需要却换根控制器的，方法很简单，直接设置一个新的控制器就行了。这样做两个界面之间就是直接一闪就跳换过去了，给人体验不太友好。所以在这里可以加个动画优化体验。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>由于 rootViewController 是放到 keyWindow 上的，所以可以在设置 rootViewController 时给 keyWindow 加上动画。</p>
+<p>.h 头文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype;</span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>.m 实现文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;UIWindow+VCHAnimalWindow.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController withOglFlipSubtype:(<span class="built_in">NSString</span> *)subtype &#123;</span><br><span class="line">    [<span class="keyword">self</span> vch_setRootViewController:rootViewController animalType:<span class="string">@&quot;oglFlip&quot;</span> subtype:subtype duration:<span class="number">.5</span>f];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController animalType:(<span class="built_in">NSString</span> *)type subtype:(<span class="built_in">NSString</span> *)subtype duration:(<span class="built_in">CFTimeInterval</span>)duration &#123;</span><br><span class="line">    <span class="built_in">CATransition</span> *animation = [<span class="built_in">CATransition</span> animation];</span><br><span class="line">    [animation setDuration:duration];</span><br><span class="line">    [animation setType:type];</span><br><span class="line">    [animation setSubtype:subtype];</span><br><span class="line">    [<span class="keyword">self</span>.layer addAnimation:animation forKey:<span class="string">@&quot;VCHAnimalUIWindow&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span> setRootViewController:rootViewController];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>CATransition 的父类 CAAnimation 中有一个属性 removedOnCompletion ，默认值为 YES 。<br>也就是说当动画结束后，会自动移除动画对象，不需要再手动管理内存。</p>
+</blockquote>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// [[UIApplication sharedApplication].keyWindow setRootViewController:ctrl];</span></span><br><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication].keyWindow vch_setRootViewController:ctrl withOglFlipSubtype:kCATransitionFromRight];</span><br></pre></td></tr></table></figure>
+
+<h1 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h1><p>一开始想到的是通过 runtime 来实现，这样做优点就是不需要修改调用语句，缺点就是无法传参。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIWindow</span> (<span class="title">VCHAnimalWindow</span>)</span></span><br><span class="line"></span><br><span class="line">+ (<span class="type">void</span>)load &#123;</span><br><span class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">UIWindow</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(setRootViewController:));</span><br><span class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">UIWindow</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(vch_setRootViewController:));</span><br><span class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)vch_setRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController &#123;</span><br><span class="line">    <span class="built_in">CATransition</span> *animation = [<span class="built_in">CATransition</span> animation];</span><br><span class="line">    [animation setDuration:<span class="number">.5</span>f];</span><br><span class="line">    [animation setType:<span class="string">@&quot;oglFlip&quot;</span>];</span><br><span class="line">    [animation setSubtype:kCATransitionFromRight];</span><br><span class="line">    [<span class="keyword">self</span>.layer addAnimation:animation forKey:<span class="string">@&quot;VCHAnimalUIWindow&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span> vch_setRootViewController:rootViewController];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/iOS%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8A%A8%E7%94%BB%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" data-id="cl7m9prd4003r5lzy0kl48896" data-title="iOS基础之动画切换根控制器" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" rel="tag">切换根控制器</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/《Effective Objective-C 2.0》第三章阅读笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2018-04-25T16:00:00.000Z" itemprop="datePublished">2018-04-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">《Effective Objective-C 2.0》第三章阅读笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第三章：接口与-API-设计"><a href="#第三章：接口与-API-设计" class="headerlink" title="第三章：接口与 API 设计"></a><center>第三章：接口与 API 设计</center></h1><h2 id="第15条：用前缀避免命名冲突"><a href="#第15条：用前缀避免命名冲突" class="headerlink" title="第15条：用前缀避免命名冲突"></a>第15条：用前缀避免命名冲突</h2><p>选择与公司、应用程序或二者皆有关联的名称作为类名的前缀，并在所有的代码中使用这一前缀。也不仅仅是类名，应用程序中所有名称都应该加前缀。  </p>
+<blockquote>
+<p>苹果宣称保留使用所有“两个字母前缀”的权利，所以我们的前缀必须多于两个字母。  </p>
+</blockquote>
+<h3 id="顶级符号"><a href="#顶级符号" class="headerlink" title="顶级符号"></a>顶级符号</h3><p>在编译好的目标文件中，类实现文件所用的纯 C 函数和全局变量的名称要算作“顶级符号”。比如在类中创建了名为 “completion” 的纯 C 函数，会编译成 “_completion” 存在符号表中。此时如果在别的文件中也创建一个名为 “completion” 的函数，就会发出一个 “duplicate symbol” 的错误。</p>
+<h3 id="避免第三方库冲突"><a href="#避免第三方库冲突" class="headerlink" title="避免第三方库冲突"></a>避免第三方库冲突</h3><p>如果两个第三方库同时引入了相同的第三方库，那么就可能会出现 “duplicate symbol” 的错误。<br><strong>当自己的第三方库引入了别的第三方库的时候，应该给那份第三方库的代码加上自己的前缀。（😆。。。没看懂）</strong></p>
+<h2 id="第16条：提供-“指定初始化方法”"><a href="#第16条：提供-“指定初始化方法”" class="headerlink" title="第16条：提供 “指定初始化方法”"></a>第16条：提供 “指定初始化方法”</h2><p>那些可以为对象提供必要信息以便其能完成工作的初始化方法就叫“指定初始化方法”，这类初始化方法一般在后面会有 NS_DESIGNATED_INITIALIZER 这个宏定义。  </p>
+<h4 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h4><p>之前已经写过一篇相关的文章，可以去这篇文章看看 <a href="https://vhuichen.github.io/2018/03/31/180331-iOS%E5%BC%80%E5%8F%91%E4%B9%8BDesignated%20Initializer/">iOS开发之Designated Initializer(指定初始化方法)</a></p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>如果子类的指定初始化方法和父类的指定初始化方法不一样，那么需要在子类中重写父类的初始化方法。</p>
+<h2 id="第17条：实现-description-方法"><a href="#第17条：实现-description-方法" class="headerlink" title="第17条：实现 description 方法"></a>第17条：实现 description 方法</h2><p>description 方法定义在 NSObject 的协议里面。当想打印某个对象的时候，通常我们会这样做</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Person *p = [[Person alloc] initWithEmail:<span class="string">@&quot;123@163.com&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,p);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// &lt;Person: 0x109ea6170&gt;</span></span><br></pre></td></tr></table></figure>
+<p>直接打印对象实际上就是调用了 description 方法。所以我们只需要重写这个方法就可以打印出感兴趣的信息出来。  </p>
+<h4 id="description"><a href="#description" class="headerlink" title="description"></a>description</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSString</span> *)description &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;&lt;%@: %p, email = %@&gt;&quot;</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, _email];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// &lt;Person: 0x12bd4f090, email = 123@163.com&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如上，只要我们重写了 description 方法，就可以打印出特定的信息出来。</p>
+<h4 id="debugDescription"><a href="#debugDescription" class="headerlink" title="debugDescription"></a>debugDescription</h4><p>在合适的地方加入断点，然后在调试控制台输入lldb的 “po” 命令，就可以打印出 debugDescription 里面的信息出来</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSString</span> *)debugDescription &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;&lt;%@: %p, email = %@&gt;&quot;</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, _email];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// &lt;Person: 0x113dbff50, email = 123@163.com&gt;</span></span><br><span class="line"><span class="comment">// (lldb) po p</span></span><br><span class="line"><span class="comment">// &lt;Person: 0x113dbff50, email = 123@163.com&gt;</span></span><br><span class="line"><span class="comment">// (lldb) </span></span><br></pre></td></tr></table></figure>
+<p>一般我们可以在 description 里面打印主要的信息，而在 debugDescription 里面打印更详细的信息。</p>
+<h2 id="第18条：尽量使用不可变对象"><a href="#第18条：尽量使用不可变对象" class="headerlink" title="第18条：尽量使用不可变对象"></a>第18条：尽量使用不可变对象</h2><p>如果属性是不可变的，那么就应该将它设置成 readonly 。<br>如果把可变对象放到 collection 中，然后又修改其内容，那么很容易破坏 collection 的内部结构，比如：NSSet  </p>
+<blockquote>
+<p>看使用场景，把代码设计成最合逻辑的。</p>
+</blockquote>
+<h2 id="第19条：使用清晰而协调的命名方式"><a href="#第19条：使用清晰而协调的命名方式" class="headerlink" title="第19条：使用清晰而协调的命名方式"></a>第19条：使用清晰而协调的命名方式</h2><p>1、命名要清晰、易懂。<br>2、命名不要太啰嗦。<br>3、驼峰命名（类名首字母要大些，并且要加上前缀）。<br>4、是否要简写要看具体情况。<br>5、加前缀，尽量避免命名冲突。  </p>
+<h2 id="第20条：为私有方法名加前缀"><a href="#第20条：为私有方法名加前缀" class="headerlink" title="第20条：为私有方法名加前缀"></a>第20条：为私有方法名加前缀</h2><p>由于 Objective-C 没有 private 关键字。如果父类的私有方法和子类的方法重名了，那么父类的私有方法将无法执行。<br>苹果自己是通过在私有方法前加下划线（_）来标识的，因此我们就不能再这样做了。  </p>
+<h3 id="怎样有效避免这个问题"><a href="#怎样有效避免这个问题" class="headerlink" title="怎样有效避免这个问题"></a>怎样有效避免这个问题</h3><p>文章给出两个方法。</p>
+<h4 id="加前缀-“p-”"><a href="#加前缀-“p-”" class="headerlink" title="加前缀 “p_”"></a>加前缀 “p_”</h4><p>即 private 的首字母加下划线作为前缀。</p>
+<h4 id="项目前缀加下划线"><a href="#项目前缀加下划线" class="headerlink" title="项目前缀加下划线"></a>项目前缀加下划线</h4><p>比如我的项目前缀是 “VCH”，那么就可以加 “vch_” 作为前缀。不过其实分类的方法很多也是使用前缀加下划线来区别原类的。</p>
+<h2 id="第21条：理解-Objective-C-错误模型"><a href="#第21条：理解-Objective-C-错误模型" class="headerlink" title="第21条：理解 Objective-C 错误模型"></a>第21条：理解 Objective-C 错误模型</h2><h3 id="致命性错误-使用-throw"><a href="#致命性错误-使用-throw" class="headerlink" title="致命性错误 使用 @throw"></a>致命性错误 使用 @throw</h3><p>只有在极端情况下，才使用 @throw 抛出异常，同时也就意味着程序结束，崩溃。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@&quot;errorName&quot;</span> reason:<span class="string">@&quot;errorReason&quot;</span> userInfo:@&#123;<span class="string">@&quot;key&quot;</span>:<span class="string">@&quot;value&quot;</span>&#125;];</span><br></pre></td></tr></table></figure>
+<h3 id="非致命性错误-返回-nil-或-0"><a href="#非致命性错误-返回-nil-或-0" class="headerlink" title="非致命性错误 返回 nil 或 0"></a>非致命性错误 返回 nil 或 0</h3><p>一般对于一些非致命性错误，可以返回 nil 或 0 来提示。</p>
+<h3 id="NSError"><a href="#NSError" class="headerlink" title="NSError"></a>NSError</h3><p>当我们进行一些网络请求时，会返回一些错误，此时可以通过 NSError 把错误信息封装起来，再交给接受者处理。</p>
+<h4 id="Error-domain"><a href="#Error-domain" class="headerlink" title="Error domain"></a>Error domain</h4><p>错误的范围，一般会定义一个全局变量来指示。</p>
+<h4 id="Error-code"><a href="#Error-code" class="headerlink" title="Error code"></a>Error code</h4><p>错误码，一般用一个枚举表示。</p>
+<h4 id="Error-info"><a href="#Error-info" class="headerlink" title="Error info"></a>Error info</h4><p>包含错误的额外信息，字典类型。</p>
+<h4 id="Error-常见处理方法"><a href="#Error-常见处理方法" class="headerlink" title="Error 常见处理方法"></a>Error 常见处理方法</h4><h5 id="交给委托处理"><a href="#交给委托处理" class="headerlink" title="交给委托处理"></a>交给委托处理</h5><p>可以把错误传递给委托对象处理，至于怎么去处理这个错误由委托对象决定。</p>
+<h5 id="返回给调用者"><a href="#返回给调用者" class="headerlink" title="返回给调用者"></a>返回给调用者</h5><p>也可以通过返回值、block等将错误返回给调用者，交由调用者处理错误。</p>
+<h2 id="第22条：理解-NSCopying-协议"><a href="#第22条：理解-NSCopying-协议" class="headerlink" title="第22条：理解 NSCopying 协议"></a>第22条：理解 NSCopying 协议</h2><p>当我们自己的类需要支持拷贝操作时，就需要实现 NSCopying 协议，协议就一个方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSCopying</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)copyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>具体实现如下</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span>&lt;<span class="title">NSCopying</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithEmail:(<span class="built_in">NSString</span> *)email;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// .m</span></span><br><span class="line">- (<span class="type">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone &#123;</span><br><span class="line">    Person *person = [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] initWithEmail:_email];</span><br><span class="line">    person.name = [_name <span class="keyword">copy</span>];</span><br><span class="line">    <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 NSCopying 协议复制出来的对象是不可变的。</p>
+<h3 id="NSMutableCopying-协议"><a href="#NSMutableCopying-协议" class="headerlink" title="NSMutableCopying 协议"></a>NSMutableCopying 协议</h3><p>当我们需要复制的是可变对象时，就需要实现 NSMutableCopying 这个协议。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSMutableCopying</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)mutableCopyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>如果自定义对象分可变版本和不可变版本，那么就要同时实现 NSCopying 和 NSMutableCopying 协议。</p>
+<h3 id="深拷贝-amp-浅拷贝"><a href="#深拷贝-amp-浅拷贝" class="headerlink" title="深拷贝 &amp; 浅拷贝"></a>深拷贝 &amp; 浅拷贝</h3><p>浅拷贝只会复制指针，拷贝后的对象和原始对象为同一对象。深拷贝则是将对象也拷贝了一份。Foundation 框架下所有的 collection 类在默认情况下都执行浅拷贝。实现 collection 深拷贝的方法类似如下</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithSet:(<span class="built_in">NSSet</span>&lt;ObjectType&gt; *)set copyItems:(<span class="type">BOOL</span>)flag;</span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithArray:(<span class="built_in">NSArray</span>&lt;ObjectType&gt; *)array copyItems:(<span class="type">BOOL</span>)flag;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" data-id="cl7m9prd800485lzyeyg8are7" data-title="《Effective Objective-C 2.0》第三章阅读笔记" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/《Effective Objective-C 2.0》第二章阅读笔记(3)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(3)/" class="article-date">
+  <time class="dt-published" datetime="2018-04-22T16:00:00.000Z" itemprop="datePublished">2018-04-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(3)/">《Effective Objective-C 2.0》第二章阅读笔记(3)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第二章：对象、消息、运行期-3"><a href="#第二章：对象、消息、运行期-3" class="headerlink" title="第二章：对象、消息、运行期(3)"></a><center>第二章：对象、消息、运行期(3)</center></h1><h2 id="第12条：理解消息转发机制"><a href="#第12条：理解消息转发机制" class="headerlink" title="第12条：理解消息转发机制"></a>第12条：理解消息转发机制</h2><p>当一个对象接收到无法解读的消息后，就会开启“消息转发”机制。如果消息转发也无法解读消息，程序就会抛出异常：</p>
+<blockquote>
+<p>unrecognized selector sent to instance xxxx</p>
+</blockquote>
+<p>消息转发分为两大阶段：</p>
+<h3 id="第一阶段：动态方法解析"><a href="#第一阶段：动态方法解析" class="headerlink" title="第一阶段：动态方法解析"></a>第一阶段：动态方法解析</h3><p>征询接受者能否动态添加方法来处理这个消息。此时会调用以下两个方法之一：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以类方法调用时触发</span></span><br><span class="line">+ (<span class="type">BOOL</span>)resolveClassMethod:(SEL)sel</span><br><span class="line"><span class="comment">// 以实例方法调用时触发</span></span><br><span class="line">+ (<span class="type">BOOL</span>)resolveInstanceMethod:(SEL)sel</span><br></pre></td></tr></table></figure>
+<p>如果需要在动态解析时处理消息，那么实现代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> run(<span class="type">id</span> <span class="keyword">self</span>, SEL _cmd) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;missRun -- run&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="type">BOOL</span>)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line">    <span class="keyword">if</span> (sel == <span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;missRun&quot;</span>)) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;sel == %@&quot;</span>,<span class="built_in">NSStringFromSelector</span>(sel));</span><br><span class="line">        class_addMethod([<span class="keyword">self</span> <span class="keyword">class</span>], sel, (IMP)run, <span class="string">&quot;v@:&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="variable language_">super</span> resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意这里 class_addMethod 的第一个参数是 [self superclass]</span></span><br><span class="line">+ (<span class="type">BOOL</span>)resolveClassMethod:(SEL)sel &#123;</span><br><span class="line">    <span class="keyword">if</span> (sel == <span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;missRun&quot;</span>)) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;sel == %@&quot;</span>,<span class="built_in">NSStringFromSelector</span>(sel));</span><br><span class="line">        class_addMethod([<span class="keyword">self</span> superclass], sel, (IMP)run, <span class="string">&quot;v@:&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="variable language_">super</span> resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>外部调用  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Person *person = [[Person alloc] init];</span></span><br><span class="line"><span class="comment">//[person performSelector:NSSelectorFromString(@&quot;missRun&quot;) withObject:nil];</span></span><br><span class="line"></span><br><span class="line">[Person performSelector:<span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;missRun&quot;</span>) withObject:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<p>此时在外部调用 missRun 方法，最终将会访问 <strong>void run(id self, SEL _cmd)</strong> 方法。</p>
+<blockquote>
+<p>IMP 指向的函数必须要有 <strong>id self, SEL _cmd</strong> 这两个参数。  </p>
+</blockquote>
+<p>class_addMethod 的最后一个参数 <strong>“v@:”</strong> 中，v 表示返回值 void ， @ 表示第一个参数类型为 id ，: 表示 SEL 。具体可看文档 <a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html">Type Encodings</a></p>
+<h3 id="第二阶段：完整的消息转发机制"><a href="#第二阶段：完整的消息转发机制" class="headerlink" title="第二阶段：完整的消息转发机制"></a>第二阶段：完整的消息转发机制</h3><p>接受者尝试能否将这条消息转发给其他接受者接收，如果不行就启用“完整的消息转发”。</p>
+<h4 id="备用接受者"><a href="#备用接受者" class="headerlink" title="备用接受者"></a>备用接受者</h4><p>此时会调用下面的方法  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    Sutdent *student = [[Sutdent alloc] init];</span><br><span class="line">    <span class="keyword">if</span> ([student respondsToSelector:aSelector]) &#123;</span><br><span class="line">        <span class="keyword">return</span> student;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="variable language_">super</span> forwardingTargetForSelector:aSelector];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="完整的消息转发"><a href="#完整的消息转发" class="headerlink" title="完整的消息转发"></a>完整的消息转发</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSMethodSignature</span> *)methodSignatureForSelector:(SEL)aSelector &#123;</span><br><span class="line">    <span class="keyword">if</span> (aSelector == <span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;missRun&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="built_in">NSMethodSignature</span> signatureWithObjCTypes:<span class="string">&quot;v@:&quot;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="variable language_">super</span> methodSignatureForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)anInvocation &#123;</span><br><span class="line">    <span class="keyword">if</span> ([anInvocation selector] == <span class="built_in">NSSelectorFromString</span>(<span class="string">@&quot;missRun&quot;</span>)) &#123;</span><br><span class="line">        Sutdent *student = [[Sutdent alloc] init];</span><br><span class="line">        [anInvocation invokeWithTarget:student];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>“备用接受者”和“完整的消息转发”区别在于，“完整的消息转发”中可以改变消息的内容。</p>
+<h3 id="消息转发流程图"><a href="#消息转发流程图" class="headerlink" title="消息转发流程图"></a>消息转发流程图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/55820526.jpg"><br>接受者在每一步均有机会处理消息，越到最后，处理的代价会越高。</p>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p><a target="_blank" rel="noopener" href="https://github.com/vhuichen/MessageForwarding.git">GitHub: MessageForwarding</a></p>
+<h2 id="第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）"><a href="#第13条：用-“方法调配技术”-调试-“黑盒方法”（method-swizzling）" class="headerlink" title="第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）"></a>第13条：用 “方法调配技术” 调试 “黑盒方法”（method swizzling）</h2><p>类对象的方法列表会将“方法名”映射带相应的方法实现上，“动态消息派发系统”会根据这个表找到相应的方法。这些方法均以函数指针的方式表示。这种指针就是 IMP 。下图是 NSString 的部分方法映射表。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/29661179.jpg"><br>Objective-C 运行时系统提供了几个方法可以用来操作这张表。开发者可以在运行时新增方法，改变方法对应的实现，也可以交换两个方法的具体实现。例如我们可以让方法映射表变成下图这样<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-24/58460381.jpg"><br>实现起来也是很简单的，创建一个 NSString 的分类，在 +load 方法中实现  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)load &#123;</span><br><span class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(lowercaseString));</span><br><span class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(uppercaseString));</span><br><span class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot;This is a String&quot;</span>;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;lowercaseString = %@&quot;</span>,string.lowercaseString);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;uppercaseString = %@&quot;</span>,string.uppercaseString);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// lowercaseString = THIS IS A STRING</span></span><br><span class="line"><span class="comment">// uppercaseString = this is a string</span></span><br></pre></td></tr></table></figure>
+<p>此时 lowercaseString 和 uppercaseString 的方法实现已经替换过来了。<br>lowercaseString 方法对应的是 uppercaseString 的方法实现。<br>uppercaseString 方法对应的是 lowercaseString 的方法实现。<br>所以打印出来的log是反过来的。当然这个没有什么意义。  </p>
+<p>下面实现一个功能：每次调用 lowercaseString 都打印出相应的log出来  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)load &#123;</span><br><span class="line">    Method originalMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(lowercaseString));</span><br><span class="line">    Method swappedMethod = class_getInstanceMethod([<span class="built_in">NSString</span> <span class="keyword">class</span>], <span class="keyword">@selector</span>(vch_lowercaseString));</span><br><span class="line">    method_exchangeImplementations(originalMethod, swappedMethod);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)vch_lowercaseString &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *string = [<span class="keyword">self</span> vch_lowercaseString];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;----%@&quot;</span>,string);</span><br><span class="line">    <span class="keyword">return</span> string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot;This is a String&quot;</span>;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;lowercaseString = %@&quot;</span>,string.lowercaseString);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// ----this is a string</span></span><br><span class="line"><span class="comment">// lowercaseString = this is a string</span></span><br></pre></td></tr></table></figure>
+<p>由于 lowercaseString 和 vch_lowercaseString 交换了方法实现，所以当我们调用 lowercaseString 方法的时候，执行的是 vch_lowercaseString 里面的方法。所以才会打印出 log 出来。  </p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p><strong>使用 method swizzling “黑魔法”，开发者可以在原有实现中添加新的功能。</strong></p>
+<h2 id="第14条：理解-“类对象”-的本质"><a href="#第14条：理解-“类对象”-的本质" class="headerlink" title="第14条：理解 “类对象” 的本质"></a>第14条：理解 “类对象” 的本质</h2><p>看看下面的两个语句  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string0 = <span class="string">@&quot;this is a string&quot;</span>;</span><br><span class="line"><span class="type">id</span> string1 = <span class="string">@&quot;this is a string&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>两个语句都创建了一个 NSSring 类型的对象，在编译时，编译器会将 string0 按照 NSString 类型来检测，string1 按照 id 类型来检测。string0 直接调用 NSString 的方法编译器不会报错，string1 直接调用 NSString 的方法则编译器报错。 而在运行时两个对象表示的意思是一样的。</p>
+<p>在 objc.h 中是这样定义 id 类型的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// objc.h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/// An opaque type that represents an Objective-C class.</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// Represents an instance of a class.</span></span><br><span class="line"><span class="keyword">struct</span> objc_object &#123;</span><br><span class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// A pointer to an instance of a class.</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_object *<span class="type">id</span>;</span><br></pre></td></tr></table></figure>
+<p>可以看出 id 是 objc_object 结构体类型的指针，objc_object 包含了一个 Class 类型的变量 isa ，Class 是 objc_class 类型的指针。<br>再看看 NSObject.h 中的定义</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NSObject.h</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt; </span>&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> clang diagnostic push</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> clang diagnostic ignored <span class="string">&quot;-Wobjc-interface-ivars&quot;</span></span></span><br><span class="line">    Class isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> clang diagnostic pop</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里面包含了一个 Class 类型的变量 isa 。这个 Class 也就是 objc_class 类型的指针。<br>事实上每个实例变量都会包含一个 objc_object 结构体，该结构体的第一个成员变量就是 isa 指针。既然是指针，那么 objc_class 也是一个对象，我们称之为“类对象”，这个类对象是一个单例，程序运行中只存在一份。   </p>
+<p>再看看 runtime.h 是怎么定义 objc_class 结构体的。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// runtime.h</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> objc_class &#123;</span><br><span class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> !__OBJC2__</span></span><br><span class="line">    Class _Nullable super_class                              OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="keyword">const</span> <span class="type">char</span> * _Nonnull name                               OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="type">long</span> version                                             OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="type">long</span> info                                                OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="type">long</span> instance_size                                       OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="keyword">struct</span> objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="keyword">struct</span> objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="keyword">struct</span> objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;</span><br><span class="line">    <span class="keyword">struct</span> objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">&#125; OBJC2_UNAVAILABLE;</span><br></pre></td></tr></table></figure>
+<p>objc_class 的第一个成员变量也是 isa 指针。它指向的是类的元类（metaclass）。objc_class 负责保存类的实例变量、方法列表、缓存方法列表、协议列表等。元类（metaclass）则负责保存类方法列表。</p>
+<h3 id="继承体系图"><a href="#继承体系图" class="headerlink" title="继承体系图"></a>继承体系图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-25/33685437.jpg"><br>每一个实例对象都有一个 isa 指针指向其类对象，用来表明其类型，类对象也有一个 isa 指针，指向其元类，元类同样存在一个 isa 指针，指向其根元类，根元类的 isa 指针则指向自身。这些类对象则构成了类的继承体系。</p>
+<h3 id="在继承体系中查询类型信息"><a href="#在继承体系中查询类型信息" class="headerlink" title="在继承体系中查询类型信息"></a>在继承体系中查询类型信息</h3><p><strong>isMemberOfClass</strong>  不包含父类，用来判断是否是某个特定类的实例。（需要考虑“类族”）<br><strong>isKindOfClass</strong>    包含父类，用来判断是否是某个特定类或者派生类的实例。  </p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>1、类本质也是一个对象（类对象）。<br>2、类对象会在程序第一次使用时创建一次，是个单例。<br>3、类对象是一种数据结构。存储了类的版本、描述信息、大小、变量列表、方法列表、方法缓存、协议列表等。<br>4、元类中保存了类方法列表。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(3)/" data-id="cl7m9prdb004f5lzy2zr58jkw" data-title="《Effective Objective-C 2.0》第二章阅读笔记(3)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" rel="tag">消息转发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" rel="tag">类对象本质</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/尾调用优化" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" class="article-date">
+  <time class="dt-published" datetime="2018-04-20T16:00:00.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/">尾调用优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>看《Effective Objective-C 2.0》这本书发现“尾调用”这个词汇，之前没接触过，记录下来。</p>
+<h3 id="什么是尾调用"><a href="#什么是尾调用" class="headerlink" title="什么是尾调用"></a>什么是尾调用</h3><p>“尾调用”是指一个函数的最后一项操作是调用另一个函数，即被调用函数的返回值就是当前函数的返回值。例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">int</span>)func0:(<span class="type">int</span>)i &#123;</span><br><span class="line">    <span class="comment">// do anything</span></span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func1:i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">int</span>)func0:(<span class="type">int</span>)i &#123;</span><br><span class="line">    <span class="comment">// do anything</span></span><br><span class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</span><br><span class="line">    	<span class="keyword">return</span> [<span class="keyword">self</span> func2:i];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	<span class="keyword">return</span> [<span class="keyword">self</span> func1:i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面的例子不属于尾调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">int</span>)func0:(<span class="type">int</span>)i &#123;</span><br><span class="line">    <span class="comment">// do anything</span></span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func1:i] + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">int</span>)func0:(<span class="type">int</span>)i &#123;</span><br><span class="line">    <span class="comment">// do anything</span></span><br><span class="line">    <span class="type">int</span> value = [<span class="keyword">self</span> func1:i]</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a>尾递归</h3><p>如果函数在尾部调用的是自身，那么就叫做“尾递归”。    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">int</span>)func0:(<span class="type">int</span>)i &#123;</span><br><span class="line">    <span class="comment">// do anything</span></span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> func0:i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h3><p>当一个函数是尾调用时，那么当前函数开辟的栈空间就已经不需要再使用了。被调用函数不需要开辟新的栈空间，而是直接使用当前函数的栈空间（更新原有栈），再把被调用函数的返回地址替换成当前函数的返回地址，这就是“尾调用优化”。使用“尾调用优化”技术，可以避免栈溢出。 </p>
+<h3 id="尾递归优化（例子）"><a href="#尾递归优化（例子）" class="headerlink" title="尾递归优化（例子）"></a>尾递归优化（例子）</h3><blockquote>
+<p>求n!</p>
+</blockquote>
+<p>没有使用尾调用时代码是这样写的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">int</span>)factorial0:(<span class="type">int</span>)n &#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> n * [<span class="keyword">self</span> factorial0:n - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序第一次进入 factorial0 函数时需要在栈中分配内存用来保存 n 值。然后在每一次递归调用 factorial0 时都需要再分配新的内存来保存新的变量 n（这里的每一个 n 值都是不一样的，内存也是不一样的），空间复杂度O(n)。这样栈就会一直叠加，最后可能造成栈溢出。  </p>
+<p>使用了尾调用时代码是这样写的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">int</span>)factorial1:(<span class="type">int</span>)n &#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> factorial1:n total:<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">int</span>)factorial1:(<span class="type">int</span>)n total:(<span class="type">int</span>)total &#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> total;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> factorial1:n - <span class="number">1</span> total:total * n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>factorial1 只执行一次，不影响，空间复杂度O(1)。<br>程序第一次进入 factorial1:count 函数时需要在栈中分配内存用来保存 n 值。当第二次调用 factorial1:count 时，由于是尾调用，此时第一次分配的栈空间已经不需要再用了，所以第二次调用的时候直接使用原有栈，不需要分配额外的内存。空间复杂度O(1)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" data-id="cl7m9prdb004i5lzy7il5b0ak" data-title="尾调用优化" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" rel="tag">尾调用优化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/《Effective Objective-C 2.0》第二章阅读笔记(2)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/" class="article-date">
+  <time class="dt-published" datetime="2018-04-19T16:00:00.000Z" itemprop="datePublished">2018-04-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/">《Effective Objective-C 2.0》第二章阅读笔记(2)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第二章：对象、消息、运行期-2"><a href="#第二章：对象、消息、运行期-2" class="headerlink" title="第二章：对象、消息、运行期(2)"></a><center>第二章：对象、消息、运行期(2)</center></h1><h2 id="第9条：以-“类族模式”-模式隐藏实现细节"><a href="#第9条：以-“类族模式”-模式隐藏实现细节" class="headerlink" title="第9条：以 “类族模式” 模式隐藏实现细节"></a>第9条：以 “类族模式” 模式隐藏实现细节</h2><p>类族模式可以把实现细节隐藏在一套简单的公共接口后面。Objective-C 的系统框架普遍使用此模式。例如：UIButton NSArray NSNumber 等等。</p>
+<h4 id="自定义-“类族模式”"><a href="#自定义-“类族模式”" class="headerlink" title="自定义 “类族模式”"></a>自定义 “类族模式”</h4><p>定义一个 Person 基类以及三个子类 PersonA, PersonB, PersonC 。三个子类分别实现自己的 doWork 任务。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Person</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></span><br><span class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType;</span><br><span class="line">- (<span class="type">void</span>)doWork;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line">+ (<span class="keyword">instancetype</span>)personWithType:(PersonType)personType &#123;</span><br><span class="line">    <span class="keyword">switch</span> (personType) &#123;</span><br><span class="line">        <span class="keyword">case</span> PersonTypeA:</span><br><span class="line">            <span class="keyword">return</span> [PersonA new];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> PersonTypeB:</span><br><span class="line">            <span class="keyword">return</span> [PersonB new];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> PersonTypeC:</span><br><span class="line">            <span class="keyword">return</span> [PersonC new];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)doWork &#123;</span><br><span class="line">    <span class="comment">//SubClasses implement this</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Subclass PersonA</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonA</span> : <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonA</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)doWork &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;do PersonA Work&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Subclass PersonB</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonB</span> : <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonB</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)doWork &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;do PersonB Work&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Subclass PersonC</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PersonC</span> : <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PersonC</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)doWork &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;do PersonC Work&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>接口调用如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Person *personA = [Person personWithType:PersonTypeA];</span><br><span class="line">Person *personB = [Person personWithType:PersonTypeB];</span><br><span class="line">Person *personC = [Person personWithType:PersonTypeC];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[personA <span class="keyword">class</span>]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[personB <span class="keyword">class</span>]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[personC <span class="keyword">class</span>]);</span><br><span class="line"></span><br><span class="line">[personA doWork];</span><br><span class="line">[personB doWork];</span><br><span class="line">[personC doWork];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// PersonA</span></span><br><span class="line"><span class="comment">// PersonB</span></span><br><span class="line"><span class="comment">// PersonC</span></span><br><span class="line"><span class="comment">// do PersonA Work</span></span><br><span class="line"><span class="comment">// do PersonB Work</span></span><br><span class="line"><span class="comment">// do PersonC Work</span></span><br></pre></td></tr></table></figure>
+<p>这样就只需要传入不同的 Type 就可以实现不同的任务。这种实现模式就叫做“类族模式”。</p>
+<h2 id="第10条：在既有类中使用关联对象存放自定义数据"><a href="#第10条：在既有类中使用关联对象存放自定义数据" class="headerlink" title="第10条：在既有类中使用关联对象存放自定义数据"></a>第10条：在既有类中使用关联对象存放自定义数据</h2><p>可以通过“关联对象”这项特性，给某个类关联多个对象，这些对象可以通过 key 区分。在关联对象的时候需要指明对象的“存储策略”，用来维护相应的“内存管理语义”。“存储策略”由 objc_AssociationPolicy 这个枚举维护。下面给出 objc_AssociationPolicy 枚举的取值以及等效的 @property 属性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Policies related to associative references.</span></span><br><span class="line"><span class="comment"> * These are options to objc_setAssociatedObject()</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</span><br><span class="line">    OBJC_ASSOCIATION_ASSIGN = <span class="number">0</span>,           <span class="comment">/**&lt; Specifies a weak reference to the associated object. */</span></span><br><span class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = <span class="number">1</span>, <span class="comment">/**&lt; Specifies a strong reference to the associated object. </span></span><br><span class="line"><span class="comment">                                            *   The association is not made atomically. */</span></span><br><span class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = <span class="number">3</span>,   <span class="comment">/**&lt; Specifies that the associated object is copied. </span></span><br><span class="line"><span class="comment">                                            *   The association is not made atomically. */</span></span><br><span class="line">    OBJC_ASSOCIATION_RETAIN = <span class="number">01401</span>,       <span class="comment">/**&lt; Specifies a strong reference to the associated object.</span></span><br><span class="line"><span class="comment">                                            *   The association is made atomically. */</span></span><br><span class="line">    OBJC_ASSOCIATION_COPY = <span class="number">01403</span>          <span class="comment">/**&lt; Specifies that the associated object is copied.</span></span><br><span class="line"><span class="comment">                                            *   The association is made atomically. */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-20/99689322.jpg"><br>对应的3个方法为：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置关联对象</span></span><br><span class="line"><span class="type">void</span> objc_setAssociatedObject(<span class="type">id</span> _Nonnull object, <span class="keyword">const</span> <span class="type">void</span> * _Nonnull key,<span class="type">id</span> _Nullable value, objc_AssociationPolicy policy);</span><br><span class="line"><span class="comment">// 获取关联对象</span></span><br><span class="line"><span class="type">id</span> objc_getAssociatedObject(<span class="type">id</span> _Nonnull object, <span class="keyword">const</span> <span class="type">void</span> * _Nonnull key);                         </span><br><span class="line"><span class="comment">// 移除关联对象</span></span><br><span class="line"><span class="type">void</span> objc_removeAssociatedObjects(<span class="type">id</span> _Nonnull object)   </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>系统没有给出移除单个关联对象的接口，如果要移除某个关联对象，可以通过给该关联对象的 key 设置一个空值来实现。<br>void objc_setAssociatedObject(object, key, nil, policy);</p>
+</blockquote>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>当我们需要使用 UIAlertView 时，一般会这样写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)showAlert &#123;</span><br><span class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@&quot;title&quot;</span> message:<span class="string">@&quot;message&quot;</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@&quot;Cancel&quot;</span> otherButtonTitles:<span class="string">@&quot;Confirm&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line">	[alertView show];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</span><br><span class="line">    <span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当存在多个 UIAlertView 时，委托方法里面就需要对 alertView 进行判断。使用关联对象可以简化这里的逻辑</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="type">void</span> *kAlertKey = <span class="string">@&quot;kAlertKey&quot;</span>;</span><br><span class="line">- (<span class="type">void</span>)showAlert &#123;</span><br><span class="line">	<span class="built_in">UIAlertView</span> *alertView = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@&quot;title&quot;</span> message:<span class="string">@&quot;message&quot;</span> delegate:<span class="keyword">self</span> cancelButtonTitle:<span class="string">@&quot;Cancel&quot;</span> otherButtonTitles:<span class="string">@&quot;confirm&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="type">void</span> (^block)(<span class="built_in">NSInteger</span>) = ^(<span class="built_in">NSInteger</span> buttonIndex) &#123;</span><br><span class="line">		<span class="keyword">if</span> (buttonIndex == <span class="number">0</span>) &#123;</span><br><span class="line">            </span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (buttonIndex == <span class="number">1</span>) &#123;</span><br><span class="line">            </span><br><span class="line">		&#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	objc_setAssociatedObject(alertView, kAlertKey, block, OBJC_ASSOCIATION_COPY);</span><br><span class="line">	[alertView show];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex &#123;</span><br><span class="line">    <span class="type">void</span> (^block)(<span class="built_in">NSInteger</span>) = objc_getAssociatedObject(alertView, kAlertKey);</span><br><span class="line">    block(buttonIndex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>当关联对象需要捕获了其他变量，可能会造成引用循环。使用关联对象会降低代码的可读性，增加调试的难度。应谨慎使用。</p>
+<h2 id="第11条：理解-objc-msgSend-的作用"><a href="#第11条：理解-objc-msgSend-的作用" class="headerlink" title="第11条：理解 objc_msgSend 的作用"></a>第11条：理解 objc_msgSend 的作用</h2><p>给对象发消息</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">id</span> returnValue = [someObject msgName:parameter];</span><br></pre></td></tr></table></figure>
+<p>编译器会转换为</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">id</span> returnValue = objc_msgSend(someObject, <span class="keyword">@selector</span>(msgName:), parameter);</span><br></pre></td></tr></table></figure>
+<p>objc_msgSend 会在接受者类中搜寻“方法列表”，如果找到对应的方法，则转跳实现代码。如果没找到就沿着继承类向上找。如果最终还是找不到该方法，则进行“消息转发”。同时 objc_msgSend 还会将找到的方法缓存在“快速映射表”，如果下次还需要执行该方法，就会先从“快速映射表”中查找，这样执行起来会快很多。<br>每个类都会有一张类似于字典一样的表格，方法名是 Key ，对应的 Value 则保存着函数指针。objc_msgSend 就是通过这个表格来寻找应该执行的方法并跳转其实现的。这些工作由“动态消息派发系统”来处理。</p>
+<h4 id="尾调用优化"><a href="#尾调用优化" class="headerlink" title="尾调用优化"></a>尾调用优化</h4><p>“尾调用”是指一个函数最后一项操作是调用另一个函数，即被调用的函数的返回值就是当前函数的返回值。如果函数在尾部调用的是自身，那么就叫做“尾递归”。<br>尾调用优化是指不需要在当前调用栈上开辟新的栈空间，而是更新原有栈（原有栈的数据已经不需要了），再把调用函数的返回地址替换成当前函数的返回地址。<br>使用“尾调用优化”技术，很大程度上可以避免了栈溢出。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/" data-id="cl7m9prda004d5lzyghmf69p5" data-title="《Effective Objective-C 2.0》第二章阅读笔记(2)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" rel="tag">关联对象</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" rel="tag">类族模式</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/">iOS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/Swift/">Swift</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%87%8D%E6%9E%84/">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" rel="tag">APP默认语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Allocations/" rel="tag">Allocations</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Base64/" rel="tag">Base64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bugly/" rel="tag">Bugly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CADisplayLink/" rel="tag">CADisplayLink</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CocoaPods/" rel="tag">CocoaPods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cookie/" rel="tag">Cookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cornerstone/" rel="tag">Cornerstone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Designated-Initializer/" rel="tag">Designated Initializer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FMDB/" rel="tag">FMDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCD/" rel="tag">GCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Desktop/" rel="tag">GitHub Desktop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instruments/" rel="tag">Instruments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KCP/" rel="tag">KCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MD5/" rel="tag">MD5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC/" rel="tag">MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/" rel="tag">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVVM/" rel="tag">MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Module/" rel="tag">Module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookie/" rel="tag">NSHTTPCookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookieStorage/" rel="tag">NSHTTPCookieStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSNumericSearch/" rel="tag">NSNumericSearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSOperation/" rel="tag">NSOperation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSPredicate/" rel="tag">NSPredicate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSString/" rel="tag">NSString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSThread/" rel="tag">NSThread</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSTimeZone/" rel="tag">NSTimeZone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NavigationItem/" rel="tag">NavigationItem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Profile/" rel="tag">Profile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Push-Notification/" rel="tag">Push Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SRWebSocket/" rel="tag">SRWebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/" rel="tag">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Socket/" rel="tag">Socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/" rel="tag">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift%E6%B7%B7%E7%BC%96/" rel="tag">Swift混编</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/" rel="tag">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UIImage/" rel="tag">UIImage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UINavigationBar/" rel="tag">UINavigationBar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITableViewCell/" rel="tag">UITableViewCell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITextField/" rel="tag">UITextField</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/URL-Schemes/" rel="tag">URL Schemes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/View/" rel="tag">View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Workspace/" rel="tag">Workspace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anchorPoint/" rel="tag">anchorPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/" rel="tag">hash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/initialize/" rel="tag">initialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isEqual/" rel="tag">isEqual</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libffi/" rel="tag">libffi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load/" rel="tag">load</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" rel="tag">体积包优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" rel="tag">关联对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" rel="tag">切换根控制器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" rel="tag">加密解密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B/" rel="tag">单例</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag">单元测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9B%BE/" rel="tag">地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" rel="tag">尾调用优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" rel="tag">数据去重</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag">时间复杂度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" rel="tag">消息转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag">热更新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="tag">符号表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" rel="tag">第三方登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" rel="tag">类对象本质</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" rel="tag">类族模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A6%E6%9D%9F/" rel="tag">约束</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" rel="tag">编译时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" rel="tag">自动登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" rel="tag">自动释放池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" rel="tag">运行时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E6%9E%84/" rel="tag">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 10px;">AES</a> <a href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">APP默认语言</a> <a href="/tags/Allocations/" style="font-size: 10px;">Allocations</a> <a href="/tags/Base64/" style="font-size: 10px;">Base64</a> <a href="/tags/Bugly/" style="font-size: 10px;">Bugly</a> <a href="/tags/CADisplayLink/" style="font-size: 10px;">CADisplayLink</a> <a href="/tags/CocoaPods/" style="font-size: 13.33px;">CocoaPods</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/Cornerstone/" style="font-size: 10px;">Cornerstone</a> <a href="/tags/Designated-Initializer/" style="font-size: 10px;">Designated Initializer</a> <a href="/tags/Effective-Objective-C-2-0/" style="font-size: 20px;">Effective Objective-C 2.0</a> <a href="/tags/FMDB/" style="font-size: 10px;">FMDB</a> <a href="/tags/GCD/" style="font-size: 13.33px;">GCD</a> <a href="/tags/GitHub-Desktop/" style="font-size: 10px;">GitHub Desktop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Instruments/" style="font-size: 10px;">Instruments</a> <a href="/tags/KCP/" style="font-size: 10px;">KCP</a> <a href="/tags/MD5/" style="font-size: 10px;">MD5</a> <a href="/tags/MVC/" style="font-size: 10px;">MVC</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MVVM/" style="font-size: 10px;">MVVM</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Module/" style="font-size: 10px;">Module</a> <a href="/tags/NSHTTPCookie/" style="font-size: 10px;">NSHTTPCookie</a> <a href="/tags/NSHTTPCookieStorage/" style="font-size: 10px;">NSHTTPCookieStorage</a> <a href="/tags/NSNumericSearch/" style="font-size: 10px;">NSNumericSearch</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSPredicate/" style="font-size: 10px;">NSPredicate</a> <a href="/tags/NSString/" style="font-size: 10px;">NSString</a> <a href="/tags/NSThread/" style="font-size: 10px;">NSThread</a> <a href="/tags/NSTimeZone/" style="font-size: 10px;">NSTimeZone</a> <a href="/tags/NavigationItem/" style="font-size: 10px;">NavigationItem</a> <a href="/tags/Profile/" style="font-size: 10px;">Profile</a> <a href="/tags/Push-Notification/" style="font-size: 10px;">Push Notification</a> <a href="/tags/SRWebSocket/" style="font-size: 10px;">SRWebSocket</a> <a href="/tags/SVN/" style="font-size: 16.67px;">SVN</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/Swift/" style="font-size: 13.33px;">Swift</a> <a href="/tags/Swift%E6%B7%B7%E7%BC%96/" style="font-size: 10px;">Swift混编</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/UIImage/" style="font-size: 10px;">UIImage</a> <a href="/tags/UINavigationBar/" style="font-size: 10px;">UINavigationBar</a> <a href="/tags/UITableViewCell/" style="font-size: 10px;">UITableViewCell</a> <a href="/tags/UITextField/" style="font-size: 10px;">UITextField</a> <a href="/tags/URL-Schemes/" style="font-size: 10px;">URL Schemes</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/WebSocket/" style="font-size: 16.67px;">WebSocket</a> <a href="/tags/Workspace/" style="font-size: 10px;">Workspace</a> <a href="/tags/anchorPoint/" style="font-size: 10px;">anchorPoint</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/initialize/" style="font-size: 10px;">initialize</a> <a href="/tags/isEqual/" style="font-size: 10px;">isEqual</a> <a href="/tags/libffi/" style="font-size: 10px;">libffi</a> <a href="/tags/load/" style="font-size: 10px;">load</a> <a href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" style="font-size: 10px;">体积包优化</a> <a href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">关联对象</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" style="font-size: 10px;">切换根控制器</a> <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" style="font-size: 10px;">加密解密</a> <a href="/tags/%E5%8D%95%E4%BE%8B/" style="font-size: 10px;">单例</a> <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">单元测试</a> <a href="/tags/%E5%9C%B0%E5%9B%BE/" style="font-size: 10px;">地图</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" style="font-size: 10px;">尾调用优化</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" style="font-size: 10px;">数据去重</a> <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" style="font-size: 10px;">时间复杂度</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">框架</a> <a href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" style="font-size: 10px;">消息转发</a> <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" style="font-size: 10px;">热更新</a> <a href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" style="font-size: 10px;">符号表</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" style="font-size: 10px;">第三方登录</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" style="font-size: 10px;">类对象本质</a> <a href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">类族模式</a> <a href="/tags/%E7%BA%A6%E6%9D%9F/" style="font-size: 10px;">约束</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">线程</a> <a href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" style="font-size: 10px;">编译时</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" style="font-size: 10px;">自动登录</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" style="font-size: 10px;">自动释放池</a> <a href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" style="font-size: 10px;">运行时</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%87%8D%E6%9E%84/" style="font-size: 10px;">重构</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/05/NetworkProtocol/KCP/KCP/">KCP 协议</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/iOS/libffi%E6%8E%A2%E7%A9%B6%20/">libffi 探究</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/">ARC下，对象什么时候加入自动释放池</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/NetworkProtocol/WebSocket/WebSocket/">WebSocket</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/NetworkProtocol/SRWebSocket/SRWebSocket/">SRWebSocket 源码解析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 vhuichen<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

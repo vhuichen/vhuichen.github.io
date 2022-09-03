@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>《Effective Objective-C 2.0》第七章阅读笔记(2) | vhuichen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="第七章：系统框架(2)第50条：构建缓存时选用 NSCache 而非 NSDictionary优点1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。3、NSCache 是线程安全的。4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Objective-C 2.0》第七章阅读笔记(2)">
+<meta property="og:url" content="https://vhuichen.github.io/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%83%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="第七章：系统框架(2)第50条：构建缓存时选用 NSCache 而非 NSDictionary优点1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。3、NSCache 是线程安全的。4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-05-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2018-07-01T08:21:50.076Z">
+<meta property="article:author" content="vhuichen">
+<meta property="article:tag" content="Effective Objective-C 2.0">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="vhuichen" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">vhuichen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录、分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://vhuichen.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2018/05/《Effective Objective-C 2.0》第七章阅读笔记(2)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%83%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/" class="article-date">
+  <time class="dt-published" datetime="2018-05-28T16:00:00.000Z" itemprop="datePublished">2018-05-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      《Effective Objective-C 2.0》第七章阅读笔记(2)
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第七章：系统框架-2"><a href="#第七章：系统框架-2" class="headerlink" title="第七章：系统框架(2)"></a><center>第七章：系统框架(2)</center></h1><h2 id="第50条：构建缓存时选用-NSCache-而非-NSDictionary"><a href="#第50条：构建缓存时选用-NSCache-而非-NSDictionary" class="headerlink" title="第50条：构建缓存时选用 NSCache 而非 NSDictionary"></a>第50条：构建缓存时选用 NSCache 而非 NSDictionary</h2><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>1、当系统资源耗尽时，NSCache 可以自动删减缓存，而且还会优先删除最久没有使用的缓存。<br>2、NSCache 并不会“拷贝”键，而是“保留”它。不拷贝键的原因是：很多时候，键都是由不支持拷贝操作的对象充当的。<br>3、NSCache 是线程安全的。<br>4、可以操控缓存删减其内容的时机，有两个与系统资源相关的尺度可供调整，其一是缓存中的对象总数，其二是所有对象的“总开销”（overroll cost）。  </p>
+<p>下面代码演示缓存的用法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Network fetcher class</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">void</span>(^EOCNetworkFercherCompletionHandler)(<span class="built_in">NSData</span> *data);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCNetworkFetcher</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)initWithURL:(<span class="built_in">NSURL</span> *)url;  </span><br><span class="line">- (<span class="type">void</span>)startWithCompletionHandler:(EOCNetworkFercherCompletionHandler)handler;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">EOCClass</span> </span>&#123;  </span><br><span class="line">    <span class="built_in">NSCache</span> *_cache;  </span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">- (<span class="type">id</span>)init &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> init];  </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;  </span><br><span class="line">        _cache = [<span class="built_in">NSCache</span> new];</span><br><span class="line">        <span class="comment">// 最多缓存 100 条数据</span></span><br><span class="line">        _cache.countLimit = <span class="number">100</span>;</span><br><span class="line">        <span class="comment">// 最大缓存空间 5MB</span></span><br><span class="line">        _cache.totalCostLimit = <span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;  </span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)downloadDataForURL:(<span class="built_in">NSURL</span> *)url &#123;  </span><br><span class="line">    <span class="built_in">NSData</span> *cachedData = [_cache objectForKey:url];  </span><br><span class="line">    <span class="keyword">if</span> (cachedData) &#123;  </span><br><span class="line">        <span class="comment">// Cache hit</span></span><br><span class="line">        [<span class="keyword">self</span> useData:cachedData];  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Cache miss</span></span><br><span class="line">        EOCNetworkFetcher *fetcher = [[EOCNetworkFetcher alloc] initWithURL:url];  </span><br><span class="line">        [fetcher startWithCompletionHandler:^(<span class="built_in">NSData</span> *data) &#123;  </span><br><span class="line">            [_cache setObject:data forKey:url cost:data.length];  </span><br><span class="line">            [<span class="keyword">self</span> useData:cachedData];</span><br><span class="line">        &#125;];  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">@end</span>  </span><br></pre></td></tr></table></figure>
+
+<h4 id="NSPurgeableData"><a href="#NSPurgeableData" class="headerlink" title="NSPurgeableData"></a>NSPurgeableData</h4><p>NSPurgeableData 和 NSCache 搭配起来用，效果很好。此类是 NSMutableData 的子类，而且实现了 NSDiscardableContent 协议。如果某个对象所占有的内存能够根据需要随时丢弃，那么就可以实现该协议所定义的接口。当系统资源紧张时可以把保存 NSPurgeableData 对象的那块内存释放掉。NSDiscardableContent 协议定义了名为 isContentDiscarded 的方法，用来查询相关内存是否已释放。<br>如果需要访问某个 NSPurgeableData 对象，可以调用 beginContentAccess 方法，告诉它现在还不应该丢弃自己所占据的内存。用完之后，调用 endContentAccess 方法，告诉它在必要时可以丢弃自己所占据的内存了。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)downloadDataForURLTwo:(<span class="built_in">NSURL</span> *)url &#123;</span><br><span class="line">	<span class="built_in">NSPurgeableData</span> *cachedData = [_cache objectForKey:url];</span><br><span class="line">	<span class="keyword">if</span> (cachedData) &#123;</span><br><span class="line">		[cachedData beginContentAccess];</span><br><span class="line">		[<span class="keyword">self</span> useData:cacheData];</span><br><span class="line">		[cachedData endContentAccess];</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		EOCNetworkFetcher *fetcher = [[EOCNetworkFetcher alloc] initWithURL:url];</span><br><span class="line">		[fetcher startWithCompletionHandler:^(<span class="built_in">NSData</span> *data) &#123;</span><br><span class="line">			<span class="built_in">NSPurgeableData</span> *purgeableData = [<span class="built_in">NSPurgeableData</span> dataWithData:data];</span><br><span class="line">			[_cache setObject:purgeableData forKey:url cost:purgeableData.length];</span><br><span class="line">			[<span class="keyword">self</span> useData:purgeableData];</span><br><span class="line">			[purgeableData endContentAccess];</span><br><span class="line">		&#125;];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建好 NSPurgeableData 后，其 “purge 引用计数”会多1，所以无需再调用 beginContentAccess 了，但使用完后必须调用 endContentAccess 方法，将多出来的 “1” 抵消掉。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>合理的使用 NSCache 可以提高程序的响应速度。</p>
+<h2 id="第51条：精简-initialize-和-load-的实现代码"><a href="#第51条：精简-initialize-和-load-的实现代码" class="headerlink" title="第51条：精简 initialize 和 load 的实现代码"></a>第51条：精简 initialize 和 load 的实现代码</h2><p>有时候，类必须先执行某些初始化操作才能正常使用。在 Objective-C 中，绝大多数的类都继承自 NSObject 这个根类，该类有两个方法，可用来实现这种初始化操作。</p>
+<h3 id="load"><a href="#load" class="headerlink" title="load"></a>load</h3><p>对于加入运行期系统中的每个类（class）及分类（category）来说，必定会调用此方法，而且仅调用一次。如果分类和其所属的类都定义了 load 方法，则先调用类里的，再调用分类的。  </p>
+<p>执行 load 方法时，运行期系统处于“脆弱状态”（fragile state）。在执行子类的 load 方法之前，必定会先执行所有父类的 load 方法，而如果代码还依赖其他程序，那么程序库里相关类的 load 方法也必定会先执行。然而，根据某个给定的程序库，却无法判断出其中各个类的载入顺序。因此，在 load 方法中使用其他类是不安全的。  </p>
+<p>load 方法不像普通方法那样，它不遵从那套继承规则。如果某个类本身没实现 load 方法，那么不管其各级父类是否实现此方法，系统都不会调用。此外，分类的其所属的类里，都可能出现 load 方法。此时两种实现代码都会调用，类的实现要比分类的实现先执行。</p>
+<p>load 方法务必实现得精简一些，也就是要尽量减少其所执行操作，因为整个程序在执行 load 方法的时候都会阻塞。如果 load 方法中包含繁杂的代码，那么应用程序在执行期行就会变得无响应。也不要写等待锁，也不要调用可能会加锁的方法。</p>
+<h3 id="initialize"><a href="#initialize" class="headerlink" title="initialize"></a>initialize</h3><p>只有在第一次给该类发送消息之前会调用 initialize 方法。</p>
+<p>与 load 方法不同，运行系统在执行 initialize 方法时，是处于正常状态的。因此，从运行期系统完整角度上来讲，此时也可以安全使用并调用任意类中的任意方法。而且，运行期系统也能确保 initialize 方法在“线程安全的环境”中执行。这就是说，只有执行 initialize 的那个线程可以操作类或类实例。其他线程都要先阻塞，等着 initialize 执行完。</p>
+<p>跟其他方法一样，如果某个类未实现 initialize 方法，而父类实现了，那么就会运行父类的代码。initialize 遵循通常的继承规则。所以应该在 initialize 方法中判断是否是当前类，代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">self</span> == [EOCBaseClass <span class="keyword">class</span>]) &#123;</span><br><span class="line">		<span class="comment">// doSomething</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，initialize 和 load 一样，都应该实现的精简一些。可以用来初始化一些全局变量，</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>之前写的文章 <a href="https://vhuichen.github.io/2018/04/10/180410-iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%90%86%E8%A7%A3load%E5%92%8Cinitialize/">iOS开发之理解load和initialize</a></p>
+<h2 id="第52条：别忘了-NSTimer-会保留其目标对象"><a href="#第52条：别忘了-NSTimer-会保留其目标对象" class="headerlink" title="第52条：别忘了 NSTimer 会保留其目标对象"></a>第52条：别忘了 NSTimer 会保留其目标对象</h2><p>计时器要和“运行循环”（runloop）相关联，运行循环到时候会触发任务。创建 NSTimer 时，可以将其“预先安排”在当前的运行循环中，也可以先创建好，然后由开发者来调度。无论采用哪种方式，只有把计时器放在运行循环里，它才能正常触发任务。</p>
+<p>使用 NSTimer 很容易会造成引用循环。看看下面的例子  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">EOCClass</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="type">void</span>)startPolling;</span><br><span class="line">- (<span class="type">void</span>)stopPolling;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// -- </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;EOCClass.h&quot;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">EOCClass</span> </span>&#123; </span><br><span class="line">	<span class="built_in">NSTimer</span> *_pollTimer; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)init &#123; </span><br><span class="line">	<span class="keyword">return</span> [<span class="variable language_">super</span> init]; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)dealloc &#123; </span><br><span class="line">	[_pollTimer invalidate]; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)stopPolling &#123; </span><br><span class="line">	[_pollTimer invalidate]; </span><br><span class="line">	_pollTimer = <span class="literal">nil</span>;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)startPolling &#123; </span><br><span class="line">	_pollTimer = [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">5.0</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(p_doPoll) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>]; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)p_doPoll &#123; </span><br><span class="line">	<span class="comment">// Poll the resource </span></span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中 self 强引用了 _pollTimer ，而 _pollTimer 也强引用了 self 。所以就造成了引用循环。除非手动调用 stopPolling 这个方法，否则就会出现内存泄漏。但我们无法保证开发者一定会调用这个方法。</p>
+<p>解决方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt; </span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSTimer</span> (<span class="title">EOCBlocksSupport</span>) </span></span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSTimer</span> *)eoc_timerScheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval block:(<span class="type">void</span>(^)())block repeats:(<span class="type">BOOL</span>)repeats;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// --</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;NSTimer+EOCBlocksSupport.h&quot;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSTimer</span> (<span class="title">EOCBlocksSupport</span>) </span></span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSTimer</span> *)eoc_timerScheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval block:(<span class="type">void</span>(^)())block repeats:(<span class="type">BOOL</span>)repeats &#123; </span><br><span class="line">	<span class="keyword">return</span> [<span class="keyword">self</span> scheduledTimerWithTimeInterval:interval target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(eoc_blockInvoke:) userInfo:[block <span class="keyword">copy</span>] repeats:repeats]; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="type">void</span>)eoc_blockInvoke:(<span class="built_in">NSTimer</span> *)timer &#123; </span><br><span class="line">	<span class="type">void</span> (^block) () = timer.userInfo; </span><br><span class="line">	block ? block() : <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)startPolling &#123;</span><br><span class="line">	__<span class="keyword">weak</span> EOCClass *weakSelf = <span class="keyword">self</span>; </span><br><span class="line">	_pollTimer = [<span class="built_in">NSTimer</span> eoc_timerScheduledTimerWithTimeInterval:<span class="number">5.0</span> block:^&#123; </span><br><span class="line">		EOCClass *strongSelf = weakSelf; </span><br><span class="line">		[strongSelf p_doPoll]; </span><br><span class="line">	&#125; repeats:<span class="literal">YES</span>]; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)p_doPoll &#123; </span><br><span class="line">	<span class="comment">// Poll the resource </span></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>使用这种方法捕获到 weakSelf ，这样 self 就可以正常释放了，self 释放后， weakSelf 也就变为 nil 。从而打破了引用循环。</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>在项目中我使用另一种方法也可以用来解决这个问题，代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">void</span> (^VCHTimerHandler)(<span class="type">id</span> userInfo);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHWeakTimer</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</span><br><span class="line">                                     target:(<span class="type">id</span>)aTarget</span><br><span class="line">                                   selector:(SEL)aSelector</span><br><span class="line">                                   userInfo:(<span class="type">id</span>)userInfo</span><br><span class="line">                                    repeats:(<span class="type">BOOL</span>)repeats;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</span><br><span class="line">                                      block:(VCHTimerHandler)block</span><br><span class="line">                                   userInfo:(<span class="type">id</span>)userInfo</span><br><span class="line">                                    repeats:(<span class="type">BOOL</span>)repeats;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;VCHWeakTimer.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VCHWeakTimer</span>()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">weak</span>) <span class="type">id</span> target;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">assign</span>) SEL selector;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VCHWeakTimer</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)fire:(<span class="type">id</span>)obj &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> clang diagnostic push</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> clang diagnostic ignored <span class="string">&quot;-Warc-performSelector-leaks&quot;</span></span></span><br><span class="line">    [<span class="keyword">self</span>.target performSelector:<span class="keyword">self</span>.selector withObject:obj];</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> clang diagnostic pop</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</span><br><span class="line">                                     target:(<span class="type">id</span>)aTarget</span><br><span class="line">                                   selector:(SEL)aSelector</span><br><span class="line">                                   userInfo:(<span class="type">id</span>)userInfo</span><br><span class="line">                                    repeats:(<span class="type">BOOL</span>)repeats &#123;</span><br><span class="line">    VCHWeakTimer *weakTimer = [[VCHWeakTimer alloc] init];</span><br><span class="line">    weakTimer.target = aTarget;</span><br><span class="line">    weakTimer.selector = aSelector;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:interval</span><br><span class="line">                                            target:weakTimer</span><br><span class="line">                                          selector:<span class="keyword">@selector</span>(fire:)</span><br><span class="line">                                          userInfo:userInfo</span><br><span class="line">                                           repeats:repeats];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSTimer</span> *)scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>)interval</span><br><span class="line">                                      block:(VCHTimerHandler)block</span><br><span class="line">                                   userInfo:(<span class="type">id</span>)userInfo</span><br><span class="line">                                    repeats:(<span class="type">BOOL</span>)repeats &#123;</span><br><span class="line">    <span class="built_in">NSMutableArray</span> *userInfoArray = [<span class="built_in">NSMutableArray</span> arrayWithObject:[block <span class="keyword">copy</span>]];</span><br><span class="line">    <span class="keyword">if</span> (userInfo != <span class="literal">nil</span>) &#123;</span><br><span class="line">        [userInfoArray addObject:userInfo];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> scheduledTimerWithTimeInterval:interval</span><br><span class="line">                                         target:<span class="keyword">self</span></span><br><span class="line">                                       selector:<span class="keyword">@selector</span>(_timerBlockInvoke:)</span><br><span class="line">                                       userInfo:userInfoArray</span><br><span class="line">                                        repeats:repeats];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)_timerBlockInvoke:(<span class="built_in">NSArray</span> *)userInfo &#123;</span><br><span class="line">    VCHTimerHandler block = userInfo[<span class="number">0</span>];</span><br><span class="line">    <span class="type">id</span> info = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">if</span> (userInfo.count == <span class="number">2</span>) &#123;</span><br><span class="line">        info = userInfo[<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    block ? block(info) : <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>直接使用 NSTimer 可能会发生内存泄漏，一定要想办法处理掉这个问题。</p>
+<h1 id="全书-·-完"><a href="#全书-·-完" class="headerlink" title="全书 · 完"></a><center><font color="red">全书 · 完</font></center></h1>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%83%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(2)/" data-id="cl7m9prdj00545lzy7vbue8m5" data-title="《Effective Objective-C 2.0》第七章阅读笔记(2)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/06/2018/06/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          iOS开发之加密解密
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/2018/05/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%83%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">《Effective Objective-C 2.0》第七章阅读笔记(1)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/">iOS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/Swift/">Swift</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%87%8D%E6%9E%84/">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" rel="tag">APP默认语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Allocations/" rel="tag">Allocations</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Base64/" rel="tag">Base64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bugly/" rel="tag">Bugly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CADisplayLink/" rel="tag">CADisplayLink</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CocoaPods/" rel="tag">CocoaPods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cookie/" rel="tag">Cookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cornerstone/" rel="tag">Cornerstone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Designated-Initializer/" rel="tag">Designated Initializer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FMDB/" rel="tag">FMDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCD/" rel="tag">GCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Desktop/" rel="tag">GitHub Desktop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instruments/" rel="tag">Instruments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KCP/" rel="tag">KCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MD5/" rel="tag">MD5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC/" rel="tag">MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/" rel="tag">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVVM/" rel="tag">MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Module/" rel="tag">Module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookie/" rel="tag">NSHTTPCookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookieStorage/" rel="tag">NSHTTPCookieStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSNumericSearch/" rel="tag">NSNumericSearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSOperation/" rel="tag">NSOperation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSPredicate/" rel="tag">NSPredicate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSString/" rel="tag">NSString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSThread/" rel="tag">NSThread</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSTimeZone/" rel="tag">NSTimeZone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NavigationItem/" rel="tag">NavigationItem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Profile/" rel="tag">Profile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Push-Notification/" rel="tag">Push Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SRWebSocket/" rel="tag">SRWebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/" rel="tag">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Socket/" rel="tag">Socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/" rel="tag">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift%E6%B7%B7%E7%BC%96/" rel="tag">Swift混编</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/" rel="tag">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UIImage/" rel="tag">UIImage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UINavigationBar/" rel="tag">UINavigationBar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITableViewCell/" rel="tag">UITableViewCell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITextField/" rel="tag">UITextField</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/URL-Schemes/" rel="tag">URL Schemes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/View/" rel="tag">View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Workspace/" rel="tag">Workspace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anchorPoint/" rel="tag">anchorPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/" rel="tag">hash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/initialize/" rel="tag">initialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isEqual/" rel="tag">isEqual</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libffi/" rel="tag">libffi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load/" rel="tag">load</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" rel="tag">体积包优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" rel="tag">关联对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" rel="tag">切换根控制器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" rel="tag">加密解密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B/" rel="tag">单例</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag">单元测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9B%BE/" rel="tag">地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" rel="tag">尾调用优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" rel="tag">数据去重</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag">时间复杂度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" rel="tag">消息转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag">热更新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="tag">符号表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" rel="tag">第三方登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" rel="tag">类对象本质</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" rel="tag">类族模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A6%E6%9D%9F/" rel="tag">约束</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" rel="tag">编译时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" rel="tag">自动登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" rel="tag">自动释放池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" rel="tag">运行时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E6%9E%84/" rel="tag">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 10px;">AES</a> <a href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">APP默认语言</a> <a href="/tags/Allocations/" style="font-size: 10px;">Allocations</a> <a href="/tags/Base64/" style="font-size: 10px;">Base64</a> <a href="/tags/Bugly/" style="font-size: 10px;">Bugly</a> <a href="/tags/CADisplayLink/" style="font-size: 10px;">CADisplayLink</a> <a href="/tags/CocoaPods/" style="font-size: 13.33px;">CocoaPods</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/Cornerstone/" style="font-size: 10px;">Cornerstone</a> <a href="/tags/Designated-Initializer/" style="font-size: 10px;">Designated Initializer</a> <a href="/tags/Effective-Objective-C-2-0/" style="font-size: 20px;">Effective Objective-C 2.0</a> <a href="/tags/FMDB/" style="font-size: 10px;">FMDB</a> <a href="/tags/GCD/" style="font-size: 13.33px;">GCD</a> <a href="/tags/GitHub-Desktop/" style="font-size: 10px;">GitHub Desktop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Instruments/" style="font-size: 10px;">Instruments</a> <a href="/tags/KCP/" style="font-size: 10px;">KCP</a> <a href="/tags/MD5/" style="font-size: 10px;">MD5</a> <a href="/tags/MVC/" style="font-size: 10px;">MVC</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MVVM/" style="font-size: 10px;">MVVM</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Module/" style="font-size: 10px;">Module</a> <a href="/tags/NSHTTPCookie/" style="font-size: 10px;">NSHTTPCookie</a> <a href="/tags/NSHTTPCookieStorage/" style="font-size: 10px;">NSHTTPCookieStorage</a> <a href="/tags/NSNumericSearch/" style="font-size: 10px;">NSNumericSearch</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSPredicate/" style="font-size: 10px;">NSPredicate</a> <a href="/tags/NSString/" style="font-size: 10px;">NSString</a> <a href="/tags/NSThread/" style="font-size: 10px;">NSThread</a> <a href="/tags/NSTimeZone/" style="font-size: 10px;">NSTimeZone</a> <a href="/tags/NavigationItem/" style="font-size: 10px;">NavigationItem</a> <a href="/tags/Profile/" style="font-size: 10px;">Profile</a> <a href="/tags/Push-Notification/" style="font-size: 10px;">Push Notification</a> <a href="/tags/SRWebSocket/" style="font-size: 10px;">SRWebSocket</a> <a href="/tags/SVN/" style="font-size: 16.67px;">SVN</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/Swift/" style="font-size: 13.33px;">Swift</a> <a href="/tags/Swift%E6%B7%B7%E7%BC%96/" style="font-size: 10px;">Swift混编</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/UIImage/" style="font-size: 10px;">UIImage</a> <a href="/tags/UINavigationBar/" style="font-size: 10px;">UINavigationBar</a> <a href="/tags/UITableViewCell/" style="font-size: 10px;">UITableViewCell</a> <a href="/tags/UITextField/" style="font-size: 10px;">UITextField</a> <a href="/tags/URL-Schemes/" style="font-size: 10px;">URL Schemes</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/WebSocket/" style="font-size: 16.67px;">WebSocket</a> <a href="/tags/Workspace/" style="font-size: 10px;">Workspace</a> <a href="/tags/anchorPoint/" style="font-size: 10px;">anchorPoint</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/initialize/" style="font-size: 10px;">initialize</a> <a href="/tags/isEqual/" style="font-size: 10px;">isEqual</a> <a href="/tags/libffi/" style="font-size: 10px;">libffi</a> <a href="/tags/load/" style="font-size: 10px;">load</a> <a href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" style="font-size: 10px;">体积包优化</a> <a href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">关联对象</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" style="font-size: 10px;">切换根控制器</a> <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" style="font-size: 10px;">加密解密</a> <a href="/tags/%E5%8D%95%E4%BE%8B/" style="font-size: 10px;">单例</a> <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">单元测试</a> <a href="/tags/%E5%9C%B0%E5%9B%BE/" style="font-size: 10px;">地图</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" style="font-size: 10px;">尾调用优化</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" style="font-size: 10px;">数据去重</a> <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" style="font-size: 10px;">时间复杂度</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">框架</a> <a href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" style="font-size: 10px;">消息转发</a> <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" style="font-size: 10px;">热更新</a> <a href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" style="font-size: 10px;">符号表</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" style="font-size: 10px;">第三方登录</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" style="font-size: 10px;">类对象本质</a> <a href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">类族模式</a> <a href="/tags/%E7%BA%A6%E6%9D%9F/" style="font-size: 10px;">约束</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">线程</a> <a href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" style="font-size: 10px;">编译时</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" style="font-size: 10px;">自动登录</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" style="font-size: 10px;">自动释放池</a> <a href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" style="font-size: 10px;">运行时</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%87%8D%E6%9E%84/" style="font-size: 10px;">重构</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/05/NetworkProtocol/KCP/KCP/">KCP 协议</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/iOS/libffi%E6%8E%A2%E7%A9%B6%20/">libffi 探究</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/">ARC下，对象什么时候加入自动释放池</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/NetworkProtocol/WebSocket/WebSocket/">WebSocket</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/NetworkProtocol/SRWebSocket/SRWebSocket/">SRWebSocket 源码解析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 vhuichen<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

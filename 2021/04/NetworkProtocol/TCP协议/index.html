@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>TCP协议 | vhuichen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="TCPTCP 全称传输控制协议（Transmission Control Protocol），是面向连接的、可靠的、基于字节流的传输层通信协议 概念停止等待协议A 每发一个包给 B，都必须收到 B 的确认（ACK） ，在规定的时间内 A 没有收到 ACK 包，则重传。 1停止等待协议有一个问题，如果 B 收到了 A 的包，但是返回的 ACK 包丢失了，此时依然会触发 A 重传 累计确认(累计应答)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP协议">
+<meta property="og:url" content="https://vhuichen.github.io/2021/04/NetworkProtocol/TCP%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="TCPTCP 全称传输控制协议（Transmission Control Protocol），是面向连接的、可靠的、基于字节流的传输层通信协议 概念停止等待协议A 每发一个包给 B，都必须收到 B 的确认（ACK） ，在规定的时间内 A 没有收到 ACK 包，则重传。 1停止等待协议有一个问题，如果 B 收到了 A 的包，但是返回的 ACK 包丢失了，此时依然会触发 A 重传 累计确认(累计应答)">
+<meta property="og:locale">
+<meta property="og:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210418233036.png">
+<meta property="og:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210418205038.jpg">
+<meta property="og:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210419001701.png">
+<meta property="og:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210418175547.jpg">
+<meta property="og:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210418175544.jpg">
+<meta property="og:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210418175546.jpg">
+<meta property="article:published_time" content="2021-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-07-14T15:24:29.345Z">
+<meta property="article:author" content="vhuichen">
+<meta property="article:tag" content="TCP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/vhuichen/images/raw/master/img/20210418233036.png">
+  
+    <link rel="alternate" href="/atom.xml" title="vhuichen" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">vhuichen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录、分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://vhuichen.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-NetworkProtocol/TCP协议" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/NetworkProtocol/TCP%E5%8D%8F%E8%AE%AE/" class="article-date">
+  <time class="dt-published" datetime="2021-04-14T16:00:00.000Z" itemprop="datePublished">2021-04-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      TCP协议
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><p>TCP 全称传输控制协议（Transmission Control Protocol），是面向连接的、可靠的、基于字节流的传输层通信协议</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h3><p>A 每发一个包给 B，都必须收到 B 的确认（ACK） ，在规定的时间内 A 没有收到 ACK 包，则重传。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">停止等待协议有一个问题，如果 B 收到了 A 的包，但是返回的 ACK 包丢失了，此时依然会触发 A 重传</span><br></pre></td></tr></table></figure>
+<h3 id="累计确认-累计应答"><a href="#累计确认-累计应答" class="headerlink" title="累计确认(累计应答)"></a>累计确认(累计应答)</h3><p>A同时发送5个数据包，并给这5个数据包序号（seq）（1，2，3，4，5），B再收到数据包后再返回的 ACK 包中返回确认号(ack)，表示当前未收到的最小编号。通过这种方式就可以处理<code>停止等待协议</code>带来的问题。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">如果B顺序收到1，2，3，4，5编号的包，那么返回的ack号分别为2，3，4，5，6  </span><br><span class="line">如果B顺序收到3，5，1，4，2编号的包，那么返回的ack号分别为1，1，2，2，6</span><br><span class="line"></span><br><span class="line">假如3数据包发送时丢包了</span><br><span class="line">如果B顺序收到1，2，4，5编号的包，那么返回的ack号分别为2，3，3，3  </span><br><span class="line">如果B顺序收到4，5，1，2编号的包，那么返回的ack号分别为1，1，2，3</span><br></pre></td></tr></table></figure>
+
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><p>每个计算机处理能力不一样，如果发送太快，接受太慢怎么办？<br>A、B 在每个数据包中加上一个值，叫<code>窗口大小</code>（win)，表示接收能力<br><img src="https://gitee.com/vhuichen/images/raw/master/img/20210418233036.png"></p>
+<h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><p>网络很差时，造成了<code>网络拥塞</code>，假设拥塞窗口的大小为cwnd，流量控制的滑动窗口的大小为rwnd，<br>那么窗口大小 &#x3D; min(cwnd, rwnd)。  </p>
+<h3 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h3><p>如何知道拥塞窗口的大小呢？可以采用试探法，先发窗口大小为1的包，如果不丢包，就发送窗口为2、4、8的包，直到出现丢包，从而得到最终的拥塞窗口。</p>
+<h4 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h4><p>发送一个数据包过去，不需要等待数据包回来再发送<br><img src="https://gitee.com/vhuichen/images/raw/master/img/20210418205038.jpg"></p>
+<h3 id="拥塞机制"><a href="#拥塞机制" class="headerlink" title="拥塞机制"></a>拥塞机制</h3><p>一旦出现丢包，就会触发拥塞机制（慢启动、拥塞规避、快速启动、快速恢复）<br><img src="https://gitee.com/vhuichen/images/raw/master/img/20210419001701.png"></p>
+<h2 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a>TCP三次握手</h2><p><img src="https://gitee.com/vhuichen/images/raw/master/img/20210418175547.jpg"></p>
+<ul>
+<li>客户端向服务器发出连接请求报文，同部位SYN&#x3D;1，初始序列号seq&#x3D;x，此时客户端进程进入了SYN-SENT（同步已发送状态）状态。</li>
+<li>服务器收到请求报文后，发出确认报文，确认报文中 ACK&#x3D;1，SYN&#x3D;1，确认号是ack&#x3D;x+1，同时也要为自己初始化一个序列号 seq&#x3D;y，此时服务器进入了SYN-RCVD（同步收到）状态。</li>
+<li>客户端收到报文后，发出确认报文的ACK&#x3D;1，ack&#x3D;y+1，自己的序列号seq&#x3D;x+1，此时，TCP连接建立，客户端进入ESTABLISHED（已建立连接）状态。</li>
+<li>当服务器收到客户端的确认后也进入 ESTABLISHED 状态，此后双方就可以开始通信了。</li>
+</ul>
+<h3 id="为什么是三次"><a href="#为什么是三次" class="headerlink" title="为什么是三次"></a>为什么是三次</h3><p>1、防止已经失效的连接请求报文突然又传送到了服务器，从而产生错误，两次握手会使得客户端和服务端再次建立连接，导致不必要的资源浪费。<br>2、其实也可以说是四次，只是中间两次合并成一次发送了。理由是TCP不允许半连接状态下传输数据。</p>
+<h3 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h3><p>客户端在短时间内伪造了大量的IP进行连接，服务器回复响应包，但是源地址是不存在的，所以服务端会不断的重发，直到重发超时。<br>这些伪造的SYN包将长时间占用未连接队列，影响了正常的SYN，目标系统运行缓慢，严重者引起网络堵塞甚至系统瘫痪。   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">部分解决方案：</span><br><span class="line">1、延迟TCB分配方法，缓存半连接状态信息，建立连接后在分配</span><br><span class="line">2、增加最大半连接数</span><br><span class="line">3、缩短超时时间</span><br></pre></td></tr></table></figure>
+
+<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><p><img src="https://gitee.com/vhuichen/images/raw/master/img/20210418175544.jpg"></p>
+<ul>
+<li>客户端发出断开连接报文，并且停止发送数据。FIN&#x3D;1，其序列号为seq&#x3D;u（等于前面已经传送过来的数据的最后一个字节的序号加1），客户端进入FIN-WAIT-1（终止等待1）状态。 </li>
+<li>服务器收到连接释放报文，发出确认报文，ACK&#x3D;1，ack&#x3D;u+1，并且带上自己的序列号seq&#x3D;v，服务端就进入了CLOSE-WAIT（关闭等待）状态。这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。</li>
+<li>客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。  </li>
+<li>服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN&#x3D;1，ack&#x3D;u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq&#x3D;w。服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。  </li>
+<li>客户端收到服务器的连接释放报文后，发出确认，ACK&#x3D;1，ack&#x3D;w+1，而自己的序列号是seq&#x3D;u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。必须经过2*MSL（最长报文段寿命）的时间后，才进入CLOSED状态。</li>
+<li>服务器只要收到了客户端发出的确认，立即进入CLOSED状态。服务器结束TCP连接的时间要比客户端早一些。</li>
+</ul>
+<h3 id="为什么要-TIME-WAIT，等待2个MSL后才关闭TCP-（2个MSL-Max-Segment-Lifetime，约240秒-）"><a href="#为什么要-TIME-WAIT，等待2个MSL后才关闭TCP-（2个MSL-Max-Segment-Lifetime，约240秒-）" class="headerlink" title="为什么要 TIME_WAIT，等待2个MSL后才关闭TCP （2个MSL(Max Segment Lifetime，约240秒)）"></a>为什么要 TIME_WAIT，等待2个MSL后才关闭TCP （2个MSL(Max Segment Lifetime，约240秒)）</h3><ul>
+<li>防止上一次连接中的包，重新出现，影响新连接（经过2MSL，上一次连接中所有的重复包都会消失）  </li>
+<li>发送的最后一个ack(fin) ，有可能丢失，这时被动方会重新发fin。</li>
+</ul>
+<h3 id="为什么是三次握手，四次挥手？关闭一定是四次吗？"><a href="#为什么是三次握手，四次挥手？关闭一定是四次吗？" class="headerlink" title="为什么是三次握手，四次挥手？关闭一定是四次吗？"></a>为什么是三次握手，四次挥手？关闭一定是四次吗？</h3><ul>
+<li>连接三次是因为中间两次合并成一次了  </li>
+<li>TCP是全双工模式，客户端第一次发送FIN报文，只表示不会再请求数据，但此时服务器还可能需要继续发送数据，等服务器数据发送完，服务器才会发送FIN报文。</li>
+<li>如果一端发送FIN报文后，另一端不再需要传输数据，<strong>那么第二次挥手的ACK报文会和第三次挥手的FIN报文合并发送过去</strong>，此时关闭连接只需要三次挥手。</li>
+</ul>
+<h3 id="客户端突然出现故障怎么处理"><a href="#客户端突然出现故障怎么处理" class="headerlink" title="客户端突然出现故障怎么处理"></a>客户端突然出现故障怎么处理</h3><p>服务器每收到一次客户端的请求后都会重新复位一个计时器，时间通常是设置为2小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。</p>
+<h3 id="TCP-报文格式"><a href="#TCP-报文格式" class="headerlink" title="TCP 报文格式"></a>TCP 报文格式</h3><p><img src="https://gitee.com/vhuichen/images/raw/master/img/20210418175546.jpg"></p>
+<h2 id="TCP是怎么保证数据可靠性传输的"><a href="#TCP是怎么保证数据可靠性传输的" class="headerlink" title="TCP是怎么保证数据可靠性传输的"></a>TCP是怎么保证数据可靠性传输的</h2><ul>
+<li>序列号和确认应答信号</li>
+<li>超时重发控制</li>
+<li>数据校验</li>
+<li>连接管理</li>
+</ul>
+<h2 id="粘包、拆包"><a href="#粘包、拆包" class="headerlink" title="粘包、拆包"></a>粘包、拆包</h2><p>报文太短，需要合并后发送，报文太长，需要分开发送  </p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ul>
+<li>指明数据包长度</li>
+<li>结尾加入特殊字符’\n’之类的</li>
+</ul>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaolincoding/p/12732052.html">https://www.cnblogs.com/xiaolincoding/p/12732052.html</a><br><a target="_blank" rel="noopener" href="https://www.toutiao.com/i6862639863104012814">https://www.toutiao.com/i6862639863104012814</a><br><a target="_blank" rel="noopener" href="https://www.toutiao.com/i6893802302663033355">https://www.toutiao.com/i6893802302663033355</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Uf42QEL6WUSHOwJ403FwOA">https://mp.weixin.qq.com/s/Uf42QEL6WUSHOwJ403FwOA</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2021/04/NetworkProtocol/TCP%E5%8D%8F%E8%AE%AE/" data-id="cl7m9rssb00018wzycnyzf0c4" data-title="TCP协议" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TCP/" rel="tag">TCP</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/NetworkProtocol/HTTP%E5%8D%8F%E8%AE%AE/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          HTTP协议
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/iOS/iOS%E6%A3%80%E6%B5%8B%E6%9C%AA%E4%BD%BF%E7%94%A8%E7%9A%84%E7%B1%BB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">iOS检测未使用的类</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/">iOS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/Swift/">Swift</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%87%8D%E6%9E%84/">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" rel="tag">APP默认语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Allocations/" rel="tag">Allocations</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Base64/" rel="tag">Base64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bugly/" rel="tag">Bugly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CADisplayLink/" rel="tag">CADisplayLink</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CocoaPods/" rel="tag">CocoaPods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cookie/" rel="tag">Cookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cornerstone/" rel="tag">Cornerstone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Designated-Initializer/" rel="tag">Designated Initializer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FMDB/" rel="tag">FMDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCD/" rel="tag">GCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Desktop/" rel="tag">GitHub Desktop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instruments/" rel="tag">Instruments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KCP/" rel="tag">KCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MD5/" rel="tag">MD5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC/" rel="tag">MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/" rel="tag">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVVM/" rel="tag">MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Module/" rel="tag">Module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookie/" rel="tag">NSHTTPCookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookieStorage/" rel="tag">NSHTTPCookieStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSNumericSearch/" rel="tag">NSNumericSearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSOperation/" rel="tag">NSOperation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSPredicate/" rel="tag">NSPredicate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSString/" rel="tag">NSString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSThread/" rel="tag">NSThread</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSTimeZone/" rel="tag">NSTimeZone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NavigationItem/" rel="tag">NavigationItem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Profile/" rel="tag">Profile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Push-Notification/" rel="tag">Push Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SRWebSocket/" rel="tag">SRWebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/" rel="tag">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Socket/" rel="tag">Socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/" rel="tag">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift%E6%B7%B7%E7%BC%96/" rel="tag">Swift混编</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/" rel="tag">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UIImage/" rel="tag">UIImage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UINavigationBar/" rel="tag">UINavigationBar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITableViewCell/" rel="tag">UITableViewCell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITextField/" rel="tag">UITextField</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/URL-Schemes/" rel="tag">URL Schemes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/View/" rel="tag">View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Workspace/" rel="tag">Workspace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anchorPoint/" rel="tag">anchorPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/" rel="tag">hash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/initialize/" rel="tag">initialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isEqual/" rel="tag">isEqual</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libffi/" rel="tag">libffi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load/" rel="tag">load</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" rel="tag">体积包优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" rel="tag">关联对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" rel="tag">切换根控制器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" rel="tag">加密解密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B/" rel="tag">单例</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag">单元测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9B%BE/" rel="tag">地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" rel="tag">尾调用优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" rel="tag">数据去重</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag">时间复杂度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" rel="tag">消息转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag">热更新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="tag">符号表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" rel="tag">第三方登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" rel="tag">类对象本质</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" rel="tag">类族模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A6%E6%9D%9F/" rel="tag">约束</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" rel="tag">编译时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" rel="tag">自动登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" rel="tag">自动释放池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" rel="tag">运行时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E6%9E%84/" rel="tag">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 10px;">AES</a> <a href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">APP默认语言</a> <a href="/tags/Allocations/" style="font-size: 10px;">Allocations</a> <a href="/tags/Base64/" style="font-size: 10px;">Base64</a> <a href="/tags/Bugly/" style="font-size: 10px;">Bugly</a> <a href="/tags/CADisplayLink/" style="font-size: 10px;">CADisplayLink</a> <a href="/tags/CocoaPods/" style="font-size: 13.33px;">CocoaPods</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/Cornerstone/" style="font-size: 10px;">Cornerstone</a> <a href="/tags/Designated-Initializer/" style="font-size: 10px;">Designated Initializer</a> <a href="/tags/Effective-Objective-C-2-0/" style="font-size: 20px;">Effective Objective-C 2.0</a> <a href="/tags/FMDB/" style="font-size: 10px;">FMDB</a> <a href="/tags/GCD/" style="font-size: 13.33px;">GCD</a> <a href="/tags/GitHub-Desktop/" style="font-size: 10px;">GitHub Desktop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Instruments/" style="font-size: 10px;">Instruments</a> <a href="/tags/KCP/" style="font-size: 10px;">KCP</a> <a href="/tags/MD5/" style="font-size: 10px;">MD5</a> <a href="/tags/MVC/" style="font-size: 10px;">MVC</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MVVM/" style="font-size: 10px;">MVVM</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Module/" style="font-size: 10px;">Module</a> <a href="/tags/NSHTTPCookie/" style="font-size: 10px;">NSHTTPCookie</a> <a href="/tags/NSHTTPCookieStorage/" style="font-size: 10px;">NSHTTPCookieStorage</a> <a href="/tags/NSNumericSearch/" style="font-size: 10px;">NSNumericSearch</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSPredicate/" style="font-size: 10px;">NSPredicate</a> <a href="/tags/NSString/" style="font-size: 10px;">NSString</a> <a href="/tags/NSThread/" style="font-size: 10px;">NSThread</a> <a href="/tags/NSTimeZone/" style="font-size: 10px;">NSTimeZone</a> <a href="/tags/NavigationItem/" style="font-size: 10px;">NavigationItem</a> <a href="/tags/Profile/" style="font-size: 10px;">Profile</a> <a href="/tags/Push-Notification/" style="font-size: 10px;">Push Notification</a> <a href="/tags/SRWebSocket/" style="font-size: 10px;">SRWebSocket</a> <a href="/tags/SVN/" style="font-size: 16.67px;">SVN</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/Swift/" style="font-size: 13.33px;">Swift</a> <a href="/tags/Swift%E6%B7%B7%E7%BC%96/" style="font-size: 10px;">Swift混编</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/UIImage/" style="font-size: 10px;">UIImage</a> <a href="/tags/UINavigationBar/" style="font-size: 10px;">UINavigationBar</a> <a href="/tags/UITableViewCell/" style="font-size: 10px;">UITableViewCell</a> <a href="/tags/UITextField/" style="font-size: 10px;">UITextField</a> <a href="/tags/URL-Schemes/" style="font-size: 10px;">URL Schemes</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/WebSocket/" style="font-size: 16.67px;">WebSocket</a> <a href="/tags/Workspace/" style="font-size: 10px;">Workspace</a> <a href="/tags/anchorPoint/" style="font-size: 10px;">anchorPoint</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/initialize/" style="font-size: 10px;">initialize</a> <a href="/tags/isEqual/" style="font-size: 10px;">isEqual</a> <a href="/tags/libffi/" style="font-size: 10px;">libffi</a> <a href="/tags/load/" style="font-size: 10px;">load</a> <a href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" style="font-size: 10px;">体积包优化</a> <a href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">关联对象</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" style="font-size: 10px;">切换根控制器</a> <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" style="font-size: 10px;">加密解密</a> <a href="/tags/%E5%8D%95%E4%BE%8B/" style="font-size: 10px;">单例</a> <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">单元测试</a> <a href="/tags/%E5%9C%B0%E5%9B%BE/" style="font-size: 10px;">地图</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" style="font-size: 10px;">尾调用优化</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" style="font-size: 10px;">数据去重</a> <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" style="font-size: 10px;">时间复杂度</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">框架</a> <a href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" style="font-size: 10px;">消息转发</a> <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" style="font-size: 10px;">热更新</a> <a href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" style="font-size: 10px;">符号表</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" style="font-size: 10px;">第三方登录</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" style="font-size: 10px;">类对象本质</a> <a href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">类族模式</a> <a href="/tags/%E7%BA%A6%E6%9D%9F/" style="font-size: 10px;">约束</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">线程</a> <a href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" style="font-size: 10px;">编译时</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" style="font-size: 10px;">自动登录</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" style="font-size: 10px;">自动释放池</a> <a href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" style="font-size: 10px;">运行时</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%87%8D%E6%9E%84/" style="font-size: 10px;">重构</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/05/NetworkProtocol/KCP/KCP/">KCP 协议</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/iOS/libffi%E6%8E%A2%E7%A9%B6%20/">libffi 探究</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/">ARC下，对象什么时候加入自动释放池</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/NetworkProtocol/WebSocket/WebSocket/">WebSocket</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/NetworkProtocol/SRWebSocket/SRWebSocket/">SRWebSocket 源码解析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 vhuichen<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

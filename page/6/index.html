@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>vhuichen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="vhuichen">
+<meta property="og:url" content="https://vhuichen.github.io/page/6/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:locale">
+<meta property="article:author" content="vhuichen">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="vhuichen" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">vhuichen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录、分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://vhuichen.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-2018/04/《Effective Objective-C 2.0》第二章阅读笔记(1)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/" class="article-date">
+  <time class="dt-published" datetime="2018-04-16T16:00:00.000Z" itemprop="datePublished">2018-04-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/">《Effective Objective-C 2.0》第二章阅读笔记(1)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第二章：对象、消息、运行期-1"><a href="#第二章：对象、消息、运行期-1" class="headerlink" title="第二章：对象、消息、运行期(1)"></a><center>第二章：对象、消息、运行期(1)</center></h1><p>“对象”是基本构造单元，可以通过对象来存储数据和传递数据。对象之间传递数据并执行任务的过程就叫做“消息传递”。</p>
+<h2 id="第6条：理解-“属性”-这一概念"><a href="#第6条：理解-“属性”-这一概念" class="headerlink" title="第6条：理解 “属性” 这一概念"></a>第6条：理解 “属性” 这一概念</h2><p>“属性” 是 Objective-C 的一项特性，用来封装对象中的数据。属性最终是通过实例变量来实现的，属性只是提供了一种简洁的抽象机制。</p>
+<h4 id="对象布局"><a href="#对象布局" class="headerlink" title="对象布局"></a>对象布局</h4><p>对象布局在编译期就已经确定了，当代码需要访问实例变量的时候，编译器会把其替换成偏移量，这个偏移量是“硬编码”，表示该变量距离对象内存起始地址有多远。<br>当类增加了实例变量时，原来的偏移量就已经不再适用，所以这时候需要重新编译。偏移量保存在类对象中，会在运行时查找。</p>
+<h4 id="应用程序二进制接口（Application-Binary-Interface，ABI）"><a href="#应用程序二进制接口（Application-Binary-Interface，ABI）" class="headerlink" title="应用程序二进制接口（Application Binary Interface，ABI）"></a>应用程序二进制接口（Application Binary Interface，ABI）</h4><blockquote>
+<p>应用程序二进制接口描述了应用程序和操作系统之间，一个应用和它的库之间，或者应用的组成部分之间的低层接口。ABI不同于应用程序接口（API），API定义了源代码和库之间的接口，因此同样的代码可以在支持这个API的任何系统中编译，然而ABI允许编译好的目标代码在使用兼容ABI的系统中无需改动就能运行。（百度百科）</p>
+</blockquote>
+<p>ABI定义了许多内容（标准），其中一项就是生成代码时所应遵循的规范，有了这种规范，我们就可以在分类和实现文件定义实例变量，可以将实例变量从接口文件中移开，以便保护和类实现相关的内部信息。</p>
+<h4 id="synthesize-amp-dynamic"><a href="#synthesize-amp-dynamic" class="headerlink" title="@synthesize &amp; @dynamic"></a>@synthesize &amp; @dynamic</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span></span></span><br><span class="line"><span class="keyword">@synthesize</span> firstName = _myFirstName;</span><br><span class="line"><span class="keyword">@dynamic</span> firstName;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>@synthesize 用来指定实例变量的名称。<br>@dynamic 告诉编译器不要自动生成实例变量，也不要生成 setter 和 getter 方法。这时编译器不会报错，而是在运行时查找。</p>
+<h4 id="属性特质"><a href="#属性特质" class="headerlink" title="属性特质"></a>属性特质</h4><p>原子性，读写权限，内存管理（assign、strong、weak、unsafe_unretained、copy），方法名</p>
+<h5 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h5><p>iOS 开发的时候应该尽量使用 nonatomic，使用 atomic 会严重影响性能。</p>
+<h5 id="读写权限"><a href="#读写权限" class="headerlink" title="读写权限"></a>读写权限</h5><p>readwrite 同时生成setter 和 getter 方法。<br>readonly 只生成 getter 方法。  </p>
+<h5 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h5><p>当属性类型为 NSString 时，一定要用 copy 修饰，防止当传递过来的值是 NSMutableString 类型，从而可能会在不知情的情况下更改属性的值。</p>
+<h2 id="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"><a href="#第7条：在对象内部尽量直接访问实例变量（感觉有歧义）" class="headerlink" title="第7条：在对象内部尽量直接访问实例变量（感觉有歧义）"></a>第7条：在对象内部尽量直接访问实例变量（感觉有歧义）</h2><p>在对象外面，应该通过属性访问实例变量。在对象内部，除了几种特殊的情况下，读取实例变量应该采用直接访问的形式，设置实例变量则采用属性来设置。</p>
+<h4 id="对象内部不要直接设置实例（有歧义）"><a href="#对象内部不要直接设置实例（有歧义）" class="headerlink" title="对象内部不要直接设置实例（有歧义）"></a>对象内部不要直接设置实例（有歧义）</h4><p>这样做不会调用 setter 方法，也就绕过了相关属性定义的“内存管理语义”，比如使用了 copy 特质，直接访问不会拷贝该属性，只会保留新值并释放旧值。此外当设置了KVO时，直接设置实例也不会触发KVO。</p>
+<h4 id="初始化时应该直接访问实例"><a href="#初始化时应该直接访问实例" class="headerlink" title="初始化时应该直接访问实例"></a>初始化时应该直接访问实例</h4><p>如果父类初始化使用 setter 方法设置属性，而子类又重写了这个 setter 方法，那么子类初始化时，父类也会初始化，这时父类将会调用子类的 setter 方法。<br>例外：如果待初始化的实例变量申明在父类中，而子类无法直接访问此实例变量，这时就需要调用 setter 方法了。</p>
+<blockquote>
+<p>dealloc 方法中也应该直接读写实例变量  </p>
+</blockquote>
+<h4 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h4><p>如果某个属性使用了懒加载，那就必须使用 getter 方法了。</p>
+<h2 id="第8条：理解-“对象同等性”-这一概念"><a href="#第8条：理解-“对象同等性”-这一概念" class="headerlink" title="第8条：理解 “对象同等性” 这一概念"></a>第8条：理解 “对象同等性” 这一概念</h2><p>“对象同等性” 可以理解为某种意义上两个对象相等，这个“相等”是我们自定义的。官方给我们定义了一些判断两个对象是否“相等”的方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NSString</span></span><br><span class="line">- (<span class="type">BOOL</span>)isEqualToString:(<span class="built_in">NSString</span> *)aString;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NSData</span></span><br><span class="line">- (<span class="type">BOOL</span>)isEqualToData:(<span class="built_in">NSData</span> *)other;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NSDictionary</span></span><br><span class="line">- (<span class="type">BOOL</span>)isEqualToDictionary:(<span class="built_in">NSDictionary</span>&lt;KeyType, ObjectType&gt; *)otherDictionary;</span><br></pre></td></tr></table></figure>
+
+<h4 id="对象完全相等"><a href="#对象完全相等" class="headerlink" title="对象完全相等"></a>对象完全相等</h4><p>用 “&#x3D;&#x3D;” 判断两个对象是否是同一个对象，这里判断的是指针。</p>
+<h4 id="自定义-“相等”"><a href="#自定义-“相等”" class="headerlink" title="自定义 “相等”"></a>自定义 “相等”</h4><p>通过 NSObject 协议中的两个方法自定义 “相等”。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)isEqual:(<span class="type">id</span>)object;  </span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span> hash;</span><br></pre></td></tr></table></figure>
+<p>自定义一个 Person 类，包含一个 email 属性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>()</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *email;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>假定对象的 email 属性值相同，就认为这两个类“相同”，那么自定义方法如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)isEqualToPerson:(Person *)otherPerson &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">nil</span> == otherPerson) <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == otherPerson) <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([_email isEqualToString:otherPerson.email]) <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">BOOL</span>)isEqual:(<span class="type">id</span>)object &#123;</span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> <span class="keyword">class</span>] != [object <span class="keyword">class</span>]) <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> isEqualToPerson:object];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果两个对象相等，则其哈希码一定相同。反之，如果哈希码相同，这两个对象不一定相同。</span></span><br><span class="line"><span class="comment">// 考虑到性能问题，hash 方法要保证高效率</span></span><br><span class="line">- (<span class="built_in">NSUInteger</span>)hash &#123;</span><br><span class="line">	<span class="comment">// 此处逻辑可以自定义</span></span><br><span class="line">    <span class="keyword">return</span> [_email hash];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NSArray</span></span><br><span class="line">- (<span class="type">BOOL</span>)containsObject:(ObjectType)anObject;</span><br><span class="line"><span class="comment">// NSSet</span></span><br><span class="line">- (<span class="type">BOOL</span>)containsObject:(ObjectType)anObject;</span><br></pre></td></tr></table></figure>
+
+<p>使用 NSArray 调用 containsObject 这个方法，会直接调用 isEqual 方法判断两个对象是否相等。测试发现这里并没有调用 hash 方法，原因不明，例子如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line">Person *aPerson = <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%zd&quot;</span>,i]];</span><br><span class="line">	[array addObject:p];</span><br><span class="line">	aPerson = p;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ([array containsObject:aPerson]) &#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;array has &#x27;aPerson&#x27;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再使用 NSSet 看看是怎么执行的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSMutableSet</span> *sets = [<span class="built_in">NSMutableSet</span> set];</span><br><span class="line">Person *aPerson = <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">	Person *p = [[Person alloc] initWithEmail:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%zd&quot;</span>,i]];</span><br><span class="line">	[sets addObject:p];</span><br><span class="line">	aPerson = p;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ([sets containsObject:aPerson]) &#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;array has &#x27;aPerson&#x27;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>NSSet 在 addObject 和 containsObject 方法中都会调用 hash 方法。再 addObject 方法中会调用 isEqual 方法，而 containsObject 方法中则不再调用。NSArray 则是在 containsObject 方法中调用 isEqual 方法。</p>
+<blockquote>
+<p>不同的集合会使用不同的逻辑判断是否“相等”。</p>
+</blockquote>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>在 NSSet 中， hash 方法是判断的第一步，应该保证此方法的高效性，同时也要考虑 <strong>哈希碰撞</strong> 发生的概率。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0(1)/" data-id="cl7m9prd9004a5lzyfsvy4l4a" data-title="《Effective Objective-C 2.0》第二章阅读笔记(1)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/《Effective Objective-C 2.0》第一章阅读笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%80%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2018-04-12T16:00:00.000Z" itemprop="datePublished">2018-04-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%80%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">《Effective Objective-C 2.0》第一章阅读笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="第一章：熟悉-Objective-C-语言"><a href="#第一章：熟悉-Objective-C-语言" class="headerlink" title="第一章：熟悉 Objective-C 语言"></a><center>第一章：熟悉 Objective-C 语言</center></h1><h2 id="第1条：了解-Objective-C-语言的起源"><a href="#第1条：了解-Objective-C-语言的起源" class="headerlink" title="第1条：了解 Objective-C 语言的起源"></a>第1条：了解 Objective-C 语言的起源</h2><h4 id="消息结构"><a href="#消息结构" class="headerlink" title="消息结构"></a>消息结构</h4><p>Objective-C 使用的是“消息结构”（messaging structure）而非“函数调用”（function calling）。<br>使用消息结构的语言，其运行时所执行的代码由运行环境决定。而使用函数调用的语言，则由编译器决定。  </p>
+<blockquote>
+<p>在C&#x2F;C++中，如果使用的函数是多态，那么运行时会根据“虚方法表”（virtual table）来查找应该执行哪个函数实现。而采用消息结构的语言则都是在运行的时候才查找要执行的方法。</p>
+</blockquote>
+<h4 id="运行期组件（runtime-component）"><a href="#运行期组件（runtime-component）" class="headerlink" title="运行期组件（runtime component）"></a>运行期组件（runtime component）</h4><p>Objective-C 中重要工作都由运行期组件完成，而非编译器。里面包含了面向对象所需的全部数据结构及函数。其本质是与开发者所编写的代码相链接的动态库。</p>
+<h4 id="对象内存分配"><a href="#对象内存分配" class="headerlink" title="对象内存分配"></a>对象内存分配</h4><p>对象所占有的内存总是分配到堆空间（Head）中，而指向对象的指针则是分配到栈（stack）中。分配到堆中的内存必须进行管理，分配到栈上用于保存对象地址的内存，则会在栈帧弹出时自动处理。<br>当遇到非指针类型变量的时候，变量可能会分配到栈空间，比如：结构体。</p>
+<h2 id="第2条：在类的头文件中尽量少引用其他头文件"><a href="#第2条：在类的头文件中尽量少引用其他头文件" class="headerlink" title="第2条：在类的头文件中尽量少引用其他头文件"></a>第2条：在类的头文件中尽量少引用其他头文件</h2><h4 id="向前声明（forward-declaring）"><a href="#向前声明（forward-declaring）" class="headerlink" title="向前声明（forward declaring）"></a>向前声明（forward declaring）</h4><p>如果只需要知道有那么一个类名，则不需要引用该类名的头文件（不需要知道其他细节），这时可以向前声明该类，既使用：</p>
+<blockquote>
+<p>@class className;  </p>
+</blockquote>
+<p>然后在实现文件中引入该头文件。这样可以降低类与类之间的耦合。<br>引入头文件的时机应该尽量延后，只有当确定要引用该头文件的时候才引用。将大量的头文件引入到头文件中，会增加文件之间的依赖性，从而增加编译时间。   </p>
+<h4 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h4><p>向前申明可以解决两个类之间的循环引用。文章说道：</p>
+<blockquote>
+<p>使用 #import 虽然不会导致引用循环，但却意味着两个类有一个不能被正确编译。</p>
+</blockquote>
+<p>不过，这句话我。。。。无法理解！！！  </p>
+<h4 id="头文件需要引用协议"><a href="#头文件需要引用协议" class="headerlink" title="头文件需要引用协议"></a>头文件需要引用协议</h4><p>如果要使用某个协议，则不能使用向前声明，为了不引用整个头文件，可以将协议放到“class-continuation 分类”中，或者单独放到一个文件中，然后使用 #import 引用头文件，这样就不会出现上面说的问题。</p>
+<h2 id="第3条：多用字面量语法，少用与之等价的方法"><a href="#第3条：多用字面量语法，少用与之等价的方法" class="headerlink" title="第3条：多用字面量语法，少用与之等价的方法"></a>第3条：多用字面量语法，少用与之等价的方法</h2><p>使用字面量语法可以缩减代码长度，提高代码可读性。也要确保创建对象的时候不能为nil。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string0 = [[<span class="built_in">NSString</span> alloc] initWithString:<span class="string">@&quot;123&quot;</span>];</span><br><span class="line"><span class="built_in">NSString</span> *string1 = <span class="string">@&quot;123&quot;</span>;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSNumber</span> *number0 = [<span class="built_in">NSNumber</span> numberWithInt:<span class="number">1</span>];</span><br><span class="line"><span class="built_in">NSNumber</span> *number1 = @<span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSArray</span> *array0 = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;cat&quot;</span>, <span class="string">@&quot;dog&quot;</span>, <span class="string">@&quot;fish&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSString</span> *cat0 = [array0 objectAtIndex:<span class="number">0</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *array1 = @[<span class="string">@&quot;cat&quot;</span>, <span class="string">@&quot;dog&quot;</span>, <span class="string">@&quot;fish&quot;</span>];</span><br><span class="line"><span class="built_in">NSString</span> *cat1 = array1[<span class="number">0</span>];</span><br><span class="line">    </span><br><span class="line"><span class="built_in">NSDictionary</span> *dictionary0 = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:<span class="string">@&quot;key0&quot;</span>, <span class="string">@&quot;value0&quot;</span>, <span class="string">@&quot;key1&quot;</span>, <span class="string">@&quot;value1&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSString</span> *value0 = [dictionary0 objectForKey:<span class="string">@&quot;key0&quot;</span>];</span><br><span class="line">	</span><br><span class="line"><span class="built_in">NSDictionary</span> *dictionary1 = @&#123;<span class="string">@&quot;key0&quot;</span>:<span class="string">@&quot;value0&quot;</span>, <span class="string">@&quot;key1&quot;</span>:<span class="string">@&quot;value1&quot;</span>&#125;;</span><br><span class="line"><span class="built_in">NSString</span> *value1 = dictionary1[<span class="string">@&quot;key1&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<h2 id="第4条：多用类型常量，少用-define-预处理指令"><a href="#第4条：多用类型常量，少用-define-预处理指令" class="headerlink" title="第4条：多用类型常量，少用 #define 预处理指令"></a>第4条：多用类型常量，少用 #define 预处理指令</h2><h4 id="使用-define-无法确定类型信息"><a href="#使用-define-无法确定类型信息" class="headerlink" title="使用 #define 无法确定类型信息"></a>使用 #define 无法确定类型信息</h4><p>比如下面的代码用 #define 无法预知 kAnimationDuration 的数据类型，不利于编写开发文档。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> kAnimationDuration 0.1</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">NSTimeInterval</span> kAnimationDuration = <span class="number">0.1</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="type">float</span> kAnimationDuration = <span class="number">0.1</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="static-const-修饰"><a href="#static-const-修饰" class="headerlink" title="static const 修饰"></a>static const 修饰</h4><p>如果一个变量用 static const 修饰，那么编译器不会创建符号，而是会像 #define 预处理指令一样，在编译的时候将所有的变量替换成常值。</p>
+<h4 id="extern-声明全局变量"><a href="#extern-声明全局变量" class="headerlink" title="extern 声明全局变量"></a>extern 声明全局变量</h4><p>使用 static const 修饰的变量只能在本文件内使用，但有时候需要对外公布这个变量，比如该变量作为“通知”的key的时候，此时可以稍微改一下。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .h文件 声明一个变量</span></span><br><span class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> VCHLoginNotification;</span><br><span class="line"><span class="comment">// .m文件 定义一个变量</span></span><br><span class="line"><span class="built_in">NSString</span> *<span class="keyword">const</span> VCHLoginNotification = <span class="string">@&quot;kLoginNotification&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>这种变量会保存在“全局符号表”中。为了避免命名冲突，这种变量应该加上类名前缀。</p>
+<h4 id="判断-const-修饰的是对象还是指针-自己理解"><a href="#判断-const-修饰的是对象还是指针-自己理解" class="headerlink" title="判断 const 修饰的是对象还是指针(自己理解)"></a>判断 const 修饰的是对象还是指针(自己理解)</h4><p>const 修饰的是右边的第一个字符  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> <span class="keyword">const</span> valueFloat0 = <span class="number">0.1</span>; <span class="comment">//[1]</span></span><br><span class="line"><span class="keyword">const</span> <span class="type">float</span> valueFloat1 = <span class="number">0.1</span>; <span class="comment">//[2]</span></span><br><span class="line"><span class="built_in">NSString</span> <span class="keyword">const</span> * string0 = <span class="string">@&quot;abc&quot;</span>; <span class="comment">//[3]</span></span><br><span class="line"><span class="built_in">NSString</span> * <span class="keyword">const</span> string1 = <span class="string">@&quot;abc&quot;</span>; <span class="comment">//[4]</span></span><br><span class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> * string2 = <span class="string">@&quot;abc&quot;</span>; <span class="comment">//[5]</span></span><br><span class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> * <span class="keyword">const</span> string3 = <span class="string">@&quot;abc&quot;</span>; <span class="comment">//[6]</span></span><br><span class="line"><span class="keyword">const</span> <span class="built_in">NSString</span> <span class="keyword">const</span> * string4 = <span class="string">@&quot;abc&quot;</span>; <span class="comment">//[7]</span></span><br></pre></td></tr></table></figure>
+<p>[1] const 右边第一个字符是 valueFloat0，表示 valueFloat0 里面的值是不变的。valueFloat0  不能是左值。<br>[2] const 右边第一个字符是 float，而 float 指的就是 valueFloat1，所以 valueFloat1 的值是不变的。valueFloat1 不能是左值。<br>[3] const 右边第一个字符是 string0，string0 是一个指针，所以 string0 指向的地址是不变的。string0 不能是左值。<br>[4] const 右边第一个字符是 string1（指针），所以 string1 指向的地址是不变的。string1 不能是左值。<br>[5] const 右边第一个字符是 NSString，表示的是 @”abc” 这个对象，所以 @”abc 是不可变对象。不可以通过 string2 这个指针来修改它指向的对象的内容。(这里刚好 @”abc” 是不能修改的，就算指向的对象是可以被修改的，也不能通过 const 修饰的指针去修改)<br>[6] 第一个 const 右边第一个字符是 NSString， 等同于 [5]。第二个 const 等同于 [4]。<br>[7] 等同于 [6]  </p>
+<h2 id="第5条：用枚举表示状态、选项、状态码"><a href="#第5条：用枚举表示状态、选项、状态码" class="headerlink" title="第5条：用枚举表示状态、选项、状态码"></a>第5条：用枚举表示状态、选项、状态码</h2><p>枚举可以提高代码可读性。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 状态、状态码</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIViewAnimationTransition</span>) &#123;</span><br><span class="line">    <span class="built_in">UIViewAnimationTransitionNone</span>,</span><br><span class="line">    <span class="built_in">UIViewAnimationTransitionFlipFromLeft</span>,</span><br><span class="line">    <span class="built_in">UIViewAnimationTransitionFlipFromRight</span>,</span><br><span class="line">    <span class="built_in">UIViewAnimationTransitionCurlUp</span>,</span><br><span class="line">    <span class="built_in">UIViewAnimationTransitionCurlDown</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可组合选项</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_OPTIONS</span>(<span class="built_in">NSUInteger</span>, <span class="built_in">UIViewAutoresizing</span>) &#123;</span><br><span class="line">    <span class="built_in">UIViewAutoresizingNone</span>                 = <span class="number">0</span>,</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleLeftMargin</span>   = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleWidth</span>        = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleRightMargin</span>  = <span class="number">1</span> &lt;&lt; <span class="number">2</span>,</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleTopMargin</span>    = <span class="number">1</span> &lt;&lt; <span class="number">3</span>,</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleHeight</span>       = <span class="number">1</span> &lt;&lt; <span class="number">4</span>,</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleBottomMargin</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>enum 用来表示状态，options 用来表示可组合的选项。</p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>1、用枚举处理 switch 的时候不要实现 default 分支。这样加入新的分支后，编译器就会提示开发者。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E3%80%8AEffective%20Objective-C%202.0%E3%80%8B%E7%AC%AC%E4%B8%80%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" data-id="cl7m9prd800455lzy3qmw40jv" data-title="《Effective Objective-C 2.0》第一章阅读笔记" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/iOS开发之编译时与运行时" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%BC%96%E8%AF%91%E6%97%B6%E4%B8%8E%E8%BF%90%E8%A1%8C%E6%97%B6/" class="article-date">
+  <time class="dt-published" datetime="2018-04-10T16:00:00.000Z" itemprop="datePublished">2018-04-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%BC%96%E8%AF%91%E6%97%B6%E4%B8%8E%E8%BF%90%E8%A1%8C%E6%97%B6/">iOS基础之编译时与运行时</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>从开始学iOS就看到这样的一个例子，也是面试题，但我一直都觉得这题目没什么意义，最初设计这题目的人目的是什么？想让人了解什么是编译时什么是运行时？不解！不管了，以后应该会了解的。   </p>
+<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<p><strong>string在编译时和运行时分别时什么类型的对象?</strong><br><strong>NSString *string &#x3D; [[NSDate alloc] init]; &#x2F;&#x2F; 原题是 NSData，我改为 NSDate，方便我后面发消息</strong>   </p>
+</blockquote>
+<p>直接这样写编译器会报警告！  </p>
+<blockquote>
+<p>Incompatible pointer types initializing ‘NSString *‘ with an expression of type ‘NSDate *‘</p>
+</blockquote>
+<p>可以使用类型转换消除这个警告   </p>
+<blockquote>
+<p><strong>NSString *string &#x3D; (NSString *)[[NSDate alloc] init];</strong></p>
+</blockquote>
+<p>此时编译器已经没有任何警告了，然后我们给 “string” 这个对象发消息看看会出现什么情况   </p>
+<h4 id="直接调用方法"><a href="#直接调用方法" class="headerlink" title="直接调用方法"></a>直接调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</span><br><span class="line"><span class="comment">//调用 NSString 的方法，编译通过</span></span><br><span class="line">[string stringByAppendingString:<span class="string">@&quot;abc&quot;</span>];</span><br><span class="line"><span class="comment">//调用 NSDate 的方法，编译不通过</span></span><br><span class="line"><span class="comment">//提示：No visible @interface for &#x27;NSString&#x27; declares the selector &#x27;isEqualToDate:&#x27;</span></span><br><span class="line">[string isEqualToDate:[<span class="built_in">NSDate</span> date]];</span><br></pre></td></tr></table></figure>
+<p>从上面提示的注释信息可以看出，编译器认为 “string” 就是 NSString 类型的对象。调用 NSDate 的方法编译不通过。<br>然后，运行Demo，结果程序直接崩溃，提示：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-12/15455244.jpg"></p>
+<blockquote>
+<p>-[_NSZeroData stringByAppendingString:]: unrecognized selector sent to instance 0x1010d12e0</p>
+</blockquote>
+<p>显然程序是找不到 “stringByAppendingString” 方法才崩溃的。</p>
+<h4 id="通过-performSelector-调用方法"><a href="#通过-performSelector-调用方法" class="headerlink" title="通过 performSelector 调用方法"></a>通过 performSelector 调用方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = (<span class="built_in">NSString</span> *)[[<span class="built_in">NSDate</span> alloc] init];</span><br><span class="line"><span class="comment">//编译通过，运行崩溃</span></span><br><span class="line">[string performSelector:<span class="keyword">@selector</span>(stringByAppendingString:) withObject:<span class="string">@&quot;abc&quot;</span> afterDelay:<span class="number">0</span>];</span><br><span class="line"><span class="comment">//编译通过，运行通过</span></span><br><span class="line">[string performSelector:<span class="keyword">@selector</span>(isEqualToDate:) withObject:[<span class="built_in">NSDate</span> date] afterDelay:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>通过 performSelector 给 “string” 对象发 “stringByAppendingString” 消息，依然是崩溃。发 “isEqualToDate” 消息，成功。</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>在编译的时候 “string” 是 NSString 类型的对象，所以给 “string” 对象发送 NSString 特有的消息可以通过编译。<br>而在运行的时候 “string” 是 NSDate 类型的对象，这就是为什么给 “string” 对象发送 “stringByAppendingString” 消息会崩溃，而 发送 “isEqualToDate” 消息则成功的原因。<br>从下图也可以看出运行的时候的类型为 NSDate<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-12/78772051.jpg"></p>
+<h3 id="编译时-amp-运行时"><a href="#编译时-amp-运行时" class="headerlink" title="编译时 &amp; 运行时"></a>编译时 &amp; 运行时</h3><p>编译时类型由声明该变量时使用的类型决定，运行时类型由实际赋给该变量的对象决定。<br>编译时会对语言进行语法检测，并编译成机器语言，由于OC的动态性，代码能否执行成功还得到运行时才能检测出来。<br>运行时会把编译好的代码装到内存中运行，这时候会对对象的类型、方法等进行检测，如果检测失败可能会直接崩溃。  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%BC%96%E8%AF%91%E6%97%B6%E4%B8%8E%E8%BF%90%E8%A1%8C%E6%97%B6/" data-id="cl7m9prd700425lzy8xx1cjbz" data-title="iOS基础之编译时与运行时" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" rel="tag">编译时</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" rel="tag">运行时</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/iOS开发之理解load和initialize" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%90%86%E8%A7%A3load%E5%92%8Cinitialize/" class="article-date">
+  <time class="dt-published" datetime="2018-04-09T16:00:00.000Z" itemprop="datePublished">2018-04-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%90%86%E8%A7%A3load%E5%92%8Cinitialize/">iOS开发之理解load和initialize</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="load"><a href="#load" class="headerlink" title="load"></a>load</h2><p>load 会在类装载的时候调用（main函数执行之前）。load 不会被覆盖，如果父类、父类分类、子类、子类分类，同时实现了 load 方法，那么这些方法都会执行。</p>
+<h3 id="调用顺序"><a href="#调用顺序" class="headerlink" title="调用顺序"></a>调用顺序</h3><p>1、先调用父类的 load 方法，再调用子类的 load 方法。<br>2、先调用本类的 load 方法，再调用分类的 load 方法。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>1、Method Swizzle 。</p>
+<h2 id="initialize"><a href="#initialize" class="headerlink" title="initialize"></a>initialize</h2><p>initialize 会在第一次给该类发送消息之前调用，有些文章说是在实例化、初始化之前调用是错的。看看文档是怎么说的</p>
+<blockquote>
+<p><strong>Initializes the class before it receives its first message.</strong>   </p>
+</blockquote>
+<h3 id="调用顺序-1"><a href="#调用顺序-1" class="headerlink" title="调用顺序"></a>调用顺序</h3><p>父类优先于子类调用 initialize 方法。<br>如果子类以及子类的分类没有实现 initialize 方法，那么当第一次给子类发消息的时候，会先给父类的 initialize 发消息。也就是父类的 initialize 方法可能会被调用多次。<br>如果本类以及其分类都实现 initialize 方法，那么只会调用 分类的 initialize 方法。</p>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>initialize 是线程安全的，自带锁，当第一个线程给这个类发了 initialize 消息，其他想给这个类发 initialize 消息的线程会被阻塞，直到第一个线程发送完 initialize 消息。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p><strong>1、如果本类以及本类的多个分类都实现了 initialize 方法，怎么调用？</strong><br>答：会调用 Compile Source 中的本类最后一个分类的 initialize 方法，如下图：<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-11/38950580.jpg"><br>我在代码中实现三个 initialize 方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Person</span></span><br><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Person initialize.......&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Person (Special)</span></span><br><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Person (Special) initialize.......&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Person (Special1)</span></span><br><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Person (Special1) initialize.......&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果打印出”<strong>Person (Special1) initialize…….</strong>“。<br>当我在 Compile Source 中调换了本类两个分类的先后顺序后，则打印出”<strong>Person (Special) initialize…….</strong>“。<br>从而得出结论上面的结论，Compile Source 中本类最后一个分类的 initialize 方法将会被调用。</p>
+<p><strong>2、当子类及其分类没有实现 initialize 方法，在父类的 initialize 方法中怎么区分这个消息是通过本类发来的还是子类发来的？</strong><br>这里我定义了两个类，Person 为父类，Student 为子类。Student 类中没有实现 initialize 方法。那么给 Student 发消息后，结果如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="type">void</span>)initialize &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> == [Person <span class="keyword">self</span>]) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;本类发来的 initialize 消息。%@ - %@&quot;</span>,<span class="keyword">self</span>,[Person <span class="keyword">self</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;子类发来的 initialize 消息。%@ - %@&quot;</span>,<span class="keyword">self</span>,[Person <span class="keyword">self</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果：<br>本类发来的 initialize 消息。Person - Person<br>子类发来的 initialize 消息。Student - Person  </p>
+</blockquote>
+<p>既：如果是本类发送的 initialize 消息，那么 self &#x3D;&#x3D; Person。如果是子类发送过来的消息，那么 self &#x3D;&#x3D; Student。   </p>
+<h3 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h3><p>1、初始化静态变量。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>1、由于 initialize 使用的是阻塞的调用方式，当一个类 initialize 依赖 另一个类的 initialize 的时候，容易造成死锁，所以应该尽量避免在 initialize 中完成一些复杂的初始化工作。<br>2、应该避免问题1这样的情况出现。如果需要在本类以及分类中同时实现初始化，可以考虑用 load 方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E7%90%86%E8%A7%A3load%E5%92%8Cinitialize/" data-id="cl7m9prd6003z5lzygw3d554j" data-title="iOS开发之理解load和initialize" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/initialize/" rel="tag">initialize</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/load/" rel="tag">load</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/[算法]给定已排序数组，找出和为特定数值的两个数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%5B%E7%AE%97%E6%B3%95%5D%E7%BB%99%E5%AE%9A%E5%B7%B2%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%EF%BC%8C%E6%89%BE%E5%87%BA%E5%92%8C%E4%B8%BA%E7%89%B9%E5%AE%9A%E6%95%B0%E5%80%BC%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2018-04-08T14:02:01.000Z" itemprop="datePublished">2018-04-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%5B%E7%AE%97%E6%B3%95%5D%E7%BB%99%E5%AE%9A%E5%B7%B2%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%EF%BC%8C%E6%89%BE%E5%87%BA%E5%92%8C%E4%B8%BA%E7%89%B9%E5%AE%9A%E6%95%B0%E5%80%BC%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%95%B0/">给定已排序数组，找出和为特定数值的两个数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h1><p>给定已排序数组，找出和为特定数值的两个数。假定数组中的数值都不相同。</p>
+<h3 id="方法一：穷举法"><a href="#方法一：穷举法" class="headerlink" title="方法一：穷举法"></a>方法一：穷举法</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)fineTwoNumberWithArray0:(<span class="type">int</span> *)nums count:(<span class="type">int</span>)count target:(<span class="type">int</span>)target &#123;</span><br><span class="line">    <span class="type">int</span> leftNum,rightNum;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; count - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        leftNum = nums[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; count; j++) &#123;</span><br><span class="line">            rightNum = nums[j];</span><br><span class="line">            <span class="keyword">if</span> ((rightNum + leftNum) == target) &#123;</span><br><span class="line">                <span class="built_in">NSLog</span>(<span class="string">@&quot;%d + %d = %d&quot;</span>,leftNum, rightNum, target);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>T(n) &#x3D; (n - 1 + 1) * n &#x2F; 2 &#x3D; (n^2) &#x2F; 2 &#x3D; O(n^2)，即时间复杂度：O(n^2)。   </p>
+</blockquote>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)fineTwoNumberWithArray1:(<span class="type">int</span> *)nums count:(<span class="type">int</span>)count target:(<span class="type">int</span>)target &#123;</span><br><span class="line">    <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> right = count - <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</span><br><span class="line">        sum = nums[left] + nums[right];</span><br><span class="line">        <span class="keyword">if</span> (sum &lt; target) &#123;</span><br><span class="line">            left += <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sum &gt; target) &#123;</span><br><span class="line">            right -= <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;%d + %d = %d&quot;</span>,nums[left], nums[right], target);</span><br><span class="line">            left += <span class="number">1</span>;</span><br><span class="line">            right -= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>T(n) &lt;&#x3D; n - 1 &#x3D; O(n) 时间复杂度：O(n)。 </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/[%E7%AE%97%E6%B3%95]%E7%BB%99%E5%AE%9A%E5%B7%B2%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%EF%BC%8C%E6%89%BE%E5%87%BA%E5%92%8C%E4%B8%BA%E7%89%B9%E5%AE%9A%E6%95%B0%E5%80%BC%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%95%B0/" data-id="cl7m9prd3003n5lzydm1e76z2" data-title="给定已排序数组，找出和为特定数值的两个数" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/时间复杂度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="article-date">
+  <time class="dt-published" datetime="2018-04-08T12:00:04.000Z" itemprop="datePublished">2018-04-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>一个算法需要执行的次数我们记为T(n)，其中n为算法的规模。现在引入某个辅助函数f(n)，当n趋近于无穷大时，T(n)&#x2F;f(n) &#x3D; C (C ≠ 0)。则f(n)和T(n)是同量级函数，记为T(n) &#x3D; O(f(n))，我们称这个为时间复杂度。</p>
+<p>##每种时间复杂度表示的意思</p>
+<h3 id="T-n-x3D-O-1"><a href="#T-n-x3D-O-1" class="headerlink" title="T(n) &#x3D; O(1)"></a>T(n) &#x3D; O(1)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)aFunction0:(<span class="type">int</span>)n &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%zd&quot;</span>,n); <span class="comment">// 执行 1 次</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不管输入的n是多少，执行次数都是常数。执行次数和输入n值没有任何关系。<br>T(n) &#x3D; 1 &#x3D; O(1)</p>
+</blockquote>
+<h3 id="T-n-x3D-O-n"><a href="#T-n-x3D-O-n" class="headerlink" title="T(n) &#x3D; O(n)"></a>T(n) &#x3D; O(n)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)aFunction1:(<span class="type">int</span>)n &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="comment">// n + 1 次</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;%zd&quot;</span>,i); <span class="comment">// n 次</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>执行次数和输入的n值成线性关系。<br>T(n) &#x3D; n + 1 + n &#x3D; 2n + 1 &#x3D; O(n)</p>
+</blockquote>
+<h3 id="T-n-x3D-O-n-2"><a href="#T-n-x3D-O-n-2" class="headerlink" title="T(n) &#x3D; O(n^2)"></a>T(n) &#x3D; O(n^2)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)aFunction2:(<span class="type">int</span>)n &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123; <span class="comment">// n + 1</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123; <span class="comment">// n + 1</span></span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;%zd&quot;</span>,i); <span class="comment">// n</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>执行次数和输入的n值成线性关系。<br>T(n) &#x3D; (n + 1) * (n + 1 + n) &#x3D; 2n^2 + 3n + 1 &#x3D; O(n^2)</p>
+</blockquote>
+<h3 id="T-n-x3D-O-log-n"><a href="#T-n-x3D-O-log-n" class="headerlink" title="T(n) &#x3D; O(log(n))"></a>T(n) &#x3D; O(log(n))</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">int</span>)aFunction3:(<span class="type">int</span> *)nums count:(<span class="type">int</span>)count target:(<span class="type">int</span>)target &#123;</span><br><span class="line">    <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> right = count - <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> mid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(left &lt;= right) &#123;</span><br><span class="line">        mid = (left + right) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) &#123;</span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>第1次查找，找到的概率为 1&#x2F;n<br>第2次查找，找到的概率为 2&#x2F;n<br>第3次查找，找到的概率为 4&#x2F;n<br>第m次查找，找到的概率为 2^(m - 1)&#x2F;n<br>假设最多需要查找m次，那么存在：1&#x2F;n + 2&#x2F;n + 4&#x2F;n + … + 2^(m - 1)&#x2F;n &#x3D; 1，可以推导出 m &lt;&#x3D; lg(n + 1)<br>即 T(n) &#x3D; O(log(n))</p>
+</blockquote>
+<h3 id="T-n-x3D-O-nlog-n"><a href="#T-n-x3D-O-nlog-n" class="headerlink" title="T(n) &#x3D; O(nlog(n))"></a>T(n) &#x3D; O(nlog(n))</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速排序</span></span><br><span class="line">- (<span class="type">void</span>)quickSort:(<span class="type">int</span> *)nums count:(<span class="type">int</span>)count &#123;</span><br><span class="line">    <span class="type">int</span> start = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> end = count - <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> value = nums[start];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (count &lt; <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (start &lt; end) &#123;</span><br><span class="line">        <span class="comment">//从数组右边往左查找一个小于value的元素</span></span><br><span class="line">        <span class="keyword">while</span> (start &lt; end) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[end] &lt; value) &#123;</span><br><span class="line">                nums[start] = nums[end];</span><br><span class="line">                start++;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                end--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//从数组左边往右查找一个大于value的元素</span></span><br><span class="line">        <span class="keyword">while</span> (start &lt; end) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[start] &gt; value) &#123;</span><br><span class="line">                nums[end] = nums[start];</span><br><span class="line">                end--;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                start++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    nums[start] = value;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> quickSort:nums count:start];</span><br><span class="line">    [<span class="keyword">self</span> quickSort:nums + start + <span class="number">1</span> count:count - start - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>第1次递归：T[n] &#x3D; 2T[n&#x2F;2] + n<br>第2次递归：T[n] &#x3D; 2{ 2T[n&#x2F;4] + (n&#x2F;2) }  + n &#x3D; 2^2 T[n&#x2F;(2^2)] + 2n<br>第m次递归：T[n] &#x3D; 2^m T[n&#x2F;(2^m)] + mn<br>假设最多需要m次递归完，那么：T[n&#x2F;(2^m)] &#x3D; T(1)  &#x3D;&#x3D;&gt; m &#x3D; log2(n)<br>得到：T[n] &#x3D; 2^m T[1] + mn &#x3D; 2^(log2(n))T[1] + (log2(n))n &#x3D; nT[1] + (log2(n))n<br>当n趋近于无穷大的时候 T[n] &#x3D; nT[1] + (log2(n))n &#x3D; (log2(n))n &#x3D; O(nlogn)<br>即：T(n) &#x3D; O(nlog(n))   </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" data-id="cl7m9prdc004l5lzy4s6me1pr" data-title="时间复杂度" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag">时间复杂度</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/04/iOS开发之Push Notification" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8BPush%20Notification/" class="article-date">
+  <time class="dt-published" datetime="2018-04-03T07:12:39.000Z" itemprop="datePublished">2018-04-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8BPush%20Notification/">iOS开发之Push Notification</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>iOS远程推送是怎么实现的？</p>
+<h3 id="远程推送逻辑图"><a href="#远程推送逻辑图" class="headerlink" title="远程推送逻辑图"></a>远程推送逻辑图</h3><p><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-3/71630237.jpg"></p>
+<p>1、 APP向iOS设备（iPhone手机）发送一个注册通知。然后iOS设备向APNS远程推送服务器发送APP的 Bundle ID 和设备的UDID。<br>2、 APNS根据上传的 Bundle ID 和 UDID 生成 Device Token 再返回给APP。<br>3、 APP 将 Device Token 发送给自己的服务器。<br>4、 当服务器发生APP感兴趣事件的时候，服务器将该消息以及对应的 Device Token 发送给APNS。<br>5、 APNS 再根据 Device Token 将消息发送给对应的APP（用户）。   </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/04/2018/04/iOS%E5%BC%80%E5%8F%91%E4%B9%8BPush%20Notification/" data-id="cl7m9prd5003v5lzy3e3tfye9" data-title="iOS开发之Push Notification" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Push-Notification/" rel="tag">Push Notification</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/03/iOS开发之Designated Initializer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8BDesignated%20Initializer/" class="article-date">
+  <time class="dt-published" datetime="2018-03-30T16:00:00.000Z" itemprop="datePublished">2018-03-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8BDesignated%20Initializer/">iOS开发之Designated Initializer(指定初始化方法)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>NS_DESIGNATED_INITIALIZER 是官方定义的一个宏。可以在编译的时候帮我们找出潜在的问题。<br>如果一个类中的初始化方法没有用 NS_DESIGNATED_INITIALIZER 修饰，说明这个方法是便利初始化方法（Convenience Initializer）。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NS_DESIGNATED_INITIALIZER</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> __has_attribute(objc_designated_initializer)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NS_DESIGNATED_INITIALIZER</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>看看官方的接口是怎么使用的。   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// UIViewController</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithNibName:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)nibNameOrNil bundle:(<span class="keyword">nullable</span> <span class="built_in">NSBundle</span> *)nibBundleOrNil <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UIView</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">CGRect</span>)frame <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UITableViewCell</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithStyle:(<span class="built_in">UITableViewCellStyle</span>)style reuseIdentifier:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)reuseIdentifier <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_0) <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>两个指定初始化方法分别对应纯代码方式和文件（Xib、Storyboard）方式创建。</p>
+</blockquote>
+<h2 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h2><p>在OC中它想表达的意思大概就是：当你alloc了一个类的时候，必须直接或间接调用这个类的其中一个带有 NS_DESIGNATED_INITIALIZER 后缀的初始化方法。不然初始化不完全，编译器会报出一个警告！下图是官方给的逻辑图。<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/50413485.jpg?imageView2/2/w/600"></p>
+<blockquote>
+<p>这里有两个约束<br>约束1、便利初始化方法只能调用本类的初始化方法，最终一定会调用本类的指定初始化方法。<br>约束2、子类的指定初始化方法一定会调用父类的指定初始化方法。</p>
+</blockquote>
+<p>当存在多个初始化方法的时候，流程如下图。这里的 Secondary initializer 就是 Convenience (便利初始化方法)<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/93397245.jpg?imageView2/2/w/700"></p>
+<blockquote>
+<p>这里便利初始化方法最终调用了本类的指定初始化方法，本类的指定初始化方法调用了父类的指定初始化方法。满足了约束1和约束2。</p>
+</blockquote>
+<p>子类要先初始化父类，然后再初始化实例变量。如下图<br><img src="http://ovsbvt5li.bkt.clouddn.com/18-4-4/37631710.jpg?imageView2/2/w/500"></p>
+<blockquote>
+<p>子类的指定初始化方法调用了父类的指定初始化方法。满足了约束2。</p>
+</blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150-CH1-SW8">Object Initialization</a><br><a target="_blank" rel="noopener" href="https://developer.apple.com/library/content/documentation/General/Conceptual/CocoaEncyclopedia/Initialization/Initialization.html">Concepts in Objective-C Programming: Object Initialization</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8BDesignated%20Initializer/" data-id="cl7m9prd0003e5lzy5rbjai34" data-title="iOS开发之Designated Initializer(指定初始化方法)" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Designated-Initializer/" rel="tag">Designated Initializer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/03/iOS开发之多线程（NSThread、NSOperation、GCD）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88NSThread%E3%80%81NSOperation%E3%80%81GCD%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2018-03-22T15:32:31.000Z" itemprop="datePublished">2018-03-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88NSThread%E3%80%81NSOperation%E3%80%81GCD%EF%BC%89/">iOS开发之多线程（NSThread、NSOperation、GCD）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>整理一些多线程相关的知识。</p>
+<h3 id="并行-amp-并发"><a href="#并行-amp-并发" class="headerlink" title="并行 &amp; 并发"></a>并行 &amp; 并发</h3><p>1、并行：并行是相对于多核而言的，几个任务同时执行。<br>2、并发：并发是相对于单核而言的，几个任务之间快速切换运行，看起来像是“同时”发生的一样   </p>
+<h3 id="NSThread"><a href="#NSThread" class="headerlink" title="NSThread"></a>NSThread</h3><p>优点：轻量级<br>缺点：需要手动管理线程活动，如生命周期、线程同步、睡眠等。<br>搭配runloop实现常驻线程</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//NSThread</span></span><br><span class="line"><span class="built_in">NSThread</span> *thread = [[<span class="built_in">NSThread</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(threadRun) object:<span class="literal">nil</span>];</span><br><span class="line">[thread start];</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)threadRun &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;threadRun&quot;</span>);</span><br><span class="line"><span class="comment">//        NSTimer *timer = [NSTimer timerWithTimeInterval:2 target:self selector:@selector(timeTask) userInfo:nil repeats:YES];</span></span><br><span class="line"><span class="comment">//        [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];</span></span><br><span class="line">        [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">2</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(timeTask) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>];</span><br><span class="line">        [[<span class="built_in">NSRunLoop</span> currentRunLoop] run];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)timeTask &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;timeTask:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="NSOperation-amp-NSOperationQueue"><a href="#NSOperation-amp-NSOperationQueue" class="headerlink" title="NSOperation &amp; NSOperationQueue"></a>NSOperation &amp; NSOperationQueue</h3><h4 id="NSOperation"><a href="#NSOperation" class="headerlink" title="NSOperation"></a>NSOperation</h4><p>NSOperation 是一个抽象类，只能使用它的自类来进行操作。系统为我们创建了两个子类NSInvocationOperation &amp; NSBlockOperation。<br>直接使用这两个类执行任务，系统不会创建子线程，而是在当前线程执行任务。NSBlockOperation 使用 addExecutionBlock方法的任务是在多线程执行的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//NSInvocationOperation</span></span><br><span class="line"><span class="built_in">NSInvocationOperation</span> *invocationOperation = [[<span class="built_in">NSInvocationOperation</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(invocationOperation) object:<span class="literal">nil</span>];</span><br><span class="line">[invocationOperation start];</span><br><span class="line">    </span><br><span class="line"><span class="comment">//NSBlockOperation</span></span><br><span class="line"><span class="built_in">NSBlockOperation</span> * blockOperation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;blockOperation:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line"><span class="comment">//这里面的任务是多线程执行的</span></span><br><span class="line">[blockOperation addExecutionBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;addExecutionBlock:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[blockOperation start];</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)invocationOperation &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;invocationOperation:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//invocationOperation:&lt;NSThread: 0x60800007e1c0&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line"><span class="comment">//blockOperation:&lt;NSThread: 0x60800007e1c0&gt;&#123;number = 1, name = main&#125;</span></span><br><span class="line"><span class="comment">//addExecutionBlock:&lt;NSThread: 0x608000078800&gt;&#123;number = 3, name = (null)&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h4><p>&#x2F;&#x2F;主队列，任务在主线程执行，一般用于更新UI的时候使用。<br>NSOperationQueue *queue &#x3D; [NSOperationQueue mainQueue];<br>&#x2F;&#x2F;子队列，任务在子线程执行，用于处理耗时任务。<br>NSOperationQueue *queue &#x3D; [[NSOperationQueue alloc] init];   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSOperationQueue</span> *operationQueue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</span><br><span class="line"><span class="comment">//NSInvocationOperation</span></span><br><span class="line"><span class="built_in">NSInvocationOperation</span> *invocationOperation = [[<span class="built_in">NSInvocationOperation</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(invocationOperation) object:<span class="literal">nil</span>];</span><br><span class="line"><span class="comment">//NSBlockOperation</span></span><br><span class="line"><span class="built_in">NSBlockOperation</span> * blockOperation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;blockOperation:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[operationQueue addOperation:invocationOperation];</span><br><span class="line">[operationQueue addOperation:blockOperation];</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)invocationOperation &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;invocationOperation:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// invocationOperation:&lt;NSThread: 0x60c00046b940&gt;&#123;number = 4, name = (null)&#125;</span></span><br><span class="line"><span class="comment">// blockOperation:&lt;NSThread: 0x60800026b580&gt;&#123;number = 3, name = (null)&#125;</span></span><br></pre></td></tr></table></figure>
+<p>也可以直接添加block   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSOperationQueue</span> *operationQueue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</span><br><span class="line">[operationQueue addOperationWithBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[operationQueue addOperationWithBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[operationQueue addOperationWithBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">    </span><br><span class="line"><span class="comment">// &lt;NSThread: 0x6080002637c0&gt;&#123;number = 4, name = (null)&#125;</span></span><br><span class="line"><span class="comment">// &lt;NSThread: 0x60c0002667c0&gt;&#123;number = 5, name = (null)&#125;</span></span><br><span class="line"><span class="comment">// &lt;NSThread: 0x60000047b2c0&gt;&#123;number = 3, name = (null)&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以通过 <strong>maxConcurrentOperationCount</strong> 来控制最大并发数，当最大并发数为1时，就相当于串行队列</p>
+<h5 id="NSOperation添加依赖关系"><a href="#NSOperation添加依赖关系" class="headerlink" title="NSOperation添加依赖关系"></a>NSOperation添加依赖关系</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSOperationQueue</span> *operationQueue = [[<span class="built_in">NSOperationQueue</span> alloc] init];</span><br><span class="line"><span class="comment">//NSBlockOperation</span></span><br><span class="line"><span class="built_in">NSBlockOperation</span> * blockOperation0 = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;blockOperation0:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">NSBlockOperation</span> * blockOperation1 = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</span><br><span class="line">	sleep(<span class="number">1</span>);</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;blockOperation1:%@&quot;</span>,[<span class="built_in">NSThread</span> currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">    </span><br><span class="line"><span class="comment">//blockOperation0 依赖 blockOperation1，只有在 blockOperation1 执行完成才能执行 blockOperation0</span></span><br><span class="line">[blockOperation0 addDependency:blockOperation1];</span><br><span class="line">    </span><br><span class="line">[operationQueue addOperation:blockOperation0];</span><br><span class="line">[operationQueue addOperation:blockOperation1];</span><br><span class="line"></span><br><span class="line"><span class="comment">//blockOperation1:&lt;NSThread: 0x600000269c80&gt;&#123;number = 3, name = (null)&#125;</span></span><br><span class="line"><span class="comment">//blockOperation0:&lt;NSThread: 0x60c000479040&gt;&#123;number = 4, name = (null)&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：NSOperationQueue 是非线程安全的，多个线程访问统一资源时，需要加锁。</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.lock = [[<span class="built_in">NSLock</span> alloc] init];</span><br><span class="line"></span><br><span class="line">[<span class="keyword">self</span>.lock lock];</span><br><span class="line"><span class="comment">//不能同时访问的资源</span></span><br><span class="line">[<span class="keyword">self</span>.lock unlock];</span><br></pre></td></tr></table></figure>
+
+<h3 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h3><p>创建队列，然后再往队列添加任务。也可以直接使用系统创建的队列。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建串行队列</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">&quot;com.vhuichen.queue&quot;</span>, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"><span class="comment">//创建并发队列</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">&quot;com.vhuichen.queue&quot;</span>, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"><span class="comment">//获取主队列</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_main_queue();</span><br><span class="line"><span class="comment">//获取全局并发队列</span></span><br><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>创建同步、异步任务   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_sync</span>(queue, ^&#123;</span><br><span class="line">    <span class="comment">//同步执行</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 异步执行任务创建方法</span></span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="comment">//异步执行</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="GCD常用方法"><a href="#GCD常用方法" class="headerlink" title="GCD常用方法"></a>GCD常用方法</h4><h5 id="dispatch-barrier"><a href="#dispatch-barrier" class="headerlink" title="dispatch_barrier"></a>dispatch_barrier</h5><p>只有当添加在dispatch_barrier前面的任务完成了，才开始执行dispatch_barrier任务。<br>有两种方式：<strong>dispatch_barrier_sync</strong> 和 <strong>dispatch_barrier_async</strong></p>
+<h5 id="dispatch-barrier-sync"><a href="#dispatch-barrier-sync" class="headerlink" title="dispatch_barrier_sync"></a>dispatch_barrier_sync</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">&quot;com.vhuichen.queue&quot;</span>, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task0.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task1.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_barrier_sync(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task2.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task3.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task4.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//task0.....</span></span><br><span class="line"><span class="comment">//task1.....</span></span><br><span class="line"><span class="comment">//task2.....</span></span><br><span class="line"><span class="comment">//test....</span></span><br><span class="line"><span class="comment">//task3.....</span></span><br><span class="line"><span class="comment">//task4.....</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//只有当task0、task1 执行完才会执行tast2.</span></span><br><span class="line"><span class="comment">//task2 执行完才会往下执行。</span></span><br><span class="line"><span class="comment">//test 执行完后，才会把task3、task4 加进队列.</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="dispatch-barrier-async"><a href="#dispatch-barrier-async" class="headerlink" title="dispatch_barrier_async"></a>dispatch_barrier_async</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">&quot;com.vhuichen.queue&quot;</span>, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task0.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task1.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_barrier_async(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task2.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;test&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task3.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;task4.....&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//test....</span></span><br><span class="line"><span class="comment">//task1.....</span></span><br><span class="line"><span class="comment">//task0.....</span></span><br><span class="line"><span class="comment">//task2.....</span></span><br><span class="line"><span class="comment">//task3.....</span></span><br><span class="line"><span class="comment">//task4.....</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//test、task0、task1 并发执行。</span></span><br><span class="line"><span class="comment">//task0、task1 执行完才会执行tast2.</span></span><br><span class="line"><span class="comment">//tast2 执行完才会执行tast3、tast4.</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="dispatch-after"><a href="#dispatch-after" class="headerlink" title="dispatch_after"></a>dispatch_after</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="number">1</span> * <span class="built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;dispatch_after task...&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//dispatch_after 会在到了指定的时间之后，将才将任务加到相应的队列中。</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="dispatch-once"><a href="#dispatch-once" class="headerlink" title="dispatch_once"></a>dispatch_once</h5><p>一般会以这种形式出现    </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line"><span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;dispatch_once task...&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//block里面的任务只会执行一次。</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="dispatch-apply"><a href="#dispatch-apply" class="headerlink" title="dispatch_apply"></a>dispatch_apply</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dispatch_queue_t</span> queue = dispatch_queue_create(<span class="string">&quot;com.vhuichen.queue&quot;</span>, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">dispatch_apply(<span class="number">10</span>, queue, ^(size_t index) &#123;</span><br><span class="line">	<span class="built_in">NSLog</span>(<span class="string">@&quot;%zu&quot;</span>,index);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;end&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 0</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 7</span></span><br><span class="line"><span class="comment">// 8</span></span><br><span class="line"><span class="comment">// 9</span></span><br><span class="line"><span class="comment">// end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// dispatch_apply 会等待所有的任务完成了，才会往下执行。</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="dispatch-semaphore"><a href="#dispatch-semaphore" class="headerlink" title="dispatch_semaphore"></a>dispatch_semaphore</h5><p>可以用于线程同步、线程加锁、控制并发线程数量</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现同步请求</span></span><br><span class="line"><span class="keyword">let</span> semaphoreSignal <span class="operator">=</span> <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line"><span class="type">ZBDepthAPI</span>.<span class="type">GET</span>(market: market.name<span class="operator">!</span>, succeed: &#123; (depthModel) <span class="keyword">in</span></span><br><span class="line">	<span class="comment">//......</span></span><br><span class="line">	semaphoreSignal.signal()</span><br><span class="line">&#125;) &#123; (error) <span class="keyword">in</span></span><br><span class="line">	<span class="comment">//......</span></span><br><span class="line">	semaphoreSignal.signal()</span><br><span class="line">&#125;</span><br><span class="line">semaphoreSignal.wait()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="dispatch-group"><a href="#dispatch-group" class="headerlink" title="dispatch_group"></a>dispatch_group</h5><p>当需要同时执行多个耗时任务，并且当所有任务执行完后更新UI。那么这时可以使用 dispatch_group 来实现。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> global = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">dispatch_group_async(group, global, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tast0.......&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;0&quot;</span>);</span><br><span class="line"></span><br><span class="line">dispatch_group_async(group, global, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tast1.......&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">dispatch_group_async(group, global, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tast2.......&quot;</span>);</span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;2&quot;</span>);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line"><span class="built_in">dispatch_async</span>(global, ^&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tast00.......&quot;</span>);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 所有任务完成的时候调用</span></span><br><span class="line"><span class="comment">//dispatch_group_notify(group, global, ^&#123;</span></span><br><span class="line"><span class="comment">//    NSLog(@&quot;tast complete...&quot;);</span></span><br><span class="line"><span class="comment">//&#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//会阻塞当前线程，直到 group 里面的任务全部完成</span></span><br><span class="line">dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;wait&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步加入的任务会立即执行</span></span><br><span class="line"><span class="comment">// dispatch_group_wait会阻塞当前线程，直到 group 里面的任务全部完成</span></span><br><span class="line"><span class="comment">// dispatch_group_enter &amp; dispatch_group_leave 必须成对出现，相当于 dispatch_group_async</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>当遇到相应场景的时候，知道使用哪种方法比较合理就行了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88NSThread%E3%80%81NSOperation%E3%80%81GCD%EF%BC%89/" data-id="cl7m9prd1003g5lzy5l5v531s" data-title="iOS开发之多线程（NSThread、NSOperation、GCD）" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCD/" rel="tag">GCD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NSOperation/" rel="tag">NSOperation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NSThread/" rel="tag">NSThread</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2018/03/iOS开发之封装FMDB" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%B0%81%E8%A3%85FMDB/" class="article-date">
+  <time class="dt-published" datetime="2018-03-22T12:12:39.000Z" itemprop="datePublished">2018-03-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%B0%81%E8%A3%85FMDB/">iOS开发之封装FMDB</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>之前在项目中使用过，写出来记录一下。</p>
+<h3 id="常用类-FMDatabaseQueue-FMDatabase"><a href="#常用类-FMDatabaseQueue-FMDatabase" class="headerlink" title="常用类 FMDatabaseQueue FMDatabase"></a>常用类 FMDatabaseQueue FMDatabase</h3><h4 id="FMDatabase"><a href="#FMDatabase" class="headerlink" title="FMDatabase"></a>FMDatabase</h4><p>FMDatabase 可以直接操作数据库，使用时需要注意，它不是线程安全的。</p>
+<h4 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h4><p>使用 FMDatabaseQueue 操作数据库则是线程安全的，看源码可以发现这是一个串行队列。</p>
+<h3 id="考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase"><a href="#考虑到线程安全可以使用-FMDatabaseQueue-代替-FMDatabase" class="headerlink" title="考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase"></a>考虑到线程安全可以使用 FMDatabaseQueue 代替 FMDatabase</h3><p>方法如下：   </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</span><br><span class="line">	</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<p>如果要处理事务，则使用下面的方法			</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.databaseQueue inDeferredTransaction:^(FMDatabase * _Nonnull db, <span class="type">BOOL</span> * _Nonnull rollback) &#123;</span><br><span class="line">     </span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+<p>不管是使用 inDatabase 还是 inDeferredTransaction 都是同步的，所以在这里不需要任何处理。</p>
+<h3 id="FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。"><a href="#FMDatabaseQueue-内部已经打开了数据库，所以不需要再使用-open-、close。但是当使用-FMResultSet-这个类的时候，记得一定要在block内处理完-FMResultSet-相关的逻辑，然后调用-close-方法。不要在block之外使用FMResultSet，不然会报错。" class="headerlink" title="FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。"></a>FMDatabaseQueue 内部已经打开了数据库，所以不需要再使用 open 、close。但是当使用 FMResultSet 这个类的时候，记得一定要在block内处理完 FMResultSet 相关的逻辑，然后调用 close 方法。不要在block之外使用FMResultSet，不然会报错。</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__block <span class="type">BOOL</span> isOK = <span class="literal">NO</span>;</span><br><span class="line">[<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase * _Nonnull db) &#123;</span><br><span class="line">	FMResultSet *results = [db executeQuery:sql];</span><br><span class="line">	isOK = results.next;</span><br><span class="line">	[results close];</span><br><span class="line">&#125;];</span><br><span class="line"><span class="keyword">return</span> isOK;</span><br></pre></td></tr></table></figure>
+<p><strong>备注：</strong> 在block内处理完FMResultSet的相关逻辑，就算不调用 [results close] ，也不会报错，可能是由于block处理完，就自动释放了这个类。但注意不要在block外面使用FMResultSet。</p>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><p>Demo中目前没有加入keyid，操作不当会出现多个相同的数据，只能以后再改了。。。。			<br><a target="_blank" rel="noopener" href="https://github.com/vhuichen/VCHFMDB">GitHub Demo</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2018/03/2018/03/iOS%E5%BC%80%E5%8F%91%E4%B9%8B%E5%B0%81%E8%A3%85FMDB/" data-id="cl7m9prd2003k5lzyfin8hvip" data-title="iOS开发之封装FMDB" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FMDB/" rel="tag">FMDB</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/">iOS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/Swift/">Swift</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%87%8D%E6%9E%84/">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" rel="tag">APP默认语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Allocations/" rel="tag">Allocations</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Base64/" rel="tag">Base64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bugly/" rel="tag">Bugly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CADisplayLink/" rel="tag">CADisplayLink</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CocoaPods/" rel="tag">CocoaPods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cookie/" rel="tag">Cookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cornerstone/" rel="tag">Cornerstone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Designated-Initializer/" rel="tag">Designated Initializer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FMDB/" rel="tag">FMDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCD/" rel="tag">GCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Desktop/" rel="tag">GitHub Desktop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instruments/" rel="tag">Instruments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KCP/" rel="tag">KCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MD5/" rel="tag">MD5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC/" rel="tag">MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/" rel="tag">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVVM/" rel="tag">MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Module/" rel="tag">Module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookie/" rel="tag">NSHTTPCookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookieStorage/" rel="tag">NSHTTPCookieStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSNumericSearch/" rel="tag">NSNumericSearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSOperation/" rel="tag">NSOperation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSPredicate/" rel="tag">NSPredicate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSString/" rel="tag">NSString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSThread/" rel="tag">NSThread</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSTimeZone/" rel="tag">NSTimeZone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NavigationItem/" rel="tag">NavigationItem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Profile/" rel="tag">Profile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Push-Notification/" rel="tag">Push Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SRWebSocket/" rel="tag">SRWebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/" rel="tag">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Socket/" rel="tag">Socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/" rel="tag">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift%E6%B7%B7%E7%BC%96/" rel="tag">Swift混编</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/" rel="tag">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UIImage/" rel="tag">UIImage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UINavigationBar/" rel="tag">UINavigationBar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITableViewCell/" rel="tag">UITableViewCell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITextField/" rel="tag">UITextField</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/URL-Schemes/" rel="tag">URL Schemes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/View/" rel="tag">View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Workspace/" rel="tag">Workspace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anchorPoint/" rel="tag">anchorPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/" rel="tag">hash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/initialize/" rel="tag">initialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isEqual/" rel="tag">isEqual</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libffi/" rel="tag">libffi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load/" rel="tag">load</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" rel="tag">体积包优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" rel="tag">关联对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" rel="tag">切换根控制器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" rel="tag">加密解密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B/" rel="tag">单例</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag">单元测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9B%BE/" rel="tag">地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" rel="tag">尾调用优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" rel="tag">数据去重</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag">时间复杂度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" rel="tag">消息转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag">热更新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="tag">符号表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" rel="tag">第三方登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" rel="tag">类对象本质</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" rel="tag">类族模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A6%E6%9D%9F/" rel="tag">约束</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" rel="tag">编译时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" rel="tag">自动登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" rel="tag">自动释放池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" rel="tag">运行时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E6%9E%84/" rel="tag">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 10px;">AES</a> <a href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">APP默认语言</a> <a href="/tags/Allocations/" style="font-size: 10px;">Allocations</a> <a href="/tags/Base64/" style="font-size: 10px;">Base64</a> <a href="/tags/Bugly/" style="font-size: 10px;">Bugly</a> <a href="/tags/CADisplayLink/" style="font-size: 10px;">CADisplayLink</a> <a href="/tags/CocoaPods/" style="font-size: 13.33px;">CocoaPods</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/Cornerstone/" style="font-size: 10px;">Cornerstone</a> <a href="/tags/Designated-Initializer/" style="font-size: 10px;">Designated Initializer</a> <a href="/tags/Effective-Objective-C-2-0/" style="font-size: 20px;">Effective Objective-C 2.0</a> <a href="/tags/FMDB/" style="font-size: 10px;">FMDB</a> <a href="/tags/GCD/" style="font-size: 13.33px;">GCD</a> <a href="/tags/GitHub-Desktop/" style="font-size: 10px;">GitHub Desktop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Instruments/" style="font-size: 10px;">Instruments</a> <a href="/tags/KCP/" style="font-size: 10px;">KCP</a> <a href="/tags/MD5/" style="font-size: 10px;">MD5</a> <a href="/tags/MVC/" style="font-size: 10px;">MVC</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MVVM/" style="font-size: 10px;">MVVM</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Module/" style="font-size: 10px;">Module</a> <a href="/tags/NSHTTPCookie/" style="font-size: 10px;">NSHTTPCookie</a> <a href="/tags/NSHTTPCookieStorage/" style="font-size: 10px;">NSHTTPCookieStorage</a> <a href="/tags/NSNumericSearch/" style="font-size: 10px;">NSNumericSearch</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSPredicate/" style="font-size: 10px;">NSPredicate</a> <a href="/tags/NSString/" style="font-size: 10px;">NSString</a> <a href="/tags/NSThread/" style="font-size: 10px;">NSThread</a> <a href="/tags/NSTimeZone/" style="font-size: 10px;">NSTimeZone</a> <a href="/tags/NavigationItem/" style="font-size: 10px;">NavigationItem</a> <a href="/tags/Profile/" style="font-size: 10px;">Profile</a> <a href="/tags/Push-Notification/" style="font-size: 10px;">Push Notification</a> <a href="/tags/SRWebSocket/" style="font-size: 10px;">SRWebSocket</a> <a href="/tags/SVN/" style="font-size: 16.67px;">SVN</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/Swift/" style="font-size: 13.33px;">Swift</a> <a href="/tags/Swift%E6%B7%B7%E7%BC%96/" style="font-size: 10px;">Swift混编</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/UIImage/" style="font-size: 10px;">UIImage</a> <a href="/tags/UINavigationBar/" style="font-size: 10px;">UINavigationBar</a> <a href="/tags/UITableViewCell/" style="font-size: 10px;">UITableViewCell</a> <a href="/tags/UITextField/" style="font-size: 10px;">UITextField</a> <a href="/tags/URL-Schemes/" style="font-size: 10px;">URL Schemes</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/WebSocket/" style="font-size: 16.67px;">WebSocket</a> <a href="/tags/Workspace/" style="font-size: 10px;">Workspace</a> <a href="/tags/anchorPoint/" style="font-size: 10px;">anchorPoint</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/initialize/" style="font-size: 10px;">initialize</a> <a href="/tags/isEqual/" style="font-size: 10px;">isEqual</a> <a href="/tags/libffi/" style="font-size: 10px;">libffi</a> <a href="/tags/load/" style="font-size: 10px;">load</a> <a href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" style="font-size: 10px;">体积包优化</a> <a href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">关联对象</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" style="font-size: 10px;">切换根控制器</a> <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" style="font-size: 10px;">加密解密</a> <a href="/tags/%E5%8D%95%E4%BE%8B/" style="font-size: 10px;">单例</a> <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">单元测试</a> <a href="/tags/%E5%9C%B0%E5%9B%BE/" style="font-size: 10px;">地图</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" style="font-size: 10px;">尾调用优化</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" style="font-size: 10px;">数据去重</a> <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" style="font-size: 10px;">时间复杂度</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">框架</a> <a href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" style="font-size: 10px;">消息转发</a> <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" style="font-size: 10px;">热更新</a> <a href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" style="font-size: 10px;">符号表</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" style="font-size: 10px;">第三方登录</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" style="font-size: 10px;">类对象本质</a> <a href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">类族模式</a> <a href="/tags/%E7%BA%A6%E6%9D%9F/" style="font-size: 10px;">约束</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">线程</a> <a href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" style="font-size: 10px;">编译时</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" style="font-size: 10px;">自动登录</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" style="font-size: 10px;">自动释放池</a> <a href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" style="font-size: 10px;">运行时</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%87%8D%E6%9E%84/" style="font-size: 10px;">重构</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/05/NetworkProtocol/KCP/KCP/">KCP 协议</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/iOS/libffi%E6%8E%A2%E7%A9%B6%20/">libffi 探究</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/">ARC下，对象什么时候加入自动释放池</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/NetworkProtocol/WebSocket/WebSocket/">WebSocket</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/NetworkProtocol/SRWebSocket/SRWebSocket/">SRWebSocket 源码解析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 vhuichen<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

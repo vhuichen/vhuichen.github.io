@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>ARC下，对象什么时候加入自动释放池 | vhuichen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ARCARC (Automatic Reference Counting) 是由编译器跟运行时共同完成的（运行时标记）；编译器会在编译时会自动加上 retain、release、autorelease、dealloc 操作。 __autoreleasing如果一个变量被用关键字修饰 __autoreleasing 修饰，那么变量会立即加入到自动释放池中 ARC规则 若方法名以下列词语开头，则其返回">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARC下，对象什么时候加入自动释放池">
+<meta property="og:url" content="https://vhuichen.github.io/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="ARCARC (Automatic Reference Counting) 是由编译器跟运行时共同完成的（运行时标记）；编译器会在编译时会自动加上 retain、release、autorelease、dealloc 操作。 __autoreleasing如果一个变量被用关键字修饰 __autoreleasing 修饰，那么变量会立即加入到自动释放池中 ARC规则 若方法名以下列词语开头，则其返回">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-10T16:00:00.000Z">
+<meta property="article:author" content="vhuichen">
+<meta property="article:tag" content="自动释放池">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="vhuichen" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">vhuichen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">记录、分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://vhuichen.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-iOS/iOS对象什么时候加入自动释放池" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" class="article-date">
+  <time class="dt-published" datetime="2022-03-09T16:00:00.000Z" itemprop="datePublished">2022-03-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS/">iOS</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      ARC下，对象什么时候加入自动释放池
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h3><p>ARC (Automatic Reference Counting) 是由编译器跟运行时共同完成的（运行时标记）；编译器会在编译时会自动加上 retain、release、autorelease、dealloc 操作。</p>
+<h3 id="autoreleasing"><a href="#autoreleasing" class="headerlink" title="__autoreleasing"></a>__autoreleasing</h3><p>如果一个变量被用关键字修饰 __autoreleasing 修饰，那么变量会立即加入到自动释放池中</p>
+<h3 id="ARC规则"><a href="#ARC规则" class="headerlink" title="ARC规则"></a>ARC规则</h3><ol>
+<li><p>若方法名以下列词语开头，则其返回的对象归调用者所有：<br><code>alloc</code>  <code>new</code>  <code>copy</code>  <code>mutableCopy</code>。归调用者所有的意思是：调用上述四种方法的那段代码要负责释放方法所返回的对象。  </p>
+</li>
+<li><p>除了会自动调用“保留”与“释放”方法外，ARC 还可以执行一些手工操作很难甚至无法完成的优化。如果发现在同一个对象上执行多次“保留”与“释放”操作，那么ARC有时可以成对地移除这两个操作。<br>一般，在方法中返回自动释放的对象时，要执行一个特殊函数。此时不直接调用对象的 autorelease 方法，而是改为调用 objc_autoreleaseReturnValue 。此函数会检视当前方法返回之后即将要执行的那段代码。若发现那段代码在返回的对象上执行 retain 操作，则设置全局数据结构（此数据结构的具体内容因处理器而异）中的一个标志位而不执行 autorelease 操作。与之相似，如果方法返回了一个自动释放的对象，而调用方法的代码要保留此对象，那么此时不直接执行 retain，而是改为执行 objc_retainAutoreleaseReturnValue 函数。此函数要检测刚才提到的那个标志位，若已经置位，则不执行 retain 操作。设置并检测标志位，要比调用 autorelease 和 retain 更快。<br><strong>备注</strong>：objc_autoreleaseReturnValue 优化不一定开启，会根据不同CPU类型决定<br><strong>另外，这个标记位存在哪里呢？关键字：线程局部存储（TLS）</strong></p>
+</li>
+</ol>
+<span id="more"></span>
+
+<h4 id="objc-autoreleaseReturnValue-相关代码逻辑"><a href="#objc-autoreleaseReturnValue-相关代码逻辑" class="headerlink" title="objc_autoreleaseReturnValue 相关代码逻辑"></a>objc_autoreleaseReturnValue 相关代码逻辑</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// Prepare a value at +1 for return through a +0 autoreleasing convention.</span><br><span class="line">id objc_autoreleaseReturnValue(id obj) &#123;</span><br><span class="line">    if (prepareOptimizedReturn(ReturnAtPlus1)) return obj;</span><br><span class="line">    return objc_autorelease(obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static ALWAYS_INLINE bool prepareOptimizedReturn(ReturnDisposition disposition) &#123;</span><br><span class="line">    ASSERT(getReturnDisposition() == ReturnAtPlus0);</span><br><span class="line">    //callerAcceptsOptimizedReturn 是个条件编译选项，不同CPU类型代码完全不一样</span><br><span class="line">    if (callerAcceptsOptimizedReturn(__builtin_return_address(0))) &#123;</span><br><span class="line">        if (disposition) setReturnDisposition(disposition);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 方法名以关键字 new 开头，ARC 不会加入 retain、release 或 autorelease 语句。</span><br><span class="line">+ (VCHPerson *)newPerson &#123;</span><br><span class="line">    VCHPerson *person = [[VCHPerson alloc] init];</span><br><span class="line">    return person;</span><br><span class="line">&#125;</span><br><span class="line">// 方法名不以关键字开头，ARC 会自动加上 autorelease 语句。</span><br><span class="line">+ (VCHPerson *)somePerson &#123;</span><br><span class="line">    VCHPerson *person = [[VCHPerson alloc] init];</span><br><span class="line">    return person;</span><br><span class="line">&#125;</span><br><span class="line">// ARC 会在函数末尾给 personOne 加上 release 语句。</span><br><span class="line">// 而 somePerson 已经在方法内部加入到释放池中了</span><br><span class="line">- (void)doSomething &#123;</span><br><span class="line">    VCHPerson *personOne = [VCHPerson newPerson];</span><br><span class="line">    VCHPerson *personTwo = [VCHPerson somePerson];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内部的实现逻辑可以用以下代码代替</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//非关键字开头</span><br><span class="line">+ (instancetype)object &#123;</span><br><span class="line">    return [[NSObject alloc] init];</span><br><span class="line">    // 实际会变成</span><br><span class="line">    return objc_autoreleaseReturnValue([[NSObject alloc] init]);</span><br><span class="line">&#125;</span><br><span class="line">NSObject *object = [NSObject object];</span><br><span class="line">// 实际会变成</span><br><span class="line">NSObject *object = objc_retainAutoreleasedReturnValue([NSObject object]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="再来看看汇编"><a href="#再来看看汇编" class="headerlink" title="再来看看汇编"></a>再来看看汇编</h3><h5 id="一、外部方法非关键字开头，内部方法关键字开头"><a href="#一、外部方法非关键字开头，内部方法关键字开头" class="headerlink" title="一、外部方法非关键字开头，内部方法关键字开头"></a>一、外部方法非关键字开头，内部方法关键字开头</h5><ol>
+<li>NSMutableArray 以 alloc 方式生成对象，引用计数为1，此时没有加入到自动释放池中</li>
+<li>init方法不做任何处理，猜测是编译器行为</li>
+<li>当前方法名不以关键字开头，return时需要加入到自动释放池中，表示当前方法内持有对象，并负责释放对象。</li>
+</ol>
+<p>但是由于编译器优化，不会立即加入到自动释放池中，而是调用 objc_autoreleaseReturnValue 方法标记对象（从下面的汇编代码可以看出确实调用了 objc_autoreleaseReturnValue 方法）。<br>如果对象返回后，又有别的变量需要 retain 这个对象，则编译器会调用这个方法 objc_retainAutoreleasedReturnValue，此时会检查对象的是否已经被标记，如果已经被标记，则相互抵消，并将标记位清除，如果没有被标记则最终调用 retain 方法。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">- (id)getObjectWithAlloc &#123;</span><br><span class="line">    id obj = [[NSMutableArray alloc] init];</span><br><span class="line">    return obj;//断点</span><br><span class="line">    /*</span><br><span class="line">     VCHTest`-[AppDelegate getObjectWithAlloc]:</span><br><span class="line">         0x10027e210 &lt;+0&gt;:  pushq  %rbp</span><br><span class="line">         0x10027e211 &lt;+1&gt;:  movq   %rsp, %rbp</span><br><span class="line">         0x10027e214 &lt;+4&gt;:  subq   $0x20, %rsp</span><br><span class="line">         0x10027e218 &lt;+8&gt;:  movq   %rdi, -0x8(%rbp)</span><br><span class="line">         0x10027e21c &lt;+12&gt;: movq   %rsi, -0x10(%rbp)</span><br><span class="line">         0x10027e220 &lt;+16&gt;: movq   0x9c41(%rip), %rdi        ; (void *)0x00007fff801e6298: NSMutableArray</span><br><span class="line">         0x10027e227 &lt;+23&gt;: callq  0x10027f814               ; symbol stub for: objc_alloc_init</span><br><span class="line">         0x10027e22c &lt;+28&gt;: movq   %rax, -0x18(%rbp)</span><br><span class="line">     -&gt;  0x10027e230 &lt;+32&gt;: movq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e234 &lt;+36&gt;: movq   0x3df5(%rip), %rax        ; (void *)0x00007fff20191840: objc_retain</span><br><span class="line">         0x10027e23b &lt;+43&gt;: callq  *%rax</span><br><span class="line">         0x10027e23d &lt;+45&gt;: xorl   %ecx, %ecx</span><br><span class="line">         0x10027e23f &lt;+47&gt;: movl   %ecx, %esi</span><br><span class="line">         0x10027e241 &lt;+49&gt;: leaq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e245 &lt;+53&gt;: movq   %rax, -0x20(%rbp)</span><br><span class="line">         0x10027e249 &lt;+57&gt;: callq  0x10027f86e               ; symbol stub for: objc_storeStrong</span><br><span class="line">         0x10027e24e &lt;+62&gt;: movq   -0x20(%rbp), %rdi</span><br><span class="line">         0x10027e252 &lt;+66&gt;: addq   $0x20, %rsp</span><br><span class="line">         0x10027e256 &lt;+70&gt;: popq   %rbp</span><br><span class="line">         0x10027e257 &lt;+71&gt;: jmp    0x10027f826               ; symbol stub for: objc_autoreleaseReturnValue</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="二、外部方法非关键字开头，内部方法非关键字开头"><a href="#二、外部方法非关键字开头，内部方法非关键字开头" class="headerlink" title="二、外部方法非关键字开头，内部方法非关键字开头"></a>二、外部方法非关键字开头，内部方法非关键字开头</h5><ol>
+<li>NSMutableArray 以 array 方式生成对象，引用计数为1，并加入到自动释放池中（标记）</li>
+<li>调用 objc_retainAutoreleasedReturnValue，因为临时变量需要持有对象，此时标记位清除</li>
+<li>由于方法名不以关键字开头，return 时调用 objc_autoreleaseReturnValue 加入到自动释放池中（同样也是先标记）</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (id)getObjectWithArray &#123;</span><br><span class="line">    id obj = [NSMutableArray array];</span><br><span class="line">    return obj;//断点</span><br><span class="line">    /*</span><br><span class="line">     VCHTest`-[AppDelegate getObjectWithArray]:</span><br><span class="line">         0x10027e260 &lt;+0&gt;:  pushq  %rbp</span><br><span class="line">         0x10027e261 &lt;+1&gt;:  movq   %rsp, %rbp</span><br><span class="line">         0x10027e264 &lt;+4&gt;:  subq   $0x20, %rsp</span><br><span class="line">         0x10027e268 &lt;+8&gt;:  movq   %rdi, -0x8(%rbp)</span><br><span class="line">         0x10027e26c &lt;+12&gt;: movq   %rsi, -0x10(%rbp)</span><br><span class="line">         0x10027e270 &lt;+16&gt;: movq   0x9bf1(%rip), %rdi        ; (void *)0x00007fff801e6298: NSMutableArray</span><br><span class="line">         0x10027e277 &lt;+23&gt;: movq   0x9aba(%rip), %rsi        ; &quot;array&quot;</span><br><span class="line">         0x10027e27e &lt;+30&gt;: movq   0x3d9b(%rip), %rax        ; (void *)0x00007fff20175280: objc_msgSend</span><br><span class="line">         0x10027e285 &lt;+37&gt;: callq  *%rax</span><br><span class="line">         0x10027e287 &lt;+39&gt;: movq   %rax, %rdi</span><br><span class="line">         0x10027e28a &lt;+42&gt;: callq  0x10027f85c               ; symbol stub for: objc_retainAutoreleasedReturnValue</span><br><span class="line">         0x10027e28f &lt;+47&gt;: movq   %rax, -0x18(%rbp)</span><br><span class="line">     -&gt;  0x10027e293 &lt;+51&gt;: movq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e297 &lt;+55&gt;: movq   0x3d92(%rip), %rax        ; (void *)0x00007fff20191840: objc_retain</span><br><span class="line">         0x10027e29e &lt;+62&gt;: callq  *%rax</span><br><span class="line">         0x10027e2a0 &lt;+64&gt;: xorl   %ecx, %ecx</span><br><span class="line">         0x10027e2a2 &lt;+66&gt;: movl   %ecx, %esi</span><br><span class="line">         0x10027e2a4 &lt;+68&gt;: leaq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e2a8 &lt;+72&gt;: movq   %rax, -0x20(%rbp)</span><br><span class="line">         0x10027e2ac &lt;+76&gt;: callq  0x10027f86e               ; symbol stub for: objc_storeStrong</span><br><span class="line">         0x10027e2b1 &lt;+81&gt;: movq   -0x20(%rbp), %rdi</span><br><span class="line">         0x10027e2b5 &lt;+85&gt;: addq   $0x20, %rsp</span><br><span class="line">         0x10027e2b9 &lt;+89&gt;: popq   %rbp</span><br><span class="line">         0x10027e2ba &lt;+90&gt;: jmp    0x10027f826               ; symbol stub for: objc_autoreleaseReturnValue</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="三、外部方法关键字开头，内部方法关键字开头"><a href="#三、外部方法关键字开头，内部方法关键字开头" class="headerlink" title="三、外部方法关键字开头，内部方法关键字开头"></a>三、外部方法关键字开头，内部方法关键字开头</h5><ol>
+<li>NSMutableArray 使用 alloc 生成对象，引用计数为1，内部没有加入 AutoreleasePool 中；</li>
+<li>随后调用 init 方法，这里 init 方法返回对象时没有加入到自动释放池中，猜测是编译器行为；</li>
+<li>由于当前方法以 copy 开头，return 时既不调用 release，也不调用 autorelease；</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">- (id)copyObjectWithAlloc &#123;</span><br><span class="line">    id obj = [[NSMutableArray alloc] init];</span><br><span class="line">    return obj;//断点</span><br><span class="line">    /*</span><br><span class="line">     VCHTest`-[AppDelegate copyObjectWithAlloc]:</span><br><span class="line">         0x10027e160 &lt;+0&gt;:  pushq  %rbp</span><br><span class="line">         0x10027e161 &lt;+1&gt;:  movq   %rsp, %rbp</span><br><span class="line">         0x10027e164 &lt;+4&gt;:  subq   $0x20, %rsp</span><br><span class="line">         0x10027e168 &lt;+8&gt;:  movq   %rdi, -0x8(%rbp)</span><br><span class="line">         0x10027e16c &lt;+12&gt;: movq   %rsi, -0x10(%rbp)</span><br><span class="line">         0x10027e170 &lt;+16&gt;: movq   0x9cf1(%rip), %rax        ; (void *)0x00007fff801e6298: NSMutableArray</span><br><span class="line">         0x10027e177 &lt;+23&gt;: movq   %rax, %rdi</span><br><span class="line">         0x10027e17a &lt;+26&gt;: callq  0x10027f814               ; symbol stub for: objc_alloc_init</span><br><span class="line">         0x10027e17f &lt;+31&gt;: movq   %rax, -0x18(%rbp)</span><br><span class="line">     -&gt;  0x10027e183 &lt;+35&gt;: movq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e187 &lt;+39&gt;: callq  *0x3ea3(%rip)             ; (void *)0x00007fff20191840: objc_retain</span><br><span class="line">         0x10027e18d &lt;+45&gt;: xorl   %ecx, %ecx</span><br><span class="line">         0x10027e18f &lt;+47&gt;: movl   %ecx, %esi</span><br><span class="line">         0x10027e191 &lt;+49&gt;: leaq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e195 &lt;+53&gt;: movq   %rax, -0x20(%rbp)</span><br><span class="line">         0x10027e199 &lt;+57&gt;: callq  0x10027f86e               ; symbol stub for: objc_storeStrong</span><br><span class="line">         0x10027e19e &lt;+62&gt;: movq   -0x20(%rbp), %rax</span><br><span class="line">         0x10027e1a2 &lt;+66&gt;: addq   $0x20, %rsp</span><br><span class="line">         0x10027e1a6 &lt;+70&gt;: popq   %rbp</span><br><span class="line">         0x10027e1a7 &lt;+71&gt;: retq</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="四、外部方法关键字开头，内部方法非关键字开头"><a href="#四、外部方法关键字开头，内部方法非关键字开头" class="headerlink" title="四、外部方法关键字开头，内部方法非关键字开头"></a>四、外部方法关键字开头，内部方法非关键字开头</h5><ol>
+<li>NSMutableArray 使用 array 生成对象，引用计数为1，内部已经加入 AutoreleasePool 中（其实还没有加入，只是被标记了而已）；</li>
+<li>通过下面的汇编代码可以看出，方法内调用了 objc_retainAutoreleasedReturnValue （因为有个临时变量需要持有当前对象），此时发现该对象已经被标记，则相互抵消，清除标志位，不加入自动释放池中；</li>
+<li>由于当前方法以 copy 开头，return 时既不调用 release，也不调用 autorelease；</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">- (id)copyObjectWithArray &#123;</span><br><span class="line">    id obj = [NSMutableArray array];</span><br><span class="line">    return obj;//断点</span><br><span class="line">    /*</span><br><span class="line">     VCHTest`-[AppDelegate copyObjectWithArray]:</span><br><span class="line">         0x10027e1b0 &lt;+0&gt;:  pushq  %rbp</span><br><span class="line">         0x10027e1b1 &lt;+1&gt;:  movq   %rsp, %rbp</span><br><span class="line">         0x10027e1b4 &lt;+4&gt;:  subq   $0x20, %rsp</span><br><span class="line">         0x10027e1b8 &lt;+8&gt;:  movq   %rdi, -0x8(%rbp)</span><br><span class="line">         0x10027e1bc &lt;+12&gt;: movq   %rsi, -0x10(%rbp)</span><br><span class="line">         0x10027e1c0 &lt;+16&gt;: movq   0x9ca1(%rip), %rax        ; (void *)0x00007fff801e6298: NSMutableArray</span><br><span class="line">         0x10027e1c7 &lt;+23&gt;: movq   0x9b6a(%rip), %rsi        ; &quot;array&quot;</span><br><span class="line">         0x10027e1ce &lt;+30&gt;: movq   %rax, %rdi</span><br><span class="line">         0x10027e1d1 &lt;+33&gt;: callq  *0x3e49(%rip)             ; (void *)0x00007fff20175280: objc_msgSend</span><br><span class="line">         0x10027e1d7 &lt;+39&gt;: movq   %rax, %rdi</span><br><span class="line">         0x10027e1da &lt;+42&gt;: callq  0x10027f85c               ; symbol stub for: objc_retainAutoreleasedReturnValue</span><br><span class="line">         0x10027e1df &lt;+47&gt;: movq   %rax, -0x18(%rbp)</span><br><span class="line">     -&gt;  0x10027e1e3 &lt;+51&gt;: movq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e1e7 &lt;+55&gt;: callq  *0x3e43(%rip)             ; (void *)0x00007fff20191840: objc_retain</span><br><span class="line">         0x10027e1ed &lt;+61&gt;: xorl   %ecx, %ecx</span><br><span class="line">         0x10027e1ef &lt;+63&gt;: movl   %ecx, %esi</span><br><span class="line">         0x10027e1f1 &lt;+65&gt;: leaq   -0x18(%rbp), %rdi</span><br><span class="line">         0x10027e1f5 &lt;+69&gt;: movq   %rax, -0x20(%rbp)</span><br><span class="line">         0x10027e1f9 &lt;+73&gt;: callq  0x10027f86e               ; symbol stub for: objc_storeStrong</span><br><span class="line">         0x10027e1fe &lt;+78&gt;: movq   -0x20(%rbp), %rax</span><br><span class="line">         0x10027e202 &lt;+82&gt;: addq   $0x20, %rsp</span><br><span class="line">         0x10027e206 &lt;+86&gt;: popq   %rbp</span><br><span class="line">         0x10027e207 &lt;+87&gt;: retq</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>下面代码执行会怎样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">id __unsafe_unretained obj0 = nil;</span><br><span class="line">id __unsafe_unretained obj1 = nil;</span><br><span class="line">&#123;</span><br><span class="line">    NSArray *array0 = [self getObjectWithAlloc];</span><br><span class="line">    obj0 = array0;</span><br><span class="line">    //</span><br><span class="line">    NSArray *array1 = [self copyObjectWithAlloc];</span><br><span class="line">    obj1 = array1;</span><br><span class="line">&#125;</span><br><span class="line">NSLog(@&quot;vhuichen obj0 = %@&quot;, obj0);</span><br><span class="line">NSLog(@&quot;vhuichen obj1 = %@&quot;, obj1);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vhuichen.github.io/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" data-id="cl7m9prca00185lzygo7g0cq5" data-title="ARC下，对象什么时候加入自动释放池" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" rel="tag">自动释放池</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/04/iOS/libffi%E6%8E%A2%E7%A9%B6%20/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          libffi 探究
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/01/NetworkProtocol/WebSocket/WebSocket/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">WebSocket</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Markdown/">Markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Swift/">Swift</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/">iOS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/Swift/">Swift</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%9F%BA%E7%A1%80/">iOS基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/iOS%E5%BC%80%E5%8F%91/">iOS开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%87%8D%E6%9E%84/">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" rel="tag">APP默认语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Allocations/" rel="tag">Allocations</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Base64/" rel="tag">Base64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bugly/" rel="tag">Bugly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CADisplayLink/" rel="tag">CADisplayLink</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CocoaPods/" rel="tag">CocoaPods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cocoapods/" rel="tag">Cocoapods</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cookie/" rel="tag">Cookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cornerstone/" rel="tag">Cornerstone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Designated-Initializer/" rel="tag">Designated Initializer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Effective-Objective-C-2-0/" rel="tag">Effective Objective-C 2.0</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FMDB/" rel="tag">FMDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GCD/" rel="tag">GCD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Desktop/" rel="tag">GitHub Desktop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Instruments/" rel="tag">Instruments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KCP/" rel="tag">KCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MD5/" rel="tag">MD5</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVC/" rel="tag">MVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/" rel="tag">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVVM/" rel="tag">MVVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Module/" rel="tag">Module</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookie/" rel="tag">NSHTTPCookie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSHTTPCookieStorage/" rel="tag">NSHTTPCookieStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSNumericSearch/" rel="tag">NSNumericSearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSOperation/" rel="tag">NSOperation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSPredicate/" rel="tag">NSPredicate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSString/" rel="tag">NSString</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSThread/" rel="tag">NSThread</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NSTimeZone/" rel="tag">NSTimeZone</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NavigationItem/" rel="tag">NavigationItem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Profile/" rel="tag">Profile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Push-Notification/" rel="tag">Push Notification</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SRWebSocket/" rel="tag">SRWebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVN/" rel="tag">SVN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Singleton/" rel="tag">Singleton</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Socket/" rel="tag">Socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/" rel="tag">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift%E6%B7%B7%E7%BC%96/" rel="tag">Swift混编</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP/" rel="tag">TCP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UIImage/" rel="tag">UIImage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UINavigationBar/" rel="tag">UINavigationBar</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITableViewCell/" rel="tag">UITableViewCell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UITextField/" rel="tag">UITextField</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/URL-Schemes/" rel="tag">URL Schemes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/View/" rel="tag">View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebSocket/" rel="tag">WebSocket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Workspace/" rel="tag">Workspace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anchorPoint/" rel="tag">anchorPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hash/" rel="tag">hash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/initialize/" rel="tag">initialize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/isEqual/" rel="tag">isEqual</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/libffi/" rel="tag">libffi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/load/" rel="tag">load</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" rel="tag">体积包优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" rel="tag">关联对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" rel="tag">切换根控制器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" rel="tag">加密解密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E4%BE%8B/" rel="tag">单例</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag">单元测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9C%B0%E5%9B%BE/" rel="tag">地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" rel="tag">尾调用优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" rel="tag">数据去重</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" rel="tag">时间复杂度</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" rel="tag">消息转发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag">热更新</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" rel="tag">符号表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" rel="tag">第三方登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" rel="tag">类对象本质</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" rel="tag">类族模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A6%E6%9D%9F/" rel="tag">约束</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" rel="tag">编译时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" rel="tag">自动登录</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" rel="tag">自动释放池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" rel="tag">运行时</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%87%8D%E6%9E%84/" rel="tag">重构</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 10px;">AES</a> <a href="/tags/APP%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">APP默认语言</a> <a href="/tags/Allocations/" style="font-size: 10px;">Allocations</a> <a href="/tags/Base64/" style="font-size: 10px;">Base64</a> <a href="/tags/Bugly/" style="font-size: 10px;">Bugly</a> <a href="/tags/CADisplayLink/" style="font-size: 10px;">CADisplayLink</a> <a href="/tags/CocoaPods/" style="font-size: 13.33px;">CocoaPods</a> <a href="/tags/Cocoapods/" style="font-size: 10px;">Cocoapods</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/Cornerstone/" style="font-size: 10px;">Cornerstone</a> <a href="/tags/Designated-Initializer/" style="font-size: 10px;">Designated Initializer</a> <a href="/tags/Effective-Objective-C-2-0/" style="font-size: 20px;">Effective Objective-C 2.0</a> <a href="/tags/FMDB/" style="font-size: 10px;">FMDB</a> <a href="/tags/GCD/" style="font-size: 13.33px;">GCD</a> <a href="/tags/GitHub-Desktop/" style="font-size: 10px;">GitHub Desktop</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Instruments/" style="font-size: 10px;">Instruments</a> <a href="/tags/KCP/" style="font-size: 10px;">KCP</a> <a href="/tags/MD5/" style="font-size: 10px;">MD5</a> <a href="/tags/MVC/" style="font-size: 10px;">MVC</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MVVM/" style="font-size: 10px;">MVVM</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Module/" style="font-size: 10px;">Module</a> <a href="/tags/NSHTTPCookie/" style="font-size: 10px;">NSHTTPCookie</a> <a href="/tags/NSHTTPCookieStorage/" style="font-size: 10px;">NSHTTPCookieStorage</a> <a href="/tags/NSNumericSearch/" style="font-size: 10px;">NSNumericSearch</a> <a href="/tags/NSOperation/" style="font-size: 10px;">NSOperation</a> <a href="/tags/NSPredicate/" style="font-size: 10px;">NSPredicate</a> <a href="/tags/NSString/" style="font-size: 10px;">NSString</a> <a href="/tags/NSThread/" style="font-size: 10px;">NSThread</a> <a href="/tags/NSTimeZone/" style="font-size: 10px;">NSTimeZone</a> <a href="/tags/NavigationItem/" style="font-size: 10px;">NavigationItem</a> <a href="/tags/Profile/" style="font-size: 10px;">Profile</a> <a href="/tags/Push-Notification/" style="font-size: 10px;">Push Notification</a> <a href="/tags/SRWebSocket/" style="font-size: 10px;">SRWebSocket</a> <a href="/tags/SVN/" style="font-size: 16.67px;">SVN</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Socket/" style="font-size: 10px;">Socket</a> <a href="/tags/Swift/" style="font-size: 13.33px;">Swift</a> <a href="/tags/Swift%E6%B7%B7%E7%BC%96/" style="font-size: 10px;">Swift混编</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/UIImage/" style="font-size: 10px;">UIImage</a> <a href="/tags/UINavigationBar/" style="font-size: 10px;">UINavigationBar</a> <a href="/tags/UITableViewCell/" style="font-size: 10px;">UITableViewCell</a> <a href="/tags/UITextField/" style="font-size: 10px;">UITextField</a> <a href="/tags/URL-Schemes/" style="font-size: 10px;">URL Schemes</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/WebSocket/" style="font-size: 16.67px;">WebSocket</a> <a href="/tags/Workspace/" style="font-size: 10px;">Workspace</a> <a href="/tags/anchorPoint/" style="font-size: 10px;">anchorPoint</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hash/" style="font-size: 10px;">hash</a> <a href="/tags/initialize/" style="font-size: 10px;">initialize</a> <a href="/tags/isEqual/" style="font-size: 10px;">isEqual</a> <a href="/tags/libffi/" style="font-size: 10px;">libffi</a> <a href="/tags/load/" style="font-size: 10px;">load</a> <a href="/tags/%E4%BD%93%E7%A7%AF%E5%8C%85%E4%BC%98%E5%8C%96/" style="font-size: 10px;">体积包优化</a> <a href="/tags/%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">关联对象</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E5%88%87%E6%8D%A2%E6%A0%B9%E6%8E%A7%E5%88%B6%E5%99%A8/" style="font-size: 10px;">切换根控制器</a> <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/" style="font-size: 10px;">加密解密</a> <a href="/tags/%E5%8D%95%E4%BE%8B/" style="font-size: 10px;">单例</a> <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">单元测试</a> <a href="/tags/%E5%9C%B0%E5%9B%BE/" style="font-size: 10px;">地图</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">多线程</a> <a href="/tags/%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" style="font-size: 10px;">尾调用优化</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D/" style="font-size: 10px;">数据去重</a> <a href="/tags/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" style="font-size: 10px;">时间复杂度</a> <a href="/tags/%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">框架</a> <a href="/tags/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/" style="font-size: 10px;">消息转发</a> <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" style="font-size: 10px;">热更新</a> <a href="/tags/%E7%AC%A6%E5%8F%B7%E8%A1%A8/" style="font-size: 10px;">符号表</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" style="font-size: 10px;">第三方登录</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%9C%AC%E8%B4%A8/" style="font-size: 10px;">类对象本质</a> <a href="/tags/%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">类族模式</a> <a href="/tags/%E7%BA%A6%E6%9D%9F/" style="font-size: 10px;">约束</a> <a href="/tags/%E7%BA%BF%E7%A8%8B/" style="font-size: 10px;">线程</a> <a href="/tags/%E7%BC%96%E8%AF%91%E6%97%B6/" style="font-size: 10px;">编译时</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" style="font-size: 10px;">自动登录</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/" style="font-size: 10px;">自动释放池</a> <a href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6/" style="font-size: 10px;">运行时</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%87%8D%E6%9E%84/" style="font-size: 10px;">重构</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">May 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/05/NetworkProtocol/KCP/KCP/">KCP 协议</a>
+          </li>
+        
+          <li>
+            <a href="/2022/04/iOS/libffi%E6%8E%A2%E7%A9%B6%20/">libffi 探究</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/iOS/iOS%E5%AF%B9%E8%B1%A1%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8A%A0%E5%85%A5%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0/">ARC下，对象什么时候加入自动释放池</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/NetworkProtocol/WebSocket/WebSocket/">WebSocket</a>
+          </li>
+        
+          <li>
+            <a href="/2021/10/NetworkProtocol/SRWebSocket/SRWebSocket/">SRWebSocket 源码解析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 vhuichen<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
