@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/vhuichen.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/vhuichen.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/vhuichen.ico">
+  <link rel="mask-icon" href="/vhuichen.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"vhuichen.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"display","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="AllocationsAllocations 一般包含一个 VM Tracker，后面会简单介绍 Statistics直译：统计 的意思表示当前系统的内存占用列表     All Heap Allocation开发者手动申请的内存（堆），虚拟内存，这一部分是由开发者控制的。未使用的内存不会直接分配物理内存，只有使用了的内存才会在物理内存上分配空间。 All Anonymous VM相对于All H">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Instruments 之 Allocations">
+<meta property="og:url" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/index.html">
+<meta property="og:site_name" content="vhuichen">
+<meta property="og:description" content="AllocationsAllocations 一般包含一个 VM Tracker，后面会简单介绍 Statistics直译：统计 的意思表示当前系统的内存占用列表     All Heap Allocation开发者手动申请的内存（堆），虚拟内存，这一部分是由开发者控制的。未使用的内存不会直接分配物理内存，只有使用了的内存才会在物理内存上分配空间。 All Anonymous VM相对于All H">
+<meta property="og:locale">
+<meta property="og:image" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/20210424230755.png">
+<meta property="og:image" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/20210424231844.png">
+<meta property="og:image" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/20210426171344.png">
+<meta property="og:image" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/20210424232638.png">
+<meta property="og:image" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/image-20220904111138382.png">
+<meta property="article:published_time" content="2021-04-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-04T03:12:14.064Z">
+<meta property="article:author" content="vhuichen">
+<meta property="article:tag" content="Allocations">
+<meta property="article:tag" content="Instruments">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/20210424230755.png">
+
+
+<link rel="canonical" href="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/","path":"2021/04/iOS/Allocations/Allocations/","title":"Instruments 之 Allocations"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Instruments 之 Allocations | vhuichen</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">vhuichen</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录、分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">Archives</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section">About</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Allocations"><span class="nav-number">1.</span> <span class="nav-text">Allocations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Statistics"><span class="nav-number">1.1.</span> <span class="nav-text">Statistics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#All-Heap-Allocation"><span class="nav-number">1.1.1.</span> <span class="nav-text">All Heap Allocation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#All-Anonymous-VM"><span class="nav-number">1.1.2.</span> <span class="nav-text">All Anonymous VM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VM-ImageIO-PNG-Data"><span class="nav-number">1.1.3.</span> <span class="nav-text">VM:ImageIO_PNG_Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VM-CG-raster-data"><span class="nav-number">1.1.4.</span> <span class="nav-text">VM:CG raster data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Call-Tree"><span class="nav-number">1.2.</span> <span class="nav-text">Call Tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Allocations-list"><span class="nav-number">1.3.</span> <span class="nav-text">Allocations list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Generations"><span class="nav-number">1.4.</span> <span class="nav-text">Generations</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VM-Tracker"><span class="nav-number">2.</span> <span class="nav-text">VM Tracker</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vhuichen"
+      src="/images/vhuichen.jpg">
+  <p class="site-author-name" itemprop="name">vhuichen</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">78</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://vhuichen.github.io/2021/04/iOS/Allocations/Allocations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vhuichen.jpg">
+      <meta itemprop="name" content="vhuichen">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="vhuichen">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Instruments 之 Allocations | vhuichen">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Instruments 之 Allocations
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-24 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-24T00:00:00+08:00">2021-04-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-09-04 11:12:14" itemprop="dateModified" datetime="2022-09-04T11:12:14+08:00">2022-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Allocations"><a href="#Allocations" class="headerlink" title="Allocations"></a>Allocations</h1><p><code>Allocations</code> 一般包含一个 <code>VM Tracker</code>，后面会简单介绍</p>
+<h2 id="Statistics"><a href="#Statistics" class="headerlink" title="Statistics"></a>Statistics</h2><p>直译：统计 的意思<br>表示当前系统的内存占用列表  </p>
+<img src="/2021/04/iOS/Allocations/Allocations/20210424230755.png" alt="img" style="zoom:50%;">
+
+<h3 id="All-Heap-Allocation"><a href="#All-Heap-Allocation" class="headerlink" title="All Heap Allocation"></a>All Heap Allocation</h3><p>开发者手动申请的内存（堆），虚拟内存，这一部分是由开发者控制的。未使用的内存不会直接分配物理内存，只有使用了的内存才会在物理内存上分配空间。</p>
+<h3 id="All-Anonymous-VM"><a href="#All-Anonymous-VM" class="headerlink" title="All Anonymous VM"></a>All Anonymous VM</h3><p>相对于<code>All Heap Allocation</code>，这里的是匿名的虚拟内存，开发者无法控制的内存。memory mapped file 、CALayer back store 好像都是在这里的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">All Heap &amp; Anonymous VM 指的就是 All Heap Allocation + All Anonymous VM</span><br></pre></td></tr></table></figure>
+
+<h3 id="VM-ImageIO-PNG-Data"><a href="#VM-ImageIO-PNG-Data" class="headerlink" title="VM:ImageIO_PNG_Data"></a>VM:ImageIO_PNG_Data</h3><p>使用 <code>[UIImage imageNamed:@&quot;*.png&quot;]</code> 缓存的解压后的图片</p>
+<h3 id="VM-CG-raster-data"><a href="#VM-CG-raster-data" class="headerlink" title="VM:CG raster data"></a>VM:CG raster data</h3><p>通过CG解压的图片.光栅化数据，也就是像素数据</p>
+<h2 id="Call-Tree"><a href="#Call-Tree" class="headerlink" title="Call Tree"></a>Call Tree</h2><p>显示调用函数，点击具体的函数能跳转到对应的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Invert Call Tree 倒置函数栈</span><br><span class="line">Hide System Libraries 隐藏系统库</span><br></pre></td></tr></table></figure>
+
+<h2 id="Allocations-list"><a href="#Allocations-list" class="headerlink" title="Allocations list"></a>Allocations list</h2><p>可以按照单次分配的内存大小排序，可以清楚的看到对应的调用栈  </p>
+<img src="/2021/04/iOS/Allocations/Allocations/20210424231844.png" alt="img" style="zoom:50%;">
+
+<h2 id="Generations"><a href="#Generations" class="headerlink" title="Generations"></a>Generations</h2><p>查看两个时间点之间的内存变化</p>
+<h1 id="VM-Tracker"><a href="#VM-Tracker" class="headerlink" title="VM Tracker"></a>VM Tracker</h1><ul>
+<li>打开界面后，需要先启动 <code>VM Tracker</code>  </li>
+<li><img src="/2021/04/iOS/Allocations/Allocations/20210426171344.png" alt="img" style="zoom:33%;"></li>
+</ul>
+<img src="/2021/04/iOS/Allocations/Allocations/20210424232638.png" alt="img" style="zoom:50%;">  
+
+<p><code>Resident</code> 指的是当前物理内存（已加载的代码段+脏内存）<br><code>VM Region</code> 一个 VM Region 是指一段连续的内存页（在虚拟地址空间里），这些页拥有相同的属性（如读写权限、是否是 wired，也就是是否能被 page out）<br><code>VMObject</code> 每个 VM Region 对应一个数据结构，名为 VM Object。 </p>
+<p><code>% of Res.</code> 当前 Type 的 <code>Resident</code> 占 总 <code>Resident</code> 的比例<br><code>Type </code> 虚拟内存的类型<br><code># Regs</code> VM Region 的个数，也就是 VMObject 的个数？<br><code>Path</code> VM Region 从哪个文件映射过来的<br><code>Dirty Size</code> 脏内存，也就是系统无法回收的内存<br><code>Swapped Size</code> OSX 中被交换的内存。iOS 没有交换区，此时的<code>Swapped Size</code>就是压缩内存<br><code>Virtual Size</code>  虚拟内存总大小<br><code>Res. %</code> 当前物理内存占虚拟内存的总大小</p>
+<img src="/2021/04/iOS/Allocations/Allocations/image-20220904111138382.png" alt="image-20220904111138382" style="zoom:50%;">
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Allocations/" rel="tag"># Allocations</a>
+              <a href="/tags/Instruments/" rel="tag"># Instruments</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/04/iOS/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6/" rel="prev" title="iOS内存管理机制">
+                  <i class="fa fa-chevron-left"></i> iOS内存管理机制
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/05/iOS/Modules/Modules/" rel="next" title="理解 iOS 中的 Modules">
+                  理解 iOS 中的 Modules <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vhuichen</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
